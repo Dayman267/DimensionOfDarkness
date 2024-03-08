@@ -31,7 +31,6 @@ public class TilemapGenerator : MonoBehaviour
     {
         objectSize = (int)(gameObjectPrefabs[0].transform.GetChild(0).gameObject.transform.lossyScale.x *
                      Mathf.Sqrt(gameObjectPrefabs[0].transform.childCount));
-        Debug.Log(objectSize);
         gameObjectsToSpawn = new int[width, height];
         SpawnFirstNineObjects();
     }
