@@ -2,20 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Movement : MonoBehaviour
+public class MainCharacterMovement : MonoBehaviour
 {
-   
     private Camera cam;
     private Vector3 direction;
     private Rigidbody rb;
     
-    private Animator animator;
-    private int isWalkingHash;
-    private int isRunningHash;
-    
     [Header("Running")]
     [SerializeField] private float speed = 5f;
-    [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private float speedIncreaseFactor = 1.5f;
     [SerializeField] private float spendPointsWhenRunning = 0.3f;
 
@@ -47,10 +41,6 @@ public class Movement : MonoBehaviour
         // #endif
         cam = Camera.main;
         rb = GetComponent<Rigidbody>();
-        
-        animator = GetComponent<Animator>();
-        isWalkingHash = Animator.StringToHash("isWalking");
-        isRunningHash = Animator.StringToHash("isRunning");
         //playerStamina = GetComponent<PlayerStamina>();
     }
 
@@ -63,59 +53,17 @@ public class Movement : MonoBehaviour
         
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
-        bool isWalking = animator.GetBool(isWalkingHash);
-        bool isRunning = animator.GetBool(isRunningHash);
-        bool forwardPressed = Input.GetKey("w") || Input.GetKey("s") || Input.GetKey("a") || Input.GetKey("d");
-        bool runPressed = Input.GetKey("left shift");
-        
+
         direction = new Vector3(h, 0, v);
         direction.Normalize();
         
-        /*Vector3 mousePosition = Input.mousePosition;
+        Vector3 mousePosition = Input.mousePosition;
         mousePosition.z = cam.transform.position.y - transform.position.y; // Устанавливаем Z равным расстоянию от камеры до персонажа
-        mousePosition = cam.ScreenToWorldPoint(mousePosition);*/
+        mousePosition = cam.ScreenToWorldPoint(mousePosition);
 
         // Поворот персонажа курсором мыши
-        /*Quaternion targetRotation = Quaternion.LookRotation(mousePosition - transform.position);
-        transform.rotation = Quaternion.Euler(0f, targetRotation.eulerAngles.y, 0f);*/
-        
-        Vector3 movementDirection = new Vector3(h,0,v);
-        movementDirection.Normalize();
-        
-        
-        
-        transform.Translate(movementDirection * speed * Time.deltaTime, Space.World);
-
-        if (movementDirection != Vector3.zero)
-        {
-            Quaternion toRotation = Quaternion.LookRotation(movementDirection,Vector3.up);
-
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
-        }
-        
-        /*if (movementDirection != Vector3.zero)
-        {
-            transform.forward = movementDirection;
-        }*/
-
-        if (!isWalking && forwardPressed)
-        {
-            animator.SetBool(isWalkingHash,true);
-        }
-
-        if (isWalking && !forwardPressed)
-        {
-            animator.SetBool(isWalkingHash, false);
-        }
-
-        if (!isRunning && (forwardPressed && runPressed))
-        {
-            animator.SetBool(isRunningHash,true);
-        }
-        if (isRunning && (!forwardPressed || !runPressed))
-        {
-            animator.SetBool(isRunningHash,false);
-        }
+        Quaternion targetRotation = Quaternion.LookRotation(mousePosition - transform.position);
+        transform.rotation = Quaternion.Euler(0f, targetRotation.eulerAngles.y, 0f);
         
         //transform.rotation.SetLookRotation(mousePosition);
         
