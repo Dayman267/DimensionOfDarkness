@@ -13,11 +13,18 @@ public class Movement : MonoBehaviour
     private int isWalkingHash;
     private int isRunningHash;
     
+    private bool isRotating;
+    private Quaternion targetRotation;
+    private float rotationDelay = 0.1f;
+    private float rotationSmoothness = 10f;
+    
     [Header("Running")]
     [SerializeField] private float speed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private float speedIncreaseFactor = 1.5f;
     [SerializeField] private float spendPointsWhenRunning = 0.3f;
+    
+    
 
     private bool isDashing;
     [Header("Dashing")]
@@ -34,6 +41,8 @@ public class Movement : MonoBehaviour
     
     [SerializeField]
     private LayerMask mask;
+
+ 
     
     //private PlayerStamina playerStamina;
 
@@ -53,6 +62,8 @@ public class Movement : MonoBehaviour
         isRunningHash = Animator.StringToHash("isRunning");
         //playerStamina = GetComponent<PlayerStamina>();
     }
+    
+    
 
     void Update()
     {
@@ -65,12 +76,16 @@ public class Movement : MonoBehaviour
         float v = Input.GetAxisRaw("Vertical");
         bool isWalking = animator.GetBool(isWalkingHash);
         bool isRunning = animator.GetBool(isRunningHash);
-        bool forwardPressed = Input.GetKey("w") || Input.GetKey("s") || Input.GetKey("a") || Input.GetKey("d");
+        bool inMovement = Mathf.Abs(h) > 0 || Mathf.Abs(v) > 0;
+        bool forwardPressed = Input.GetKeyUp(KeyCode.W);
+        bool backwardPressed = Input.GetKeyUp(KeyCode.S);
+        bool leftPressed = Input.GetKeyUp(KeyCode.A);
+        bool rightPressed = Input.GetKeyUp(KeyCode.D);
         bool runPressed = Input.GetKey("left shift");
-        
+
         direction = new Vector3(h, 0, v);
         direction.Normalize();
-        
+
         /*Vector3 mousePosition = Input.mousePosition;
         mousePosition.z = cam.transform.position.y - transform.position.y; // Устанавливаем Z равным расстоянию от камеры до персонажа
         mousePosition = cam.ScreenToWorldPoint(mousePosition);*/
@@ -92,31 +107,68 @@ public class Movement : MonoBehaviour
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
         }
-        
-        /*if (movementDirection != Vector3.zero)
+        // Баг 1 при быстром нажатии и отпускании клавиши движения модель персонажа немного смещается в этом направлении,но не успевает развернуться в нужном направлении
+        if (isRotating)
         {
-            transform.forward = movementDirection;
-        }*/
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            
+            if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f)
+            {
+                isRotating = false;
+            }
+        }
+        // Баг 1
+        
+        // Для плавности
+        if (inMovement)
+        {
+            Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
+            targetRotation = Quaternion.Slerp(transform.rotation, toRotation, Time.deltaTime * rotationSmoothness);
+        }
 
-        if (!isWalking && forwardPressed)
+        if (!isWalking && inMovement)
         {
             animator.SetBool(isWalkingHash,true);
         }
 
-        if (isWalking && !forwardPressed)
+        if (isWalking && !inMovement)
         {
             animator.SetBool(isWalkingHash, false);
         }
+        
 
-        if (!isRunning && (forwardPressed && runPressed))
+        if (!isRunning && (inMovement && runPressed))
         {
             animator.SetBool(isRunningHash,true);
         }
-        if (isRunning && (!forwardPressed || !runPressed))
+        if (isRunning && (!inMovement || !runPressed))
         {
             animator.SetBool(isRunningHash,false);
         }
+
         
+        if (!inMovement)
+        {
+            // Баг 1
+            switch (forwardPressed, backwardPressed, leftPressed, rightPressed)
+            {
+                case (true,false,false,false):  RotateInDirection("forward");
+                    break;
+                case (false,true,false,false):  RotateInDirection("backward");
+                    break;
+                case (false,false,true,false):  RotateInDirection("left");
+                    break;
+                case (false,false,false,true):  RotateInDirection("right");
+                    break;
+       
+                default: Debug.LogWarning("Invalid direction specified.");
+                    break;
+            }
+            // Баг 1
+        }
+
+        
+
         //transform.rotation.SetLookRotation(mousePosition);
         
         // Vector3 difference = cam.ScreenToWorldPoint(Input.mousePosition) - transform.position;
@@ -152,6 +204,46 @@ public class Movement : MonoBehaviour
             rb.velocity = direction * speed;
         }
     }
+
+    // Баг 1
+    private void RotateToDirection(Vector3 direction)
+    {
+        if (direction != Vector3.zero)
+        {
+            targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+            isRotating = true;
+        }
+    }
+    // Баг 1
+    
+    
+    // Баг 1
+    private void RotateInDirection(string direction)
+    {
+        Vector3 rotateDirection = Vector3.zero;
+
+        switch (direction.ToLower())
+        {
+            case "forward":
+                rotateDirection = Vector3.forward;
+                break;
+            case "backward":
+                rotateDirection = Vector3.back;
+                break;
+            case "left":
+                rotateDirection = Vector3.left;
+                break;
+            case "right":
+                rotateDirection = Vector3.right;
+                break;
+            default:
+                Debug.LogWarning("Invalid direction specified.");
+                break;
+        }
+
+        RotateToDirection(rotateDirection);
+    }
+    // Баг 1
 
     private bool Running() =>
         Input.GetKey(KeyCode.LeftShift) && direction != Vector3.zero; // && playerStamina.GetStaminaPoints() > 0;
