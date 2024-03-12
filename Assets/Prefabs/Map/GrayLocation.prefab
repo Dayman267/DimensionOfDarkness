@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1319607953182939026}
   - component: {fileID: 2688680609614609312}
   - component: {fileID: 879656375375237058}
+  - component: {fileID: 4490552439024039979}
   m_Layer: 0
   m_Name: GrayLocation
   m_TagString: Tilemap
@@ -111,6 +112,27 @@ MonoBehaviour:
   - {fileID: 7433901882389271155, guid: 259fea420f12e4e2a902923fda1f2b4b, type: 3}
   minObjectsPerTile: 50
   maxObjectsPerTile: 50
+--- !u!65 &4490552439024039979
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103195491086369761}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 100, y: 0.001, z: 100}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &464739183143486269
 GameObject:
   m_ObjectHideFlags: 0
