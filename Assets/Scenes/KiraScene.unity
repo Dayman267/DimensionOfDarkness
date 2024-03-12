@@ -215,7 +215,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mainCamera: {fileID: 963194228}
-  _isAiming: 0
   speed: 5
   rotationSpeed: 500
   speedIncreaseFactor: 1.5

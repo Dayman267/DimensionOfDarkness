@@ -62,6 +62,7 @@ public class Movement1 : MonoBehaviour
 
     bool isRightClickDown;
     bool isLeftClickDown;
+    bool isShootingWhileRun;
     void Update()
     {
         float h = Input.GetAxisRaw("Horizontal");
@@ -73,8 +74,9 @@ public class Movement1 : MonoBehaviour
         bool isAimAnimActive = animator.GetBool(isAimHash);
         bool isShootingAnimActive = animator.GetBool(isShootingHash);
         bool inMovement = Mathf.Abs(h) > 0 || Mathf.Abs(v) > 0;
-       
-       
+        
+
+
 
         direction = new Vector3(h, 0, v);
         direction.Normalize();
@@ -97,13 +99,26 @@ public class Movement1 : MonoBehaviour
         
         if (isLeftClickDown)
         {
-            if(!isShootingAnimActive)
+            if (inMovement && !isAimAnimActive)
+            {
+                isRightClickDown = true;
+                isShootingWhileRun = true;
+                if(!isShootingAnimActive)
                     animator.SetBool(isShootingHash,true);
-            if(isShootingAnimActive)
-                animator.SetBool(isShootingHash,false);
+            }
+            else
+            {
+                if(!isShootingAnimActive)
+                    animator.SetBool(isShootingHash,true);
+            }
         }
         else
         {
+            if (isShootingWhileRun && !Input.GetKey(KeyCode.Mouse1))
+            {
+                isRightClickDown = false;
+            }
+
             if(isShootingAnimActive)
                 animator.SetBool(isShootingHash,false);
         }
@@ -117,6 +132,8 @@ public class Movement1 : MonoBehaviour
                 animator.SetBool(isAimHash, true);
             }
 
+          
+            
             
         }
         else
