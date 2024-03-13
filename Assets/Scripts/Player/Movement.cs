@@ -1,25 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    [SerializeField] private Transform _mainCamera;
+    [SerializeField] private Object weaponVFX;
     private Camera cam;
     private Vector3 direction;
     private Rigidbody rb;
+    private const float LERP_SPEED = 9;
 
     private Animator animator;
-    private int isWalkingHash;
-    private int isRunningHash;
-    private int isAimingHash;
-    private int isAimWalk_FHash;
-    private int isAimWalk_BHash;
-    private int isAimWalk_RHash;
-    private int isAimWalk_LHash;
+    private Vector3 _movementVector;
 
+    private int isAimHash;
+    private int isShootingHash;
+    private int ShootingSpeedHash;
+    
+    [SerializeField] private float shootingSpeedAcceleration = 0.5f;
+    [SerializeField] private float shootingSpeedDecceleration = 2f;
     private bool isRotating;
     private Quaternion targetRotation;
-    private float rotationSmoothness = 10f;
 
     [Header("Running")] [SerializeField] private float speed = 5f;
     [SerializeField] private float rotationSpeed = 5f;
@@ -51,195 +54,143 @@ public class Movement : MonoBehaviour
         // #if UNITY_EDITOR
         //     EditorApplication.isPlaying = false;
         // #endif
-        cam = Camera.main;
         rb = GetComponent<Rigidbody>();
+        cam = Camera.main;
 
         animator = GetComponent<Animator>();
-        isWalkingHash = Animator.StringToHash("isWalking");
-        isRunningHash = Animator.StringToHash("isRunning");
-        isAimingHash = Animator.StringToHash("isAiming");
-        isAimWalk_FHash = Animator.StringToHash("isAimingWalkForward");
-        isAimWalk_BHash = Animator.StringToHash("isAimingWalkBackward");
-        isAimWalk_RHash = Animator.StringToHash("isAimingWalkRight");
-        isAimWalk_LHash = Animator.StringToHash("isAimingWalkLeft");
+        isAimHash = Animator.StringToHash("isAim");
+        ShootingSpeedHash = Animator.StringToHash("ShootingSpeed");
         //playerStamina = GetComponent<PlayerStamina>();
+
+        ResetAngularVelocity();
+        transform.rotation = Quaternion.Euler(Vector3.zero);
     }
 
-
+    bool isRightClickDown;
+    bool isLeftClickDown;
+    bool isShootingWhileRun;
+    float shootingSpeed = 0.0f;
     void Update()
     {
-        // direction.x = Input.GetAxisRaw("Horizontal");
-        // direction.z = Input.GetAxisRaw("Vertical");
-        //
-        // direction.Normalize();
-
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
-        bool isWalking = animator.GetBool(isWalkingHash);
-        bool isRunning = animator.GetBool(isRunningHash);
-        bool isAiming = animator.GetBool(isAimingHash);
-        bool isAimWalkF = animator.GetBool(isAimWalk_FHash);
-        bool isAimWalkB = animator.GetBool(isAimWalk_BHash);
-        bool isAimWalkR = animator.GetBool(isAimWalk_RHash);
-        bool isAimWalkL = animator.GetBool(isAimWalk_LHash);
+        _movementVector = CalculateMovementVector();
+
+        bool isAimAnimActive = animator.GetBool(isAimHash);
         bool inMovement = Mathf.Abs(h) > 0 || Mathf.Abs(v) > 0;
-        bool forwardPressed = Input.GetKeyUp(KeyCode.W);
-        bool backwardPressed = Input.GetKeyUp(KeyCode.S);
-        bool leftPressed = Input.GetKeyUp(KeyCode.A);
-        bool rightPressed = Input.GetKeyUp(KeyCode.D);
-        bool runPressed = Input.GetKey("left shift");
-        bool rightClickPressed = Input.GetKey(KeyCode.Mouse1);
 
         direction = new Vector3(h, 0, v);
         direction.Normalize();
 
+        
+        UpdateAnimatorVariables();
+        
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+            isRightClickDown = true;
 
-        if (rightClickPressed)
+        if (Input.GetKeyUp(KeyCode.Mouse1))
+            isRightClickDown = false;
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+            isLeftClickDown = true;
+
+        if (Input.GetKeyUp(KeyCode.Mouse0))
+            isLeftClickDown = false;
+
+        if (isLeftClickDown)
         {
-            speed = 2f;
-            Vector3 mousePosition = Input.mousePosition;
-            mousePosition.z = cam.transform.position.y - transform.position.y; // Устанавливаем Z равным расстоянию от камеры до персонажа
-            mousePosition = cam.ScreenToWorldPoint(mousePosition);
-            // Поворот персонажа курсором мыши
-            Quaternion targetRotation = Quaternion.LookRotation(mousePosition - transform.position);
-            transform.rotation = Quaternion.Euler(0f, targetRotation.eulerAngles.y, 0f);
+            if (inMovement && !isAimAnimActive)
+            {
+                isRightClickDown = true;
+                isShootingWhileRun = true;
 
-            OffRun(isWalking,inMovement);
-            OffSprint(isRunning,inMovement,runPressed);
-            
-            if (!isAiming)
-            {
-                animator.SetBool(isAimingHash, true);
-            }
+                if(shootingSpeed <= 1f)
+                    shootingSpeed += Time.deltaTime * shootingSpeedAcceleration;
+                animator.SetFloat(ShootingSpeedHash,shootingSpeed);
 
-            if (!isAimWalkF && isAiming && Input.GetKey(KeyCode.W))
-            {
-                animator.SetBool(isAimWalk_FHash, true);
+                weaponVFX.GameObject().SetActive(true);
             }
-
-            if (!isAimWalkB && isAiming && Input.GetKey(KeyCode.S))
+            else
             {
-                animator.SetBool(isAimWalk_BHash, true);
-            }
-
-            if (!isAimWalkR && isAiming && Input.GetKey(KeyCode.D))
-            {
-                animator.SetBool(isAimWalk_RHash, true);
-            }
-
-            if (!isAimWalkL && isAiming && Input.GetKey(KeyCode.A))
-            {
-                animator.SetBool(isAimWalk_LHash, true);
-            }
-            
-            if (isAimWalkF && !Input.GetKey(KeyCode.W))
-            {
-                animator.SetBool(isAimWalk_FHash, false);
-            }
-            
-            if (isAimWalkB && !Input.GetKey(KeyCode.S))
-            {
-                animator.SetBool(isAimWalk_BHash, false);
-            }
-            
-            if (isAimWalkR && !Input.GetKey(KeyCode.D))
-            {
-                animator.SetBool(isAimWalk_RHash, false);
-            }
-            
-            if (isAimWalkL && !Input.GetKey(KeyCode.A))
-            {
-                animator.SetBool(isAimWalk_LHash, false);
+                if(shootingSpeed <= 1f)
+                    shootingSpeed += Time.deltaTime * shootingSpeedAcceleration;
+                animator.SetFloat(ShootingSpeedHash,shootingSpeed);
+                weaponVFX.GameObject().SetActive(true);
             }
         }
         else
         {
-            speed = 5f;
-
-            Vector3 movementDirection = new Vector3(h, 0, v);
-            movementDirection.Normalize();
-
-            transform.Translate(movementDirection * speed * Time.deltaTime, Space.World);
-
-            if (movementDirection != Vector3.zero)
+            if (isShootingWhileRun && !Input.GetKey(KeyCode.Mouse1))
             {
-                Quaternion toRotation = Quaternion.LookRotation(movementDirection, Vector3.up);
-
-                transform.rotation =
-                    Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
-            }
-
-            // Баг 1 при быстром нажатии и отпускании клавиши движения модель персонажа немного смещается в этом направлении,но не успевает развернуться в нужном направлении
-            if (isRotating)
-            {
-                transform.rotation =
-                    Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-
-                if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f)
-                {
-                    isRotating = false;
-                }
-            }
-            // Баг 1
-            
-            // Для плавности
-            if (inMovement)
-            {
-                Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
-                targetRotation = Quaternion.Slerp(transform.rotation, toRotation, Time.deltaTime * rotationSmoothness);
-            }
-
-            if (isAiming)
-            {
-                animator.SetBool(isAimingHash, false);
-            }
-
-            if (!isWalking && inMovement)
-            {
-                animator.SetBool(isWalkingHash, true);
+                isRightClickDown = false;
             }
             
-            OffRun(isWalking,inMovement);
-
-            if (!isRunning && (inMovement && runPressed))
-            {
-                animator.SetBool(isRunningHash, true);
-            }
+            if(shootingSpeed >= 0f)
+                shootingSpeed = 0;
+            animator.SetFloat(ShootingSpeedHash,shootingSpeed);
             
-            OffSprint(isRunning,inMovement,runPressed);
+            weaponVFX.GameObject().SetActive(false);
+            
+        }
 
-
-            if (!inMovement)
+        if (isRightClickDown)
+        {
+            speed = 2f;
+            TurnToMousePosition();
+            if (!isAimAnimActive)
             {
-                // Баг 1
-                switch (forwardPressed, backwardPressed, leftPressed, rightPressed)
-                {
-                    case (true, false, false, false):
-                        RotateInDirection("forward");
-                        break;
-                    case (false, true, false, false):
-                        RotateInDirection("backward");
-                        break;
-                    case (false, false, true, false):
-                        RotateInDirection("left");
-                        break;
-                    case (false, false, false, true):
-                        RotateInDirection("right");
-                        break;
-                }
-                // Баг 1
+                animator.SetBool(isAimHash, true);
+            }
+        }
+        else
+        {
+            speed = 10f;
+            TurnCharacterInMovementDirection();
+            if (isAimAnimActive)
+            {
+                animator.SetBool(isAimHash, false);
             }
         }
 
+        ResetAngularVelocity();
 
-        //transform.rotation.SetLookRotation(mousePosition);
+        // Баг 1 при быстром нажатии и отпускании клавиши движения модель персонажа немного смещается в этом направлении,но не успевает развернуться в нужном направлении
+        if (isRotating)
+        {
+            transform.rotation =
+                Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
-        // Vector3 difference = cam.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        // Debug.Log(difference);
-        // float rotate = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
-        // transform.rotation = Quaternion.Euler(rotate-90, rotate-90, rotate-90);
-        //transform.eulerAngles = new Vector3(0f, rotate-90);
+            if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f)
+            {
+                isRotating = false;
+            }
+        }
+        // Баг 1
+
+
+        if (!inMovement)
+        {
+            // Баг 1
+            switch (Input.GetKeyUp(KeyCode.W), Input.GetKeyUp(KeyCode.S), Input.GetKeyUp(KeyCode.A),
+                Input.GetKeyUp(KeyCode.D))
+            {
+                case (true, false, false, false):
+                    RotateInDirection("forward");
+                    break;
+                case (false, true, false, false):
+                    RotateInDirection("backward");
+                    break;
+                case (false, false, true, false):
+                    RotateInDirection("left");
+                    break;
+                case (false, false, false, true):
+                    RotateInDirection("right");
+                    break;
+            }
+            // Баг 1
+        }
+
 
         if (isDashing || isVaulting) return;
 
@@ -269,20 +220,12 @@ public class Movement : MonoBehaviour
         }
     }
 
-    private void OffRun(bool animState,bool movementState)
+    /*private void FixedUpdate()
     {
-        if (animState && !movementState)
-        {
-            animator.SetBool(isWalkingHash, false);
-        }
-    }
-    private void OffSprint(bool animState,bool movementState,bool runButtState)
-    {
-        if (animState && (!movementState || !runButtState))
-        {
-            animator.SetBool(isRunningHash, false);
-        }
-    }
+        rb.velocity = new Vector3(_movementVector.x * speed, rb.velocity.y,
+            _movementVector.z * speed);
+    }*/
+
 
     // Баг 1
     private void RotateToDirection(Vector3 direction)
@@ -323,6 +266,79 @@ public class Movement : MonoBehaviour
         RotateToDirection(rotateDirection);
     }
     // Баг 1
+
+
+    private void UpdateAnimatorVariables()
+    {
+        animator.SetFloat("MovementSpeed", _movementVector.magnitude);
+        //_playerAnimator.SetBool(IsAttacking, Input.GetKey(KeyCode.Mouse1));
+    }
+
+    private float maxMovementMagnitude = 1f;
+
+    private Vector3 CalculateMovementVector()
+    {
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+        Vector3 cameraR = _mainCamera.right;
+        Vector3 cameraF = _mainCamera.forward;
+
+        cameraR.y = 0;
+        cameraF.y = 0;
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            maxMovementMagnitude = 1.5f;
+        }
+        else
+        {
+            maxMovementMagnitude = 1f;
+        }
+
+        Vector3 movementVector = cameraF.normalized * v + cameraR.normalized * h;
+        movementVector = Vector3.ClampMagnitude(movementVector, maxMovementMagnitude);
+
+        // Плавное изменение магнитуды движения
+        float targetMagnitude = Input.GetKey(KeyCode.LeftShift) ? 1.5f : 1f;
+        float lerpedMagnitude = Mathf.MoveTowards(_movementVector.magnitude, targetMagnitude, 1.1f * Time.deltaTime);
+        movementVector = movementVector.normalized * lerpedMagnitude;
+
+        Vector3 relativeVector = transform.InverseTransformDirection(movementVector);
+        animator.SetFloat("Horizontal", relativeVector.x);
+        animator.SetFloat("Vertical", relativeVector.z);
+
+        return movementVector;
+    }
+
+    private void TurnCharacterInMovementDirection()
+    {
+        if (rb.velocity.magnitude / speed > 0.1f)
+            transform.rotation = Quaternion.Lerp(transform.rotation,
+                Quaternion.LookRotation(new Vector3(rb.velocity.x, 0, rb.velocity.z)),
+                LERP_SPEED * Time.deltaTime);
+    }
+
+    public void FootStep()
+    {
+        // Воспроизведение звука шагов
+    }
+
+    private void TurnToMousePosition()
+    {
+        Vector3 mousePosition = Input.mousePosition;
+        mousePosition.z =
+            cam.transform.position.y - transform.position.y; // Устанавливаем Z равным расстоянию от камеры до персонажа
+        mousePosition = cam.ScreenToWorldPoint(mousePosition);
+        // Поворот персонажа курсором мыши
+        Quaternion targetRotation = Quaternion.LookRotation(mousePosition - transform.position);
+        transform.rotation = Quaternion.Euler(0f, targetRotation.eulerAngles.y, 0f);
+    }
+
+    private void ResetAngularVelocity()
+    {
+        rb.angularVelocity = Vector3.zero;
+    }
 
     private bool Running() =>
         Input.GetKey(KeyCode.LeftShift) && direction != Vector3.zero; // && playerStamina.GetStaminaPoints() > 0;
