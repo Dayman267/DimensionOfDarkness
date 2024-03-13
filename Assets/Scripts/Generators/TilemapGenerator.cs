@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class TilemapGenerator : MonoBehaviour
 {
@@ -29,8 +25,7 @@ public class TilemapGenerator : MonoBehaviour
 
     public void Start()
     {
-        objectSize = (int)(gameObjectPrefabs[0].transform.GetChild(0).gameObject.transform.lossyScale.x *
-                     Mathf.Sqrt(gameObjectPrefabs[0].transform.childCount));
+        objectSize = (int)gameObjectPrefabs[0].GetComponent<Terrain>().terrainData.size.x;
         gameObjectsToSpawn = new int[width, height];
         SpawnFirstNineObjects();
     }
@@ -45,7 +40,7 @@ public class TilemapGenerator : MonoBehaviour
                 else gameObjectsToSpawn[x, y] = -1;
             }
         }
-
+        
         bool isFinished = false;
         for (int x = 1; x < width && !isFinished; x++)
         {
@@ -97,7 +92,7 @@ public class TilemapGenerator : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 if (gameObjectsToSpawn[x, y] == -1) continue;
-                GameObject prefab = Instantiate(
+                Instantiate(
                     gameObjectPrefabs[gameObjectsToSpawn[x, y]],
                     new Vector3(x-width/2, 0, y-height/2) * objectSize, 
                     Quaternion.identity, 

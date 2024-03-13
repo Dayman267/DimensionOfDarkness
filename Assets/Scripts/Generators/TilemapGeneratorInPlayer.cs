@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TilemapGeneratorInPlayer : MonoBehaviour
@@ -9,7 +7,7 @@ public class TilemapGeneratorInPlayer : MonoBehaviour
 
     private void OnTriggerEnter(Collider tile)
     {
-        if(tile.gameObject.CompareTag("Tilemap"))
+        if(tile.gameObject.CompareTag("Terrain"))
             OnEnteredIntoATile?.Invoke(tile.transform.position);
     }
 }
