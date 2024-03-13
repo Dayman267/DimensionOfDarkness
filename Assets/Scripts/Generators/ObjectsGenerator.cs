@@ -30,7 +30,7 @@ public class ObjectsGenerator : MonoBehaviour
             Instantiate(
                 gameObjectPrefabs[Random.Range(0, gameObjectPrefabs.Length)], 
                 position + terrain.transform.position,
-                Quaternion.identity,
+                Quaternion.Euler(0, Random.Range(0f, 360f), 0),
                 transform);
         }
         Destroy(this);
