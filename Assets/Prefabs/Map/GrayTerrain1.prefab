@@ -81,7 +81,7 @@ TerrainCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5020331940475715737}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: cba63df9827099d4fbce091c80f76bef, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -128,6 +128,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameObjectPrefabs:
+  - {fileID: 2062629817386256694, guid: c87acdfe60b3b1544ad6dd27d05064fa, type: 3}
+  - {fileID: 6865272344759708043, guid: d66a234a1bb3ed742b708806dd62d737, type: 3}
+  - {fileID: 6865272344759708043, guid: 67c0ddcf6aff0ea44be857c0d12686c7, type: 3}
+  - {fileID: 7572745643897728499, guid: b94f947b323472d409966e04588c9fad, type: 3}
   - {fileID: 6974467101497487031, guid: 77529a9805a83d848a6e2c2d00e97dd2, type: 3}
-  minObjectsPerTile: 20
-  maxObjectsPerTile: 20
+  - {fileID: 5496369607938120404, guid: 71c58b72eff5848b3b4e2897ef6fda92, type: 3}
+  - {fileID: 1286251527009528097, guid: 5d760205a8d1c40a3a26bf909fcc7730, type: 3}
+  - {fileID: 7709263511906827119, guid: 440ddc44bdac1465b9960626412666aa, type: 3}
+  - {fileID: 4801734822274315122, guid: 65f8d54e05e3740fb9bdbb766689ad5d, type: 3}
+  - {fileID: 7780972383534799365, guid: 319543aa0100a4996a997233179b9ac8, type: 3}
+  - {fileID: 6691480826944822800, guid: 17eccaaf4fc4b460bbfe80bacb3bc357, type: 3}
+  - {fileID: 7433901882389271155, guid: 259fea420f12e4e2a902923fda1f2b4b, type: 3}
+  - {fileID: 1000012968262300, guid: 30b99e7dc1382e346a7f9789de00de5e, type: 3}
+  - {fileID: 1000010869019282, guid: d7ba4fe833670a140b9b6085652f0e26, type: 3}
+  - {fileID: 1000011949594382, guid: 75fa8bf3a73ee6b4da0c7a2c6d3db6a1, type: 3}
+  - {fileID: 1000011696945378, guid: f94554303b4f7094ea5e12fe79985529, type: 3}
+  - {fileID: 1000013569322780, guid: 5d10ae558efe6a64d96e5b4d02ec6792, type: 3}
+  - {fileID: 1000011143488790, guid: a649302f8407dd9469e2c5b67b4a0674, type: 3}
+  - {fileID: 8049162677070700873, guid: c096903d83f9a0a4cb3a87ea3616cb47, type: 3}
+  - {fileID: 3381115593212513860, guid: 7c219905a0a4e2a468b0001696039a98, type: 3}
+  minObjectsPerTile: 15
+  maxObjectsPerTile: 25
