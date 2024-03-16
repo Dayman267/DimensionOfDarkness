@@ -114,14 +114,13 @@ public class PlayerController : MonoBehaviour
             ShootOff();
         }
 
-        if (!inMovement)
+        if (!inMovement && !isRightClickDown && !isLeftClickDown)
         {
             ListenWASDKeyUp();
-        }
-
-        if (isRotating)
-        {
-            RotateTowardsTarget();
+            if (isRotating)
+            {
+                RotateTowardsTarget();
+            }
         }
 
 
