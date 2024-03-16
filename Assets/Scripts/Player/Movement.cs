@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Movement : MonoBehaviour
@@ -12,6 +10,10 @@ public class Movement : MonoBehaviour
     [SerializeField] private float speed = 5f;
     [SerializeField] private float speedIncreaseFactor = 1.5f;
     [SerializeField] private float spendPointsWhenRunning = 0.3f;
+    
+    // [SerializeField] private float maxSlopeAngle = 45f; // Максимальный угол наклона поверхности
+    // [SerializeField] private float maxSlopeDistance = 0.2f; // Максимальное расстояние для определения поверхности
+    // [SerializeField] private LayerMask terrainLayer; // Слой, на котором находится террейн
 
     private bool isDashing;
     [Header("Dashing")]
@@ -56,6 +58,14 @@ public class Movement : MonoBehaviour
 
         direction = new Vector3(h, 0, v);
         direction.Normalize();
+        
+        // float terrainSlope = CalculateTerrainSlope();
+        // if (Mathf.Abs(terrainSlope) > maxSlopeAngle)
+        // {
+        //     direction = Vector3.zero;
+        // }
+        // float speedMultiplier = 1f - Mathf.Abs(terrainSlope) / maxSlopeAngle;
+        // float finalSpeed = speed * speedMultiplier;
         
         Vector3 mousePosition = Input.mousePosition;
         mousePosition.z = cam.transform.position.y - transform.position.y; // Устанавливаем Z равным расстоянию от камеры до персонажа
@@ -118,4 +128,16 @@ public class Movement : MonoBehaviour
     //
     // private bool Dashing() => 
     //     Input.GetKeyDown(KeyCode.Space) && direction != Vector2.zero && playerStamina.GetStaminaPoints() > 0;
+    
+    // float CalculateTerrainSlope()
+    // {
+    //     RaycastHit hit;
+    //     // Пускаем луч вниз, чтобы определить угол наклона террейна
+    //     if (Physics.Raycast(transform.position, Vector3.down, out hit, maxSlopeDistance, terrainLayer))
+    //     {
+    //         float slopeAngle = Vector3.Angle(hit.normal, Vector3.up);
+    //         return slopeAngle;
+    //     }
+    //     return 0f;
+    // }
 }
