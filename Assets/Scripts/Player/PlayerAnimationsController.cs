@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerAnimationsController : MonoBehaviour
@@ -14,15 +10,20 @@ public class PlayerAnimationsController : MonoBehaviour
     private int moveSpeedAnimHash;
     private int aimAnimHash;
     private int shootingSpeedAnimHash;
+    private int horizontalAnimHash;
+    private int verticalAnimHash;
     
     float shootingSpeed = 0.0f;
     
     void Start()
     {
-        Debug.Log(_animator == null ? "null" : "great");
+        _animator = GetComponent<Animator>();
         moveSpeedAnimHash = Animator.StringToHash("MovementSpeed");
         aimAnimHash = Animator.StringToHash("isAim");
         shootingSpeedAnimHash = Animator.StringToHash("ShootingSpeed");
+        horizontalAnimHash = Animator.StringToHash("Horizontal");
+        verticalAnimHash = Animator.StringToHash("Vertical");
+        Debug.Log(_animator == null ? "null" : "isAnimator");
     }
     
     private void OnEnable()
@@ -32,7 +33,7 @@ public class PlayerAnimationsController : MonoBehaviour
         PlayerController.OnAimAnimationDiasble += DisableAimAnimationHandler;
         PlayerController.OnShootAnimationEnable += EnableShootAnimationHandler;
         PlayerController.OnShootAnimationDiasble += DisableShootAnimationHandler;
-        PlayerController.OnSendAnimator += GetAnimator;
+        PlayerController.OnSend_X_Z_Pos += Get_X_Z_PosHandler;
     }
 
     private void OnDisable()
@@ -42,7 +43,13 @@ public class PlayerAnimationsController : MonoBehaviour
         PlayerController.OnAimAnimationDiasble -= DisableAimAnimationHandler;
         PlayerController.OnShootAnimationEnable -= EnableShootAnimationHandler;
         PlayerController.OnShootAnimationDiasble -= DisableShootAnimationHandler;
-        PlayerController.OnSendAnimator -= GetAnimator;
+        PlayerController.OnSend_X_Z_Pos -= Get_X_Z_PosHandler;
+    }
+    
+    private void Get_X_Z_PosHandler(float x, float z)
+    {
+        _animator.SetFloat(horizontalAnimHash, x);
+        _animator.SetFloat(verticalAnimHash, z);
     }
 
     private void EnableAimAnimationHandler()
@@ -84,10 +91,5 @@ public class PlayerAnimationsController : MonoBehaviour
     private bool IsAnimActive(int parameterHash)
     {
         return _animator.GetBool(parameterHash);
-    }
-
-    private void GetAnimator(Animator animator)
-    {
-        _animator = animator;
     }
 }

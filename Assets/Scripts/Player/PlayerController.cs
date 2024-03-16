@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
 public class PlayerController : MonoBehaviour
@@ -51,7 +48,7 @@ public class PlayerController : MonoBehaviour
     public static event Action OnAimAnimationDiasble;
     public static event Action OnShootAnimationEnable;
     public static event Action OnShootAnimationDiasble;
-    public static event Action<Animator> OnSendAnimator;
+    public static event Action<float,float> OnSend_X_Z_Pos ;
 
     //private PlayerStamina playerStamina;
 
@@ -60,15 +57,12 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         cam = Camera.main;
-        animator = GetComponent<Animator>();
 
         playerInput = GetComponent<PlayerInput>();
         playerActions = new PlayerActions();
         playerActions.Gameplay.Enable();
         //playerActions.Gameplay.Aim.performed += Aim;
-
-        if (OnSendAnimator != null)
-            OnSendAnimator.Invoke(animator);
+        
     }
 
     private void Start()
@@ -91,7 +85,6 @@ public class PlayerController : MonoBehaviour
     bool isLeftClickDown;
     bool isLShiftDown;
     bool isShootingWhileRun;
-    float shootingSpeed = 0.0f;
 
     void Update()
     {
@@ -124,15 +117,13 @@ public class PlayerController : MonoBehaviour
 
         if (!inMovement)
         {
-           ListenWASDKeyUp();
+            ListenWASDKeyUp();
         }
 
         if (isRotating)
         {
             RotateTowardsTarget();
         }
-
-
 
 
         if (isDashing || isVaulting) return;
@@ -168,19 +159,19 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector3(_movementVector.x * speed, rb.velocity.y,
             _movementVector.z * speed);
     }*/
-    
-    
+
+
     private void RotateTowardsTarget()
     {
         transform.rotation =
-                Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
-            if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f)
-            {
-                isRotating = false;
-            }
+        if (Quaternion.Angle(transform.rotation, targetRotation) < 0.1f)
+        {
+            isRotating = false;
+        }
     }
-    
+
     private void ListenWASDKeyUp()
     {
         // Баг 1    
@@ -204,7 +195,7 @@ public class PlayerController : MonoBehaviour
         }
         // Баг 1
     }
-    
+
     // Баг 1
     private void RotateToDirection(Vector3 direction)
     {
@@ -215,13 +206,10 @@ public class PlayerController : MonoBehaviour
         }
     }
     // Баг 1
-    
+
     private void MoveAnimEnable()
     {
-        if (OnMoveAnimation != null)
-        {
-            OnMoveAnimation.Invoke(_movementVector.magnitude);
-        }
+        OnMoveAnimation?.Invoke(_movementVector.magnitude);
     }
 
     private float maxMovementMagnitude = 1f;
@@ -249,13 +237,12 @@ public class PlayerController : MonoBehaviour
         Vector3 movementVector = cameraF.normalized * v + cameraR.normalized * h;
         movementVector = Vector3.ClampMagnitude(movementVector, maxMovementMagnitude);
 
-        float targetMagnitude = Input.GetKey(KeyCode.LeftShift) ? 1.5f : 1f;
+        float targetMagnitude = isLShiftDown ? 1.5f : 1f;
         float lerpedMagnitude = Mathf.MoveTowards(_movementVector.magnitude, targetMagnitude, 1.1f * Time.deltaTime);
         movementVector = movementVector.normalized * lerpedMagnitude;
 
         Vector3 relativeVector = transform.InverseTransformDirection(movementVector);
-        animator.SetFloat("Horizontal", relativeVector.x);
-        animator.SetFloat("Vertical", relativeVector.z);
+        OnSend_X_Z_Pos?.Invoke(relativeVector.x,relativeVector.z);
 
         return movementVector;
     }
@@ -329,8 +316,7 @@ public class PlayerController : MonoBehaviour
             AimOn();
         }
 
-        if (OnShootAnimationEnable != null)
-            OnShootAnimationEnable.Invoke();
+        OnShootAnimationEnable?.Invoke();
         weaponVFX.GameObject().SetActive(true);
     }
 
@@ -342,8 +328,8 @@ public class PlayerController : MonoBehaviour
             isShootingWhileRun = false;
         }
 
-        if (OnShootAnimationDiasble != null)
-            OnShootAnimationDiasble.Invoke();
+
+        OnShootAnimationDiasble?.Invoke();
         weaponVFX.GameObject().SetActive(false);
     }
 
@@ -351,8 +337,7 @@ public class PlayerController : MonoBehaviour
     {
         TurnToMousePosition();
         speed = 2f;
-        if (OnAimAnimationEnable != null)
-            OnAimAnimationEnable.Invoke();
+        OnAimAnimationEnable?.Invoke();
     }
 
     private void AimOff()
@@ -360,8 +345,7 @@ public class PlayerController : MonoBehaviour
         speed = 10f;
         TurnCharacterInMovementDirection();
 
-        if (OnAimAnimationDiasble != null)
-            OnAimAnimationDiasble.Invoke();
+        OnAimAnimationDiasble?.Invoke();
     }
 
     private void OnEnable()
