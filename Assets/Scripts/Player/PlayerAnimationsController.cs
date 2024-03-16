@@ -17,7 +17,7 @@ public class PlayerAnimationsController : MonoBehaviour
     
     void Start()
     {
-        _animator = GetComponent<Animator>();
+        _animator = GetComponentInChildren<Animator>();
         moveSpeedAnimHash = Animator.StringToHash("MovementSpeed");
         aimAnimHash = Animator.StringToHash("isAim");
         shootingSpeedAnimHash = Animator.StringToHash("ShootingSpeed");

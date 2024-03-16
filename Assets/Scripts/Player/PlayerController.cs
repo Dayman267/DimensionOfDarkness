@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
     public static event Action OnAimAnimationDiasble;
     public static event Action OnShootAnimationEnable;
     public static event Action OnShootAnimationDiasble;
-    public static event Action<float,float> OnSend_X_Z_Pos ;
+    public static event Action<float, float> OnSend_X_Z_Pos;
 
     //private PlayerStamina playerStamina;
 
@@ -62,7 +62,6 @@ public class PlayerController : MonoBehaviour
         playerActions = new PlayerActions();
         playerActions.Gameplay.Enable();
         //playerActions.Gameplay.Aim.performed += Aim;
-        
     }
 
     private void Start()
@@ -242,7 +241,7 @@ public class PlayerController : MonoBehaviour
         movementVector = movementVector.normalized * lerpedMagnitude;
 
         Vector3 relativeVector = transform.InverseTransformDirection(movementVector);
-        OnSend_X_Z_Pos?.Invoke(relativeVector.x,relativeVector.z);
+        OnSend_X_Z_Pos?.Invoke(relativeVector.x, relativeVector.z);
 
         return movementVector;
     }
