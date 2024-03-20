@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5641879504182077388}
   - component: {fileID: 7102080078160398635}
   - component: {fileID: 6408290864929845092}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SwampTerrain1
   m_TagString: Terrain
   m_Icon: {fileID: 0}
@@ -32,8 +32,7 @@ Transform:
   m_LocalPosition: {x: -50, y: 0, z: -50}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 185158510946122939}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!218 &1919619799428612335
@@ -146,69 +145,3 @@ MonoBehaviour:
   - {fileID: 1000011143488790, guid: a649302f8407dd9469e2c5b67b4a0674, type: 3}
   minObjectsPerTile: 15
   maxObjectsPerTile: 25
---- !u!1001 &225312194987687353
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 2842376139389050037}
-    m_Modifications:
-    - target: {fileID: 122064002046525698, guid: 39146af1e8afa934181c425340af4b7e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 75.82078
-      objectReference: {fileID: 0}
-    - target: {fileID: 122064002046525698, guid: 39146af1e8afa934181c425340af4b7e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 5.1252747
-      objectReference: {fileID: 0}
-    - target: {fileID: 122064002046525698, guid: 39146af1e8afa934181c425340af4b7e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 78.31502
-      objectReference: {fileID: 0}
-    - target: {fileID: 122064002046525698, guid: 39146af1e8afa934181c425340af4b7e, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 122064002046525698, guid: 39146af1e8afa934181c425340af4b7e, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 122064002046525698, guid: 39146af1e8afa934181c425340af4b7e, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 122064002046525698, guid: 39146af1e8afa934181c425340af4b7e, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 122064002046525698, guid: 39146af1e8afa934181c425340af4b7e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 122064002046525698, guid: 39146af1e8afa934181c425340af4b7e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 122064002046525698, guid: 39146af1e8afa934181c425340af4b7e, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 124164899951436184, guid: 39146af1e8afa934181c425340af4b7e, type: 3}
-      propertyPath: m_Name
-      value: Crystalsv03 (1) Variant
-      objectReference: {fileID: 0}
-    - target: {fileID: 124738342209427568, guid: 39146af1e8afa934181c425340af4b7e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 39146af1e8afa934181c425340af4b7e, type: 3}
---- !u!4 &185158510946122939 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 122064002046525698, guid: 39146af1e8afa934181c425340af4b7e, type: 3}
-  m_PrefabInstance: {fileID: 225312194987687353}
-  m_PrefabAsset: {fileID: 0}
