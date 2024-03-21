@@ -3,15 +3,19 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
+[DisallowMultipleComponent]
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Transform _mainCamera;
     [SerializeField] private Object weaponVFX;
+    [SerializeField] private AudioSource audio;
     private Camera cam;
     private Vector3 direction;
     private Rigidbody rb;
     private const float LERP_SPEED = 9;
+
 
     private Animator animator;
     private Vector3 _movementVector;
@@ -40,8 +44,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float vaultTime = 0.2f;
     [SerializeField] private float stayVaultRadius = 0.6f;
     [SerializeField] private float spendPointsWhenVaulting = 20f;
-
-    [SerializeField] private LayerMask mask;
+    
+    //[SerializeField] private LayerMask mask;
+    [SerializeField] private PlayerGunSelector GunSelector;
 
     public static event Action<float> OnMoveAnimation;
     public static event Action OnAimAnimationEnable;
@@ -107,11 +112,13 @@ public class PlayerController : MonoBehaviour
 
         if (isLeftClickDown)
         {
-            ShootOn(inMovement);
+            Debug.Log("isActive");
+            GunSelector.ActiveGun.Shoot();
+            ShootAnimOn(inMovement);
         }
         else
         {
-            ShootOff();
+            ShootAnimOff();
         }
 
         if (!inMovement && !isRightClickDown && !isLeftClickDown)
@@ -121,6 +128,11 @@ public class PlayerController : MonoBehaviour
             {
                 RotateTowardsTarget();
             }
+        }
+
+        if (inMovement)
+        {
+            FootStep();
         }
 
 
@@ -236,7 +248,7 @@ public class PlayerController : MonoBehaviour
         movementVector = Vector3.ClampMagnitude(movementVector, maxMovementMagnitude);
 
         float targetMagnitude = isLShiftDown ? 1.5f : 1f;
-        float lerpedMagnitude = Mathf.MoveTowards(_movementVector.magnitude, targetMagnitude, 1.1f * Time.deltaTime);
+        float lerpedMagnitude = Mathf.MoveTowards(_movementVector.magnitude, targetMagnitude, 5f * Time.deltaTime);
         movementVector = movementVector.normalized * lerpedMagnitude;
 
         Vector3 relativeVector = transform.InverseTransformDirection(movementVector);
@@ -253,9 +265,45 @@ public class PlayerController : MonoBehaviour
                 LERP_SPEED * Time.deltaTime);
     }
 
+    public void Shooting()
+    {
+        //  if(!audio.isPlaying) audio.Play();
+    }
+
+
+    [SerializeField] AudioClip[] stepSounds; //So the shots don't sound the same every time
+    private int currentIndex = 0;
+    
     public void FootStep()
     {
-        // Воспроизведение звука шагов
+        if (stepSounds.Length == 0)
+        {
+            Debug.LogWarning("No step sounds available!");
+            return;
+        }
+        
+        int n = Random.Range(0, stepSounds.Length);
+
+
+        //audio.clip = stepSounds[n];
+        audio.pitch = 0.67f;
+        //Play the sound once
+        if (!audio.isPlaying)
+        {
+            audio.PlayOneShot(audio.clip);
+            
+            // Play the current sound from the array
+            audio.clip = stepSounds[currentIndex];
+            audio.Play();
+
+            // Move to the next sound in the array
+            currentIndex = (currentIndex + 1) % stepSounds.Length;
+            /*stepSounds[n] = stepSounds[0];
+            stepSounds[0] = audio.clip;*/
+        }
+
+
+        // move picked sound to index 0 so it's not picked next time
     }
 
     private void TurnToMousePosition()
@@ -302,7 +350,7 @@ public class PlayerController : MonoBehaviour
         Move(direction, speed * speedIncreaseFactor);
     }
 
-    private void ShootOn(bool isMove)
+    private void ShootAnimOn(bool isMove)
     {
         if (isMove && !isRightClickDown)
         {
@@ -314,11 +362,12 @@ public class PlayerController : MonoBehaviour
             AimOn();
         }
 
+        Shooting();
         OnShootAnimationEnable?.Invoke();
-        weaponVFX.GameObject().SetActive(true);
+        //weaponVFX.GameObject().SetActive(true);
     }
 
-    private void ShootOff()
+    private void ShootAnimOff()
     {
         if (isShootingWhileRun && !isRightClickDown)
         {
@@ -328,7 +377,7 @@ public class PlayerController : MonoBehaviour
 
 
         OnShootAnimationDiasble?.Invoke();
-        weaponVFX.GameObject().SetActive(false);
+       // weaponVFX.GameObject().SetActive(false);
     }
 
     private void AimOn()
