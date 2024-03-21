@@ -46,7 +46,8 @@ public class GunSO : ScriptableObject
         {
             LastShootTime = Time.time;
             ShootSystem.Play();
-            Vector3 shootDirection = ShootSystem.transform.forward
+           
+            /*Vector3 shootDirection = ShootSystem.transform.forward
                                      + new Vector3(
                                          Random.Range(
                                              -ShootConfig.Spread.x,
@@ -61,7 +62,10 @@ public class GunSO : ScriptableObject
                                              ShootConfig.Spread.z
                                          )
                                      );
-            shootDirection.Normalize();
+            shootDirection.Normalize();*/
+
+            Vector3 spreadAmount = ShootConfig.GetSpread();
+            Vector3 shootDirection = Model.transform.parent.forward + spreadAmount;
 
             if (Physics.Raycast(
                     ShootSystem.transform.position,
