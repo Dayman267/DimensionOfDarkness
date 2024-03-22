@@ -44,9 +44,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float vaultTime = 0.2f;
     [SerializeField] private float stayVaultRadius = 0.6f;
     [SerializeField] private float spendPointsWhenVaulting = 20f;
-    
+
     //[SerializeField] private LayerMask mask;
     [SerializeField] private PlayerGunSelector GunSelector;
+    [SerializeField] private bool AutoReload = true;
+    private bool isReloading = false;
 
     public static event Action<float> OnMoveAnimation;
     public static event Action OnAimAnimationEnable;
@@ -54,6 +56,8 @@ public class PlayerController : MonoBehaviour
     public static event Action OnShootAnimationEnable;
     public static event Action OnShootAnimationDiasble;
     public static event Action<float, float> OnSend_X_Z_Pos;
+
+    public static event Action OnReloadAnimation; 
 
     //private PlayerStamina playerStamina;
 
@@ -89,6 +93,7 @@ public class PlayerController : MonoBehaviour
     bool isLeftClickDown;
     bool isLShiftDown;
     bool isShootingWhileRun;
+    bool isRKeyDown;
 
     void Update()
     {
@@ -110,15 +115,25 @@ public class PlayerController : MonoBehaviour
                 AimOff();
         }
 
+        if (GunSelector.ActiveGun != null)
+        {
+            GunSelector.ActiveGun.Tick(isLeftClickDown);
+        }
+
         if (isLeftClickDown)
         {
-            Debug.Log("isActive");
-            GunSelector.ActiveGun.Shoot();
             ShootAnimOn(inMovement);
         }
         else
         {
             ShootAnimOff();
+        }
+
+        if (ShouldManualReload() || ShouldAutoReload())
+        {
+            Debug.Log("Work!!!!");
+            isReloading = true;
+            OnReloadAnimation?.Invoke();
         }
 
         if (!inMovement && !isRightClickDown && !isLeftClickDown)
@@ -170,6 +185,24 @@ public class PlayerController : MonoBehaviour
             _movementVector.z * speed);
     }*/
 
+    private void EndReload()
+    {
+        GunSelector.ActiveGun.EndReload();
+        isReloading = false;
+    }
+    
+    private bool ShouldManualReload()
+    {
+        return !isReloading && isRKeyDown && GunSelector.ActiveGun.CanReload();
+    }
+
+    private bool ShouldAutoReload()
+    {
+        return !isReloading 
+               && AutoReload
+               && GunSelector.ActiveGun.AmmoConfig.CurrentClipAmmo == 0
+               && GunSelector.ActiveGun.CanReload();
+    }
 
     private void RotateTowardsTarget()
     {
@@ -273,7 +306,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] AudioClip[] stepSounds; //So the shots don't sound the same every time
     private int currentIndex = 0;
-    
+
     public void FootStep()
     {
         if (stepSounds.Length == 0)
@@ -281,7 +314,7 @@ public class PlayerController : MonoBehaviour
             Debug.LogWarning("No step sounds available!");
             return;
         }
-        
+
         int n = Random.Range(0, stepSounds.Length);
 
 
@@ -291,7 +324,7 @@ public class PlayerController : MonoBehaviour
         if (!audio.isPlaying)
         {
             audio.PlayOneShot(audio.clip);
-            
+
             // Play the current sound from the array
             audio.clip = stepSounds[currentIndex];
             audio.Play();
@@ -377,7 +410,7 @@ public class PlayerController : MonoBehaviour
 
 
         OnShootAnimationDiasble?.Invoke();
-       // weaponVFX.GameObject().SetActive(false);
+        // weaponVFX.GameObject().SetActive(false);
     }
 
     private void AimOn()
@@ -406,6 +439,9 @@ public class PlayerController : MonoBehaviour
 
         playerActions.Gameplay.Sprint.performed += ctx => isLShiftDown = true;
         playerActions.Gameplay.Sprint.canceled += ctx => isLShiftDown = false;
+        
+        playerActions.Gameplay.WeaponReload.performed += ctx => isRKeyDown = true;
+        playerActions.Gameplay.WeaponReload.canceled += ctx => isRKeyDown = false;
     }
 
     private void OnDisable()
@@ -419,5 +455,8 @@ public class PlayerController : MonoBehaviour
 
         playerActions.Gameplay.Sprint.performed += ctx => isLShiftDown = true;
         playerActions.Gameplay.Sprint.canceled += ctx => isLShiftDown = false;
+        
+        playerActions.Gameplay.WeaponReload.performed -= ctx => isRKeyDown = true;
+        playerActions.Gameplay.WeaponReload.canceled -= ctx => isRKeyDown = false;
     }
 }
