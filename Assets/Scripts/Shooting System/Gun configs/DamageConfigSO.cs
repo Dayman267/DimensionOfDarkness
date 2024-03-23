@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 [CreateAssetMenu(fileName = "Damage Config", menuName = "Guns/Damage Config", order = 1)]

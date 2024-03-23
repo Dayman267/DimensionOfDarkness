@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Transform _mainCamera;
     [SerializeField] private Object weaponVFX;
-    [SerializeField] private AudioSource audio;
     private Camera cam;
     private Vector3 direction;
     private Rigidbody rb;
@@ -144,13 +143,7 @@ public class PlayerController : MonoBehaviour
                 RotateTowardsTarget();
             }
         }
-
-        if (inMovement)
-        {
-            FootStep();
-        }
-
-
+        
         if (isDashing || isVaulting) return;
 
         // if (Vaulting())
@@ -297,48 +290,7 @@ public class PlayerController : MonoBehaviour
                 Quaternion.LookRotation(new Vector3(rb.velocity.x, 0, rb.velocity.z)),
                 LERP_SPEED * Time.deltaTime);
     }
-
-    public void Shooting()
-    {
-        //  if(!audio.isPlaying) audio.Play();
-    }
-
-
-    [SerializeField] AudioClip[] stepSounds; //So the shots don't sound the same every time
-    private int currentIndex = 0;
-
-    public void FootStep()
-    {
-        if (stepSounds.Length == 0)
-        {
-            Debug.LogWarning("No step sounds available!");
-            return;
-        }
-
-        int n = Random.Range(0, stepSounds.Length);
-
-
-        //audio.clip = stepSounds[n];
-        audio.pitch = 0.67f;
-        //Play the sound once
-        if (!audio.isPlaying)
-        {
-            audio.PlayOneShot(audio.clip);
-
-            // Play the current sound from the array
-            audio.clip = stepSounds[currentIndex];
-            audio.Play();
-
-            // Move to the next sound in the array
-            currentIndex = (currentIndex + 1) % stepSounds.Length;
-            /*stepSounds[n] = stepSounds[0];
-            stepSounds[0] = audio.clip;*/
-        }
-
-
-        // move picked sound to index 0 so it's not picked next time
-    }
-
+    
     private void TurnToMousePosition()
     {
         Vector3 mousePosition = Input.mousePosition;
@@ -394,8 +346,7 @@ public class PlayerController : MonoBehaviour
         {
             AimOn();
         }
-
-        Shooting();
+        
         OnShootAnimationEnable?.Invoke();
         //weaponVFX.GameObject().SetActive(true);
     }

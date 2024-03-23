@@ -214,12 +214,12 @@ public class GunSO : ScriptableObject
                 damageable.TakeDamage(DamageConfig.GetDamage(distance));
             }
         }
-
-        yield return new WaitForSeconds(TrailConfig.Duration);
+        
         yield return null;
         instance.emitting = false;
         instance.gameObject.SetActive(false);
-        TrailPool.Release(instance);
+        Destroy(instance.gameObject);
+        //TrailPool.Release(instance);
     }
 
     private TrailRenderer CreateTrail()

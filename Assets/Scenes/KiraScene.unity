@@ -351,7 +351,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &357151552
 MeshRenderer:
@@ -413,7 +413,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.1, y: 7.22, z: 4.55}
-  m_LocalScale: {x: 1, y: 2, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1145,7 +1145,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -1160,7 +1160,7 @@ AudioSource:
   rolloffMode: 0
   BypassEffects: 0
   BypassListenerEffects: 0
-  BypassReverbZones: 0
+  BypassReverbZones: 1
   rolloffCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -1269,6 +1269,25 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1002827528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1002827488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9722f4cc9a107746879638c892dea31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audio: {fileID: 1002827504}
+  stepSounds:
+  - {fileID: 8300000, guid: 904e60474f216ac4dac4f44efe86a1cf, type: 3}
+  - {fileID: 8300000, guid: 44ec06cb62b833443b4a0629dad19de6, type: 3}
+  - {fileID: 8300000, guid: b65eb5b1c73d18e46bee625051553052, type: 3}
+  - {fileID: 8300000, guid: e3c23b0ac3b852542a151002f50683cb, type: 3}
+  - {fileID: 8300000, guid: f500b779f4866944882201039e4dd4d4, type: 3}
 --- !u!1 &1034488286
 GameObject:
   m_ObjectHideFlags: 0
@@ -1434,7 +1453,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mainCamera: {fileID: 963194228}
   weaponVFX: {fileID: 0}
-  audio: {fileID: 0}
   shootingSpeedAcceleration: 0.5
   speed: 5
   rotationSpeed: 500
@@ -1449,7 +1467,6 @@ MonoBehaviour:
   spendPointsWhenVaulting: 20
   GunSelector: {fileID: 0}
   AutoReload: 1
-  stepSounds: []
 --- !u!114 &1192243909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2216,6 +2233,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5854484438722371457, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1002827520}
+    - targetCorrespondingSourceObject: {fileID: 5854484438722371457, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1002827528}
   m_SourcePrefab: {fileID: 100100000, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
