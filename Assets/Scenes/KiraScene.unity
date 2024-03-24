@@ -2049,6 +2049,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 692100614054315188, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
+      propertyPath: AutoReload
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 692100614054315188, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
       propertyPath: GunSelector
       value: 
       objectReference: {fileID: 1002827512}

@@ -21,9 +21,11 @@ public class GunSO : ScriptableObject
     public ShootConfigurationSO ShootConfig;
     public TrailConfigSO TrailConfig;
     public AmmoConfigSO AmmoConfig;
+    public AudioConfigSO AudioConfig;
 
     private MonoBehaviour ActiveMonoBehaviour;
     private GameObject Model;
+    private AudioSource ShootingAudioSource;
 
     private float LastShootTime;
     private float InitialClickTime;
@@ -44,10 +46,10 @@ public class GunSO : ScriptableObject
         Model.transform.localRotation = Quaternion.Euler(SpawnRotation);
 
         ShootSystem = Model.GetComponentInChildren<ParticleSystem>();
-        Debug.Log(ShootSystem.name);
+        ShootingAudioSource = Model.GetComponent<AudioSource>();
     }
 
-    public void Shoot()
+    public void TryToShoot()
     {
         /*if (Time.time > ShootConfig.FireRate + LastShootTime)
         {
@@ -101,8 +103,18 @@ public class GunSO : ScriptableObject
 
         if (Time.time > ShootConfig.FireRate + LastShootTime)
         {
+            
+
             LastShootTime = Time.time;
+            
+            if (AmmoConfig.CurrentClipAmmo == 0)
+            {
+                AudioConfig.PlayOutOfAmmoClip(ShootingAudioSource);
+                return;
+            }
+            
             ShootSystem.Play();
+            AudioConfig.PlayShootingClip(ShootingAudioSource,AmmoConfig.CurrentClipAmmo == 1);
 
             Vector3 spreadAmount = ShootConfig.GetSpread(Time.time - InitialClickTime);
             //Model.transform.forward += Model.transform.TransformDirection(spreadAmount);
@@ -152,21 +164,17 @@ public class GunSO : ScriptableObject
         AmmoConfig.Reload();
     }
     
+    public void StartReloading()
+    {
+        AudioConfig.PlayReloadClip(ShootingAudioSource);
+    }
+    
     public void Tick(bool WantsToShoot)
     {
-        /*Model.transform.localRotation = Quaternion.Lerp(
-            Model.transform.localRotation,
-            Quaternion.Euler(SpawnRotation),
-            Time.deltaTime * ShootConfig.RecoilRecoverySpeed
-            );*/
-        
         if (WantsToShoot)
         {
             LastFrameWantedToShoot = true;
-            if (AmmoConfig.CurrentClipAmmo > 0)
-            {
-                Shoot();
-            }
+            TryToShoot();
         }
         else if (!WantsToShoot && LastFrameWantedToShoot)
         {
@@ -237,6 +245,7 @@ public class GunSO : ScriptableObject
 
         return trail;
     }
+
 
     
 }

@@ -130,7 +130,7 @@ public class PlayerController : MonoBehaviour
 
         if (ShouldManualReload() || ShouldAutoReload())
         {
-            Debug.Log("Work!!!!");
+            GunSelector.ActiveGun.StartReloading();
             isReloading = true;
             OnReloadAnimation?.Invoke();
         }
