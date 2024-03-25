@@ -33,6 +33,7 @@ public class GunSO : ScriptableObject
     private bool LastFrameWantedToShoot;
 
     private ParticleSystem ShootSystem;
+    private GameObject ShootingStartPoint;
     private ObjectPool<TrailRenderer> TrailPool;
     private ObjectPool<Bullet> BulletPool;
 
@@ -52,6 +53,7 @@ public class GunSO : ScriptableObject
 
         ShootSystem = Model.GetComponentInChildren<ParticleSystem>();
         ShootingAudioSource = Model.GetComponent<AudioSource>();
+        ShootingStartPoint = GameObject.FindWithTag("ShootingStartPoint");
     }
 
     public void TryToShoot()
@@ -88,7 +90,7 @@ public class GunSO : ScriptableObject
             //Quaternion rotation = Quaternion.Euler(spreadAmount);
             //Model.transform.rotation *= rotation;
             
-            Vector3 shootDirection = ShootSystem.transform.forward + spreadAmount;
+            Vector3 shootDirection = ShootingStartPoint.transform.forward + spreadAmount;
 
             AmmoConfig.CurrentClipAmmo--;
 
@@ -100,8 +102,6 @@ public class GunSO : ScriptableObject
             {
                 DoProjectileShoot(shootDirection);
             }
-            
-            
         }
     }
 

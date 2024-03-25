@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Objects
   - Terrain
+  - ShootingStartPoint
   layers:
   - Default
   - TransparentFX

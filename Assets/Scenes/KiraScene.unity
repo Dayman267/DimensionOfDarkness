@@ -681,6 +681,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &444369609
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 444369610}
+  m_Layer: 0
+  m_Name: ShootingStartPoint
+  m_TagString: ShootingStartPoint
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &444369610
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 444369609}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.244, y: 1.546, z: 0.694}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5948187983281849433}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &674420296
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2226,7 +2257,10 @@ PrefabInstance:
     - {fileID: 9025653566225828088, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
     - {fileID: -5340245893466586478, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
     - {fileID: 966155449074260952, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3526514594408611149, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 444369610}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5854484438722371457, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
       insertIndex: -1
@@ -2241,6 +2275,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1002827528}
   m_SourcePrefab: {fileID: 100100000, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
+--- !u!4 &5948187983281849433 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3526514594408611149, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
+  m_PrefabInstance: {fileID: 5948187983281849432}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
