@@ -34,12 +34,17 @@ public class GunSO : ScriptableObject
 
     private ParticleSystem ShootSystem;
     private ObjectPool<TrailRenderer> TrailPool;
+    private ObjectPool<Bullet> BulletPool;
 
     public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour)
     {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
         LastShootTime = 0; // in editor this will not be properly reset, in build it`s fine
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
+        if (!ShootConfig.IsHitScan)
+        {
+            BulletPool = new ObjectPool<Bullet>(CreateBullet);
+        }
         Model = Instantiate(ModelPrefab);
         Model.transform.SetParent(Parent, false);
         Model.transform.localPosition = SpawnPoint;
@@ -51,44 +56,6 @@ public class GunSO : ScriptableObject
 
     public void TryToShoot()
     {
-        /*if (Time.time > ShootConfig.FireRate + LastShootTime)
-        {
-            LastShootTime = Time.time;
-            ShootSystem.Play();
-
-            Vector3 spreadAmount = ShootConfig.GetSpread(Time.time - InitialClickTime);
-            Quaternion spreadRotation = Quaternion.Euler(spreadAmount);
-            Model.transform.rotation *= spreadRotation;
-
-            Vector3 shootDirection = Model.transform.forward;
-
-            if (Physics.Raycast(
-                    ShootSystem.transform.position,
-                    shootDirection,
-                    out RaycastHit hit,
-                    float.MaxValue,
-                    ShootConfig.HitMask
-                ))
-            {
-                ActiveMonoBehaviour.StartCoroutine(
-                    PlayTrail(
-                        ShootSystem.transform.position,
-                        hit.point,
-                        hit
-                    )
-                );
-            }
-            else
-            {
-                ActiveMonoBehaviour.StartCoroutine(
-                    PlayTrail(
-                        ShootSystem.transform.position,
-                        ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance),
-                        new RaycastHit()
-                    )
-                );
-            }
-        }*/
         if (Time.time - LastShootTime - ShootConfig.FireRate > Time.deltaTime)
         {
             float lastDuration = Mathf.Clamp(
@@ -118,39 +85,126 @@ public class GunSO : ScriptableObject
 
             Vector3 spreadAmount = ShootConfig.GetSpread(Time.time - InitialClickTime);
             //Model.transform.forward += Model.transform.TransformDirection(spreadAmount);
-            Quaternion rotation = Quaternion.Euler(spreadAmount);
-            Model.transform.rotation *= rotation;
+            //Quaternion rotation = Quaternion.Euler(spreadAmount);
+            //Model.transform.rotation *= rotation;
             
-            Vector3 shootDirection = ShootSystem.transform.forward;
+            Vector3 shootDirection = ShootSystem.transform.forward + spreadAmount;
 
             AmmoConfig.CurrentClipAmmo--;
 
-            if (Physics.Raycast(
-                    ShootSystem.transform.position,
-                    shootDirection,
-                    out RaycastHit hit,
-                    float.MaxValue,
-                    ShootConfig.HitMask
-                ))
+            if (ShootConfig.IsHitScan)
             {
-                ActiveMonoBehaviour.StartCoroutine(
-                    PlayTrail(
-                        ShootSystem.transform.position,
-                        hit.point,
-                        hit
-                    )
-                );
+                DoHitScanShoot(shootDirection);
             }
             else
             {
-                ActiveMonoBehaviour.StartCoroutine(
-                    PlayTrail(
-                        ShootSystem.transform.position,
-                        ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance),
-                        new RaycastHit()
-                    )
-                );
+                DoProjectileShoot(shootDirection);
             }
+            
+            
+        }
+    }
+
+    private void DoProjectileShoot(Vector3 shootDirection)
+    {
+        Bullet bullet = BulletPool.Get();
+        bullet.gameObject.SetActive(true);
+        bullet.OnCollision += HandleOnBulletColision;
+        bullet.transform.position = ShootSystem.transform.position;
+        bullet.Spawn(shootDirection * ShootConfig.BulletSpawnForce);
+
+        TrailRenderer trail = TrailPool.Get();
+        if (trail != null)
+        {
+            trail.transform.SetParent(bullet.transform,false);
+            trail.transform.localPosition = Vector3.zero;
+            trail.emitting = true;
+            trail.gameObject.SetActive(true);
+        }
+    }
+
+    private void HandleOnBulletColision(Bullet bullet, Collision collision)
+    {
+        TrailRenderer trail = bullet.GetComponentInChildren<TrailRenderer>();
+        if (trail != null)
+        {
+            trail.transform.SetParent(null,true);
+            ActiveMonoBehaviour.StartCoroutine(DeleyedDisableTrail(trail));
+        }
+        
+        bullet.gameObject.SetActive(false);
+        BulletPool.Release(bullet);
+
+        if (collision != null)
+        {
+            ContactPoint contactPoint = collision.GetContact(0);
+
+            HandleBulletImpact(
+                Vector3.Distance(contactPoint.point,bullet.SpawnLocation),
+                contactPoint.point,
+                contactPoint.normal,
+                contactPoint.otherCollider
+            );
+        }
+    }
+
+    private IEnumerator DeleyedDisableTrail(TrailRenderer trail)
+    {
+        yield return new WaitForSeconds(TrailConfig.Duration);
+        yield return null;
+        trail.emitting = false;
+        trail.gameObject.SetActive(false);
+        TrailPool.Release(trail);
+    }
+
+    // Video 6 - 10:39
+    private void HandleBulletImpact(
+        float DistanceTraveled,
+        Vector3 HitLocation,
+        Vector3 HitNormal,
+        Collider HitCollider)
+    {
+        /*SurfaceManager.Instance.HandleImpact(
+                HitCollider.gameObject,
+                HitLocation,
+                HitNormal,
+                ImpactType,
+                0
+            );*/
+
+        if (HitCollider.TryGetComponent(out IDamageable damageable))
+        {
+            damageable.TakeDamage(DamageConfig.GetDamage(DistanceTraveled));
+        }
+    }
+
+    private void DoHitScanShoot(Vector3 shootDirection)
+    {
+        if (Physics.Raycast(
+                ShootSystem.transform.position,
+                shootDirection,
+                out RaycastHit hit,
+                float.MaxValue,
+                ShootConfig.HitMask
+            ))
+        {
+            ActiveMonoBehaviour.StartCoroutine(
+                PlayTrail(
+                    ShootSystem.transform.position,
+                    hit.point,
+                    hit
+                )
+            );
+        }
+        else
+        {
+            ActiveMonoBehaviour.StartCoroutine(
+                PlayTrail(
+                    ShootSystem.transform.position,
+                    ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance),
+                    new RaycastHit()
+                )
+            );
         }
     }
 
@@ -210,17 +264,7 @@ public class GunSO : ScriptableObject
 
         if (Hit.collider != null)
         {
-            /*SurfaceManager.Instance.HandleImpact(
-                Hit.transform.gameObject,
-                EndPoint,
-                Hit.normal,
-                ImpactType,
-                0
-            );*/
-            if (Hit.collider.TryGetComponent(out IDamageable damageable))
-            {
-                damageable.TakeDamage(DamageConfig.GetDamage(distance));
-            }
+            HandleBulletImpact(distance,EndPoint,Hit.normal,Hit.collider);
         }
         
         yield return null;
@@ -246,6 +290,9 @@ public class GunSO : ScriptableObject
         return trail;
     }
 
-
+    private Bullet CreateBullet()
+    {
+        return Instantiate(ShootConfig.BulletPrefab);
+    }
     
 }

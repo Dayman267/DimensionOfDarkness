@@ -7,6 +7,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Shoot Config", menuName = "Guns/Shoot Configuration", order = 2)]
 public class ShootConfigurationSO : ScriptableObject
 {
+    public bool IsHitScan = true;
+    public Bullet BulletPrefab;
+    public float BulletSpawnForce = 1000;
     public LayerMask HitMask;
     public float FireRate = 0.25f;
     public float RecoilRecoverySpeed = 1f;
