@@ -6,4 +6,5 @@ public enum GunType
 {
     Pistol,
     Rifle,
+    Light
 }

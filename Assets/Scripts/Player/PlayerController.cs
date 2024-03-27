@@ -2,12 +2,15 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 
 [DisallowMultipleComponent]
 public class PlayerController : MonoBehaviour
 {
+    //[SerializeField] private Image Crosshair;
     [SerializeField] private Transform _mainCamera;
     [SerializeField] private Object weaponVFX;
     private Camera cam;
@@ -56,7 +59,7 @@ public class PlayerController : MonoBehaviour
     public static event Action OnShootAnimationDiasble;
     public static event Action<float, float> OnSend_X_Z_Pos;
 
-    public static event Action OnReloadAnimation; 
+    public static event Action OnReloadAnimation;
 
     //private PlayerStamina playerStamina;
 
@@ -94,6 +97,7 @@ public class PlayerController : MonoBehaviour
     bool isShootingWhileRun;
     bool isRKeyDown;
 
+    private Vector3 worldMousePosition;
     void Update()
     {
         _movementVector = CalculateMovementVector();
@@ -114,6 +118,7 @@ public class PlayerController : MonoBehaviour
                 AimOff();
         }
 
+        
         if (GunSelector.ActiveGun != null)
         {
             GunSelector.ActiveGun.Tick(isLeftClickDown);
@@ -125,7 +130,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            ShootAnimOff();
+            if(!isRightClickDown)
+                ShootAnimOff();
         }
 
         if (ShouldManualReload() || ShouldAutoReload())
@@ -135,6 +141,8 @@ public class PlayerController : MonoBehaviour
             OnReloadAnimation?.Invoke();
         }
 
+        //UpdateCrossHair();
+
         if (!inMovement && !isRightClickDown && !isLeftClickDown)
         {
             ListenWASDKeyUp();
@@ -143,7 +151,7 @@ public class PlayerController : MonoBehaviour
                 RotateTowardsTarget();
             }
         }
-        
+
         if (isDashing || isVaulting) return;
 
         // if (Vaulting())
@@ -172,6 +180,41 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /*private void UpdateCrossHair()
+    {
+        if (GunSelector.ActiveGun.ShootConfig.ShootType == ShootType.FromGun)
+        {
+            Vector3 gunTipPoint = GunSelector.ActiveGun.GetRaycastOrigin();
+            Vector3 gunForward = GunSelector.ActiveGun.GetGunForward();
+            Vector3 hitPoint = gunTipPoint + gunForward * 10;
+
+            if (Physics.Raycast(
+                    gunTipPoint,
+                    gunForward,
+                    out RaycastHit hit,
+                    float.MaxValue,
+                    GunSelector.ActiveGun.ShootConfig.HitMask
+                ))
+            {
+                hitPoint = hit.point;
+            }
+
+            Vector3 screenSpaceLocation = GunSelector.Camera.WorldToScreenPoint(hitPoint);
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    (RectTransform)Crosshair.transform.parent,
+                    screenSpaceLocation,
+                    null,
+                    out Vector2 localPosition))
+            {
+                Crosshair.rectTransform.anchoredPosition = localPosition;
+            }
+            else
+            {
+                Crosshair.rectTransform.anchoredPosition = Vector2.zero;
+            }
+        }
+    }*/
+
     /*private void FixedUpdate()
     {
         rb.velocity = new Vector3(_movementVector.x * speed, rb.velocity.y,
@@ -183,7 +226,7 @@ public class PlayerController : MonoBehaviour
         GunSelector.ActiveGun.EndReload();
         isReloading = false;
     }
-    
+
     private bool ShouldManualReload()
     {
         return !isReloading && isRKeyDown && GunSelector.ActiveGun.CanReload();
@@ -191,7 +234,7 @@ public class PlayerController : MonoBehaviour
 
     private bool ShouldAutoReload()
     {
-        return !isReloading 
+        return !isReloading
                && AutoReload
                && GunSelector.ActiveGun.AmmoConfig.CurrentClipAmmo == 0
                && GunSelector.ActiveGun.CanReload();
@@ -290,7 +333,7 @@ public class PlayerController : MonoBehaviour
                 Quaternion.LookRotation(new Vector3(rb.velocity.x, 0, rb.velocity.z)),
                 LERP_SPEED * Time.deltaTime);
     }
-    
+
     private void TurnToMousePosition()
     {
         Vector3 mousePosition = Input.mousePosition;
@@ -337,27 +380,18 @@ public class PlayerController : MonoBehaviour
 
     private void ShootAnimOn(bool isMove)
     {
-        if (isMove && !isRightClickDown)
-        {
-            isShootingWhileRun = true;
-        }
+        AimOn();
 
-        if (isShootingWhileRun)
-        {
-            AimOn();
-        }
-        
-        OnShootAnimationEnable?.Invoke();
+            OnShootAnimationEnable?.Invoke();
         //weaponVFX.GameObject().SetActive(true);
     }
 
     private void ShootAnimOff()
     {
-        if (isShootingWhileRun && !isRightClickDown)
-        {
+        
             AimOff();
             isShootingWhileRun = false;
-        }
+        
 
 
         OnShootAnimationDiasble?.Invoke();
@@ -390,7 +424,7 @@ public class PlayerController : MonoBehaviour
 
         playerActions.Gameplay.Sprint.performed += ctx => isLShiftDown = true;
         playerActions.Gameplay.Sprint.canceled += ctx => isLShiftDown = false;
-        
+
         playerActions.Gameplay.WeaponReload.performed += ctx => isRKeyDown = true;
         playerActions.Gameplay.WeaponReload.canceled += ctx => isRKeyDown = false;
     }
@@ -406,7 +440,7 @@ public class PlayerController : MonoBehaviour
 
         playerActions.Gameplay.Sprint.performed += ctx => isLShiftDown = true;
         playerActions.Gameplay.Sprint.canceled += ctx => isLShiftDown = false;
-        
+
         playerActions.Gameplay.WeaponReload.performed -= ctx => isRKeyDown = true;
         playerActions.Gameplay.WeaponReload.canceled -= ctx => isRKeyDown = false;
     }

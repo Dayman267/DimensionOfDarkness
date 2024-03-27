@@ -8,6 +8,7 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class PlayerGunSelector : MonoBehaviour
 {
+    public Camera Camera;
     [SerializeField] private GunType Gun;
     [SerializeField] private Transform GunParent;
 
@@ -17,7 +18,7 @@ public class PlayerGunSelector : MonoBehaviour
 
     [Space] [Header("Runtime Filled")] public GunSO ActiveGun;
 
-    private void Start()
+    private void Awake()
     {
         GunSO gun = Guns.Find(gun => gun.Type == Gun);
 
@@ -27,7 +28,7 @@ public class PlayerGunSelector : MonoBehaviour
         }
 
         ActiveGun = gun;
-        gun.Spawn(GunParent,this);
+        gun.Spawn(GunParent,this, Camera);
         
         //Some magic for IK
         // video 1 - 14.18

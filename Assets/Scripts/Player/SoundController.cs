@@ -44,7 +44,8 @@ public class SoundController : MonoBehaviour
     public bool IsStepSoundsAvailable()
     {
         bool isSoundsAvailable = stepSounds.Length > 0;
-        if (isSoundsAvailable)
+        
+        if (!isSoundsAvailable)
         {
             Debug.LogWarning("No step sounds available!");
         }

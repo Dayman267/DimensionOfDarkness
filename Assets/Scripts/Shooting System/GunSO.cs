@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 using UnityEngine.Rendering;
 using Random = UnityEngine.Random;
@@ -26,37 +27,114 @@ public class GunSO : ScriptableObject
     private MonoBehaviour ActiveMonoBehaviour;
     private GameObject Model;
     private AudioSource ShootingAudioSource;
+    private Camera ActiveCamera;
 
     private float LastShootTime;
     private float InitialClickTime;
     private float StopShootingTime;
     private bool LastFrameWantedToShoot;
 
-    private ParticleSystem ShootSystem;
+    private ParticleSystem[] ShootSystem;
     private GameObject ShootingStartPoint;
     private ObjectPool<TrailRenderer> TrailPool;
     private ObjectPool<Bullet> BulletPool;
 
-    public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour)
+    public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour, Camera ActiveCamera = null)
     {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
+        this.ActiveCamera = ActiveCamera;
+
         LastShootTime = 0; // in editor this will not be properly reset, in build it`s fine
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
         if (!ShootConfig.IsHitScan)
         {
             BulletPool = new ObjectPool<Bullet>(CreateBullet);
         }
+
         Model = Instantiate(ModelPrefab);
         Model.transform.SetParent(Parent, false);
         Model.transform.localPosition = SpawnPoint;
         Model.transform.localRotation = Quaternion.Euler(SpawnRotation);
 
-        ShootSystem = Model.GetComponentInChildren<ParticleSystem>();
+        ShootSystem = Model.GetComponentsInChildren<ParticleSystem>();
         ShootingAudioSource = Model.GetComponent<AudioSource>();
         ShootingStartPoint = GameObject.FindWithTag("ShootingStartPoint");
     }
 
-    public void TryToShoot()
+    public void UpdateCamera(Camera ActiveCamera)
+    {
+        this.ActiveCamera = ActiveCamera;
+    }
+
+    public void PlayParticleSystems()
+    {
+        foreach (ParticleSystem ps in ShootSystem)
+        {
+            ps.Play();
+        }
+    }
+    
+   public void TryToShoot()
+{
+    if (Time.time - LastShootTime - ShootConfig.FireRate > Time.deltaTime)
+    {
+        float lastDuration = Mathf.Clamp(
+            0,
+            (StopShootingTime - InitialClickTime),
+            ShootConfig.MaxSpreadTime
+        );
+        float lerpTime = (ShootConfig.RecoilRecoverySpeed - (Time.time - StopShootingTime))
+                         / ShootConfig.RecoilRecoverySpeed;
+        InitialClickTime = Time.time - Mathf.Lerp(0, lastDuration, Mathf.Clamp01(lerpTime));
+    }
+    
+    if (Time.time > ShootConfig.FireRate + LastShootTime)
+    {
+        LastShootTime = Time.time;
+        
+        if (AmmoConfig.CurrentClipAmmo == 0)
+        {
+            AudioConfig.PlayOutOfAmmoClip(ShootingAudioSource);
+            return;
+        }
+
+        PlayParticleSystems();
+        AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.CurrentClipAmmo == 1);
+        
+        Ray ray = ActiveCamera.ScreenPointToRay(Mouse.current.position.value);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            Vector3 shootDirection = hit.point - ShootingStartPoint.transform.position;
+            
+            if (ShootConfig.IsHitScan)
+            {
+                DoHitScanShoot(shootDirection);
+            }
+            else
+            {
+                DoProjectileShoot(shootDirection.normalized); 
+            }
+        }
+        else
+        {
+            Vector3 shootDirection = ray.direction;
+
+            if (ShootConfig.IsHitScan)
+            {
+                DoHitScanShoot(shootDirection);
+            }
+            else
+            {
+                DoProjectileShoot(shootDirection.normalized); 
+            }
+        }
+        
+        AmmoConfig.CurrentClipAmmo--;
+    }
+}
+    /*public void TryToShoot()
     {
         if (Time.time - LastShootTime - ShootConfig.FireRate > Time.deltaTime)
         {
@@ -67,32 +145,43 @@ public class GunSO : ScriptableObject
             );
             float lerpTime = (ShootConfig.RecoilRecoverySpeed - (Time.time - StopShootingTime))
                              / ShootConfig.RecoilRecoverySpeed;
-            InitialClickTime = Time.time - Mathf.Lerp(0,lastDuration, Mathf.Clamp01(lerpTime));
+            InitialClickTime = Time.time - Mathf.Lerp(0, lastDuration, Mathf.Clamp01(lerpTime));
         }
 
         if (Time.time > ShootConfig.FireRate + LastShootTime)
         {
-            
-
             LastShootTime = Time.time;
-            
+
             if (AmmoConfig.CurrentClipAmmo == 0)
             {
                 AudioConfig.PlayOutOfAmmoClip(ShootingAudioSource);
                 return;
             }
-            
-            ShootSystem.Play();
-            AudioConfig.PlayShootingClip(ShootingAudioSource,AmmoConfig.CurrentClipAmmo == 1);
+
+            PlayParticleSystems();
+            AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.CurrentClipAmmo == 1);
 
             Vector3 spreadAmount = ShootConfig.GetSpread(Time.time - InitialClickTime);
             //Model.transform.forward += Model.transform.TransformDirection(spreadAmount);
             //Quaternion rotation = Quaternion.Euler(spreadAmount);
             //Model.transform.rotation *= rotation;
-            
-            Vector3 shootDirection = ShootingStartPoint.transform.forward + spreadAmount;
+
+            //Vector3 shootDirection = ShootingStartPoint.transform.forward + spreadAmount;
+            Vector3 shootDirection = Vector3.zero;
+
+            if (ShootConfig.ShootType == ShootType.FromGun)
+            {
+                shootDirection = ShootingStartPoint.transform.forward + spreadAmount;
+            }
+            else
+            {
+                shootDirection = ActiveCamera.transform.forward +
+                                 ActiveCamera.transform.TransformDirection(shootDirection);
+            }
 
             AmmoConfig.CurrentClipAmmo--;
+            
+            Debug.DrawRay(GetRaycastOrigin(), shootDirection * 100f, Color.blue, 1f);
 
             if (ShootConfig.IsHitScan)
             {
@@ -103,24 +192,44 @@ public class GunSO : ScriptableObject
                 DoProjectileShoot(shootDirection);
             }
         }
-    }
+    }*/
 
     private void DoProjectileShoot(Vector3 shootDirection)
     {
         Bullet bullet = BulletPool.Get();
         bullet.gameObject.SetActive(true);
         bullet.OnCollision += HandleOnBulletColision;
-        bullet.transform.position = ShootSystem.transform.position;
+
+        if (ShootConfig.ShootType == ShootType.FromCamera
+            && Physics.Raycast(
+                GetRaycastOrigin(),
+                shootDirection,
+                out RaycastHit hit,
+                float.MaxValue,
+                ShootConfig.HitMask
+            ))
+        {
+            Vector3 directionToHit = (hit.point - ShootingStartPoint.transform.position).normalized;
+            Model.transform.forward = directionToHit;
+            shootDirection = directionToHit;
+        }
+
+        bullet.transform.position = ShootingStartPoint.transform.position;
         bullet.Spawn(shootDirection * ShootConfig.BulletSpawnForce);
 
         TrailRenderer trail = TrailPool.Get();
         if (trail != null)
         {
-            trail.transform.SetParent(bullet.transform,false);
+            trail.transform.SetParent(bullet.transform, false);
             trail.transform.localPosition = Vector3.zero;
             trail.emitting = true;
             trail.gameObject.SetActive(true);
         }
+    }
+
+    public Vector3 GetGunForward()
+    {
+        return Model.transform.forward;
     }
 
     private void HandleOnBulletColision(Bullet bullet, Collision collision)
@@ -128,10 +237,10 @@ public class GunSO : ScriptableObject
         TrailRenderer trail = bullet.GetComponentInChildren<TrailRenderer>();
         if (trail != null)
         {
-            trail.transform.SetParent(null,true);
+            trail.transform.SetParent(null, true);
             ActiveMonoBehaviour.StartCoroutine(DeleyedDisableTrail(trail));
         }
-        
+
         bullet.gameObject.SetActive(false);
         BulletPool.Release(bullet);
 
@@ -140,7 +249,7 @@ public class GunSO : ScriptableObject
             ContactPoint contactPoint = collision.GetContact(0);
 
             HandleBulletImpact(
-                Vector3.Distance(contactPoint.point,bullet.SpawnLocation),
+                Vector3.Distance(contactPoint.point, bullet.SpawnLocation),
                 contactPoint.point,
                 contactPoint.normal,
                 contactPoint.otherCollider
@@ -181,7 +290,7 @@ public class GunSO : ScriptableObject
     private void DoHitScanShoot(Vector3 shootDirection)
     {
         if (Physics.Raycast(
-                ShootSystem.transform.position,
+                GetRaycastOrigin(),
                 shootDirection,
                 out RaycastHit hit,
                 float.MaxValue,
@@ -190,7 +299,7 @@ public class GunSO : ScriptableObject
         {
             ActiveMonoBehaviour.StartCoroutine(
                 PlayTrail(
-                    ShootSystem.transform.position,
+                    ShootingStartPoint.transform.position,
                     hit.point,
                     hit
                 )
@@ -200,29 +309,46 @@ public class GunSO : ScriptableObject
         {
             ActiveMonoBehaviour.StartCoroutine(
                 PlayTrail(
-                    ShootSystem.transform.position,
-                    ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance),
+                    ShootingStartPoint.transform.position,
+                    ShootingStartPoint.transform.position + (shootDirection * TrailConfig.MissDistance),
                     new RaycastHit()
                 )
             );
         }
     }
 
+   public Vector3 GetRaycastOrigin()
+    {
+        Vector3 origin = ShootingStartPoint.transform.position;
+
+        if (ShootConfig.ShootType == ShootType.FromCamera)
+        {
+            origin = ActiveCamera.transform.position
+                     + ActiveCamera.transform.forward
+                     * Vector3.Distance(
+                         ActiveCamera.transform.position,
+                         ShootingStartPoint.transform.position
+                     );
+        }
+
+        return origin;
+    }
+
     public bool CanReload()
     {
         return AmmoConfig.CanReload();
     }
-    
+
     public void EndReload()
     {
         AmmoConfig.Reload();
     }
-    
+
     public void StartReloading()
     {
         AudioConfig.PlayReloadClip(ShootingAudioSource);
     }
-    
+
     public void Tick(bool WantsToShoot)
     {
         if (WantsToShoot)
@@ -264,9 +390,9 @@ public class GunSO : ScriptableObject
 
         if (Hit.collider != null)
         {
-            HandleBulletImpact(distance,EndPoint,Hit.normal,Hit.collider);
+            HandleBulletImpact(distance, EndPoint, Hit.normal, Hit.collider);
         }
-        
+
         yield return null;
         instance.emitting = false;
         instance.gameObject.SetActive(false);
@@ -294,5 +420,4 @@ public class GunSO : ScriptableObject
     {
         return Instantiate(ShootConfig.BulletPrefab);
     }
-    
 }
