@@ -47,6 +47,7 @@ namespace LlamAcademy.ImpactSystem
                 List<TextureAlpha> activeTextures = GetActiveTexturesFromTerrain(terrain, HitPoint);
                 foreach (TextureAlpha activeTexture in activeTextures)
                 {
+                    
                     SurfaceType surfaceType = Surfaces.Find(surface => surface.Albedo == activeTexture.Texture);
                     if (surfaceType != null)
                     {
@@ -54,6 +55,7 @@ namespace LlamAcademy.ImpactSystem
                         {
                             if (typeEffect.ImpactType == Impact)
                             {
+                                
                                 PlayEffects(HitPoint, HitNormal, typeEffect.SurfaceEffect, activeTexture.Alpha);
                             }
                         }

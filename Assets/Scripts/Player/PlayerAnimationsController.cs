@@ -85,7 +85,7 @@ public class PlayerAnimationsController : MonoBehaviour
 
     private void DisableShootAnimationHandler()
     {
-        if (shootingSpeed >= 0f)
+        if (shootingSpeed > 0f)
             shootingSpeed = 0;
         animator.SetFloat(shootingSpeedAnimHash, shootingSpeed);
     }

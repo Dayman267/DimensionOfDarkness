@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using LlamAcademy.ImpactSystem;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,7 +12,7 @@ using Random = UnityEngine.Random;
 [CreateAssetMenu(fileName = "Gun", menuName = "Guns/Gun", order = 0)]
 public class GunSO : ScriptableObject
 {
-    //public ImpactType ImpactType;
+    public ImpactType ImpactType;
     public GunType Type;
     public string Name;
     public GameObject ModelPrefab;
@@ -273,13 +274,13 @@ public class GunSO : ScriptableObject
         Vector3 HitNormal,
         Collider HitCollider)
     {
-        /*SurfaceManager.Instance.HandleImpact(
+        SurfaceManager.Instance.HandleImpact(
                 HitCollider.gameObject,
                 HitLocation,
                 HitNormal,
                 ImpactType,
                 0
-            );*/
+            );
 
         if (HitCollider.TryGetComponent(out IDamageable damageable))
         {

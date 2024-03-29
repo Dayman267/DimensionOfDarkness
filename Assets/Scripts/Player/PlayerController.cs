@@ -12,7 +12,6 @@ public class PlayerController : MonoBehaviour
 {
     //[SerializeField] private Image Crosshair;
     [SerializeField] private Transform _mainCamera;
-    [SerializeField] private Object weaponVFX;
     private Camera cam;
     private Vector3 direction;
     private Rigidbody rb;
@@ -98,6 +97,7 @@ public class PlayerController : MonoBehaviour
     bool isRKeyDown;
 
     private Vector3 worldMousePosition;
+
     void Update()
     {
         _movementVector = CalculateMovementVector();
@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour
                 AimOff();
         }
 
-        
+
         if (GunSelector.ActiveGun != null)
         {
             GunSelector.ActiveGun.Tick(isLeftClickDown);
@@ -130,8 +130,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if(!isRightClickDown)
-                ShootAnimOff();
+            ShootAnimOff();
         }
 
         if (ShouldManualReload() || ShouldAutoReload())
@@ -381,21 +380,17 @@ public class PlayerController : MonoBehaviour
     private void ShootAnimOn(bool isMove)
     {
         AimOn();
-
-            OnShootAnimationEnable?.Invoke();
-        //weaponVFX.GameObject().SetActive(true);
+        OnShootAnimationEnable?.Invoke();
     }
 
     private void ShootAnimOff()
     {
-        
+        if (!isRightClickDown)
+        {
             AimOff();
-            isShootingWhileRun = false;
-        
-
-
+        }
+        isShootingWhileRun = false;
         OnShootAnimationDiasble?.Invoke();
-        // weaponVFX.GameObject().SetActive(false);
     }
 
     private void AimOn()
@@ -409,7 +404,6 @@ public class PlayerController : MonoBehaviour
     {
         speed = 10f;
         TurnCharacterInMovementDirection();
-
         OnAimAnimationDiasble?.Invoke();
     }
 
