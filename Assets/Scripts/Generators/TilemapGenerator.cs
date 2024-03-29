@@ -4,7 +4,12 @@ public class TilemapGenerator : MonoBehaviour
 {
     public GameObject parentToSet;
     
-    public GameObject[] gameObjectPrefabs;
+    public GameObject[] grayTerrains;
+    public GameObject[] greenTerrains;
+    public GameObject[] yellowTerrains;
+    private GameObject[][] terrainsArrays;
+    private GameObject[] pickedTerrains;
+    //private System.Random random = new System.Random();
     
     public int[,] gameObjectsToSpawn;
     
@@ -25,7 +30,14 @@ public class TilemapGenerator : MonoBehaviour
 
     public void Start()
     {
-        objectSize = (int)gameObjectPrefabs[0].GetComponent<Terrain>().terrainData.size.x;
+        terrainsArrays = new [] {grayTerrains, greenTerrains, yellowTerrains };
+        int randomIndex = Random.Range(0, terrainsArrays.Length-1);
+        pickedTerrains = terrainsArrays[randomIndex];
+        for (int i = 0; i < pickedTerrains.Length; i++)
+        {
+            
+        }
+        objectSize = (int)pickedTerrains[0].GetComponent<Terrain>().terrainData.size.x;
         gameObjectsToSpawn = new int[width, height];
         SpawnFirstNineObjects();
     }
@@ -53,35 +65,35 @@ public class TilemapGenerator : MonoBehaviour
                 
                 if (x > 0 && gameObjectsToSpawn[x - 1,y] == -1)
                 {
-                    gameObjectsToSpawn[x - 1,y] = Random.Range(0, gameObjectPrefabs.Length);
+                    gameObjectsToSpawn[x - 1,y] = Random.Range(0, pickedTerrains.Length);
                 }
                 if (y > 0 && gameObjectsToSpawn[x,y - 1] == -1)
                 {
-                    gameObjectsToSpawn[x,y - 1] = Random.Range(0, gameObjectPrefabs.Length);
+                    gameObjectsToSpawn[x,y - 1] = Random.Range(0, pickedTerrains.Length);
                 }
                 if (x > 0 && y > 0 && gameObjectsToSpawn[x - 1,y - 1] == -1) 
                 {
-                    gameObjectsToSpawn[x - 1,y - 1] = Random.Range(0, gameObjectPrefabs.Length);
+                    gameObjectsToSpawn[x - 1,y - 1] = Random.Range(0, pickedTerrains.Length);
                 }
                 if (x < maxX && gameObjectsToSpawn[x + 1,y] == -1) 
                 {
-                    gameObjectsToSpawn[x + 1,y] = Random.Range(0, gameObjectPrefabs.Length);
+                    gameObjectsToSpawn[x + 1,y] = Random.Range(0, pickedTerrains.Length);
                 }
                 if (y < maxY && gameObjectsToSpawn[x,y + 1] == -1) 
                 {
-                    gameObjectsToSpawn[x,y + 1] = Random.Range(0, gameObjectPrefabs.Length);
+                    gameObjectsToSpawn[x,y + 1] = Random.Range(0, pickedTerrains.Length);
                 }
                 if (x < maxX && y < maxY && gameObjectsToSpawn[x + 1,y + 1] == -1) 
                 {
-                    gameObjectsToSpawn[x + 1,y + 1] = Random.Range(0, gameObjectPrefabs.Length);
+                    gameObjectsToSpawn[x + 1,y + 1] = Random.Range(0, pickedTerrains.Length);
                 }
                 if (x > 0 && y < maxY && gameObjectsToSpawn[x - 1,y + 1] == -1) 
                 {
-                    gameObjectsToSpawn[x - 1,y + 1] = Random.Range(0, gameObjectPrefabs.Length);
+                    gameObjectsToSpawn[x - 1,y + 1] = Random.Range(0, pickedTerrains.Length);
                 }
                 if (y > 0 && x < maxX && gameObjectsToSpawn[x + 1,y - 1] == -1)
                 {
-                    gameObjectsToSpawn[x + 1,y - 1] = Random.Range(0, gameObjectPrefabs.Length);
+                    gameObjectsToSpawn[x + 1,y - 1] = Random.Range(0, pickedTerrains.Length);
                 }
                 isFinished = true;
             }
@@ -93,7 +105,7 @@ public class TilemapGenerator : MonoBehaviour
             {
                 if (gameObjectsToSpawn[x, y] == -1) continue;
                 Instantiate(
-                    gameObjectPrefabs[gameObjectsToSpawn[x, y]],
+                    pickedTerrains[gameObjectsToSpawn[x, y]],
                     new Vector3(x-width/2, 0, y-height/2) * objectSize, 
                     Quaternion.identity, 
                     parentToSet.transform);
@@ -111,57 +123,57 @@ public class TilemapGenerator : MonoBehaviour
     
         if (positionX > 0 && gameObjectsToSpawn[(int)positionX - 1, (int)positionY] == -1)
         {
-            gameObjectsToSpawn[(int)positionX - 1,(int)positionY] = Random.Range(0, 3);
-            Instantiate(gameObjectPrefabs[gameObjectsToSpawn[(int)positionX - 1,(int)positionY]],
+            gameObjectsToSpawn[(int)positionX - 1,(int)positionY] = Random.Range(0, pickedTerrains.Length);
+            Instantiate(pickedTerrains[gameObjectsToSpawn[(int)positionX - 1,(int)positionY]],
                 new Vector3((int)positionX - 1-width/2, 0, (int)positionY-height/2) * objectSize,
                 Quaternion.identity, parentToSet.transform);
         }
         if (positionY > 0 && gameObjectsToSpawn[(int)positionX, (int)positionY - 1] == -1)
         {
-            gameObjectsToSpawn[(int)positionX, (int)positionY - 1] = Random.Range(0, 3);
-            Instantiate(gameObjectPrefabs[gameObjectsToSpawn[(int)positionX,(int)positionY - 1]],
+            gameObjectsToSpawn[(int)positionX, (int)positionY - 1] = Random.Range(0, pickedTerrains.Length);
+            Instantiate(pickedTerrains[gameObjectsToSpawn[(int)positionX,(int)positionY - 1]],
                 new Vector3((int)positionX -width/2, 0, (int)positionY - 1-height/2) * objectSize,
                 Quaternion.identity, parentToSet.transform);
         }
         if (positionX > 0 && positionY > 0 && gameObjectsToSpawn[(int)positionX - 1, (int)positionY - 1] == -1) 
         {
-            gameObjectsToSpawn[(int)positionX - 1, (int)positionY - 1] = Random.Range(0, 3);
-            Instantiate(gameObjectPrefabs[gameObjectsToSpawn[(int)positionX - 1,(int)positionY -1]],
+            gameObjectsToSpawn[(int)positionX - 1, (int)positionY - 1] = Random.Range(0, pickedTerrains.Length);
+            Instantiate(pickedTerrains[gameObjectsToSpawn[(int)positionX - 1,(int)positionY -1]],
                 new Vector3((int)positionX - 1-width/2, 0, (int)positionY-1-height/2) * objectSize,
                 Quaternion.identity, parentToSet.transform);
         }
         if (positionX < maxX && gameObjectsToSpawn[(int)positionX + 1, (int)positionY] == -1) 
         {
-            gameObjectsToSpawn[(int)positionX + 1, (int)positionY] = Random.Range(0, 3);
-            Instantiate(gameObjectPrefabs[gameObjectsToSpawn[(int)positionX + 1,(int)positionY]],
+            gameObjectsToSpawn[(int)positionX + 1, (int)positionY] = Random.Range(0, pickedTerrains.Length);
+            Instantiate(pickedTerrains[gameObjectsToSpawn[(int)positionX + 1,(int)positionY]],
                 new Vector3((int)positionX + 1-width/2, 0, (int)positionY-height/2) * objectSize,
                 Quaternion.identity, parentToSet.transform);
         }
         if (positionY < maxY && gameObjectsToSpawn[(int)positionX, (int)positionY + 1] == -1) 
         {
-            gameObjectsToSpawn[(int)positionX, (int)positionY + 1] = Random.Range(0, 3);
-            Instantiate(gameObjectPrefabs[gameObjectsToSpawn[(int)positionX,(int)positionY+1]],
+            gameObjectsToSpawn[(int)positionX, (int)positionY + 1] = Random.Range(0, pickedTerrains.Length);
+            Instantiate(pickedTerrains[gameObjectsToSpawn[(int)positionX,(int)positionY+1]],
                 new Vector3((int)positionX-width/2, 0, (int)positionY+1-height/2) * objectSize,
                 Quaternion.identity, parentToSet.transform);
         }
         if (positionX < maxX && positionY < maxY && gameObjectsToSpawn[(int)positionX + 1, (int)positionY + 1] == -1) 
         {
-            gameObjectsToSpawn[(int)positionX + 1, (int)positionY + 1] = Random.Range(0, 3);
-            Instantiate(gameObjectPrefabs[gameObjectsToSpawn[(int)positionX + 1,(int)positionY+1]],
+            gameObjectsToSpawn[(int)positionX + 1, (int)positionY + 1] = Random.Range(0, pickedTerrains.Length);
+            Instantiate(pickedTerrains[gameObjectsToSpawn[(int)positionX + 1,(int)positionY+1]],
                 new Vector3((int)positionX + 1-width/2, 0, (int)positionY+1-height/2) * objectSize,
                 Quaternion.identity, parentToSet.transform);
         }
         if (positionX > 0 && positionY < maxY && gameObjectsToSpawn[(int)positionX - 1, (int)positionY + 1] == -1) 
         {
-            gameObjectsToSpawn[(int)positionX - 1, (int)positionY + 1] = Random.Range(0, 3);
-            Instantiate(gameObjectPrefabs[gameObjectsToSpawn[(int)positionX - 1,(int)positionY+1]],
+            gameObjectsToSpawn[(int)positionX - 1, (int)positionY + 1] = Random.Range(0, pickedTerrains.Length);
+            Instantiate(pickedTerrains[gameObjectsToSpawn[(int)positionX - 1,(int)positionY+1]],
                 new Vector3((int)positionX - 1-width/2, 0, (int)positionY+1-height/2) * objectSize,
                 Quaternion.identity, parentToSet.transform);
         }
         if (positionY > 0 && positionX < maxX && gameObjectsToSpawn[(int)positionX + 1, (int)positionY - 1] == -1) 
         {
-            gameObjectsToSpawn[(int)positionX + 1, (int)positionY - 1] = Random.Range(0, 3);
-            Instantiate(gameObjectPrefabs[gameObjectsToSpawn[(int)positionX + 1,(int)positionY-1]],
+            gameObjectsToSpawn[(int)positionX + 1, (int)positionY - 1] = Random.Range(0, pickedTerrains.Length);
+            Instantiate(pickedTerrains[gameObjectsToSpawn[(int)positionX + 1,(int)positionY-1]],
                 new Vector3((int)positionX + 1-width/2, 0, (int)positionY-1-height/2) * objectSize,
                 Quaternion.identity, parentToSet.transform);
         }
