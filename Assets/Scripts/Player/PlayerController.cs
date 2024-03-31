@@ -1,11 +1,7 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
-using Object = UnityEngine.Object;
-using Random = UnityEngine.Random;
+
 
 [DisallowMultipleComponent]
 public class PlayerController : MonoBehaviour
@@ -14,7 +10,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform _mainCamera;
     private Camera cam;
     private Vector3 direction;
-    private Rigidbody rb;
     private const float LERP_SPEED = 9;
 
 
@@ -23,8 +18,6 @@ public class PlayerController : MonoBehaviour
 
     private PlayerActions playerActions;
     private PlayerInput playerInput;
-
-    [SerializeField] private float shootingSpeedAcceleration = 0.5f;
 
     private bool isRotating;
     private Quaternion targetRotation;
@@ -46,32 +39,35 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float stayVaultRadius = 0.6f;
     [SerializeField] private float spendPointsWhenVaulting = 20f;
 
-    //[SerializeField] private LayerMask mask;
-    [SerializeField] private PlayerGunSelector GunSelector;
-    [SerializeField] private bool AutoReload = true;
-    private bool isReloading = false;
-
     public static event Action<float> OnMoveAnimation;
     public static event Action OnAimAnimationEnable;
     public static event Action OnAimAnimationDiasble;
     public static event Action OnShootAnimationEnable;
     public static event Action OnShootAnimationDiasble;
     public static event Action<float, float> OnSend_X_Z_Pos;
-
-    public static event Action OnReloadAnimation;
+    
+    public float turnSmoothTime = 0.1f;
+    public float gravity = -9.81f;
+    //public float jumpHeight = 3f;
+    CharacterController controller;
+    public Transform groundCheck;
+    public LayerMask groundMask;
+    public float groundDistance = 0.4f;
+    float turnSmoothVelocity;
+    bool isGrounded;
+    Vector3 velocity;
+    private float targetAngle;
 
     //private PlayerStamina playerStamina;
-
-
+    
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
         cam = Camera.main;
 
         playerInput = GetComponent<PlayerInput>();
+        controller = GetComponent<CharacterController>();
         playerActions = new PlayerActions();
         playerActions.Gameplay.Enable();
-        //playerActions.Gameplay.Aim.performed += Aim;
     }
 
     private void Start()
@@ -85,18 +81,34 @@ public class PlayerController : MonoBehaviour
 
 
         //playerStamina = GetComponent<PlayerStamina>();
-
-        ResetAngularVelocity();
+        
         transform.rotation = Quaternion.Euler(Vector3.zero);
     }
 
-    bool isRightClickDown;
-    bool isLeftClickDown;
-    bool isLShiftDown;
-    bool isShootingWhileRun;
-    bool isRKeyDown;
+    public static bool IsRightClickDown()
+    {
+        return isRightClickDown;
+    }
 
-    private Vector3 worldMousePosition;
+    public static bool IsLeftClickDown()
+    {
+        return isLeftClickDown;
+    }
+
+    public static bool IsLShiftDown()
+    {
+        return isLShiftDown;
+    }
+
+    public static bool IsRKeyDown()
+    {
+        return isRKeyDown;
+    }
+    
+    static bool isRightClickDown;
+    static bool isLeftClickDown;
+    static bool isLShiftDown;
+    static bool isRKeyDown;
 
     void Update()
     {
@@ -106,7 +118,6 @@ public class PlayerController : MonoBehaviour
         bool inMovement = Mathf.Abs(direction.x) > 0 || Mathf.Abs(direction.z) > 0;
 
         MoveAnimEnable();
-        ResetAngularVelocity();
 
         if (isRightClickDown)
         {
@@ -117,30 +128,15 @@ public class PlayerController : MonoBehaviour
             if (!isLeftClickDown)
                 AimOff();
         }
-
-
-        if (GunSelector.ActiveGun != null)
-        {
-            GunSelector.ActiveGun.Tick(isLeftClickDown);
-        }
-
+        
         if (isLeftClickDown)
         {
-            ShootAnimOn(inMovement);
+            ShootAnimOn();
         }
         else
         {
             ShootAnimOff();
         }
-
-        if (ShouldManualReload() || ShouldAutoReload())
-        {
-            GunSelector.ActiveGun.StartReloading();
-            isReloading = true;
-            OnReloadAnimation?.Invoke();
-        }
-
-        //UpdateCrossHair();
 
         if (!inMovement && !isRightClickDown && !isLeftClickDown)
         {
@@ -151,8 +147,11 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        
+        
         if (isDashing || isVaulting) return;
 
+        Move(inMovement);
         // if (Vaulting())
         // {
         //     RaycastHit2D hit = 
@@ -168,75 +167,8 @@ public class PlayerController : MonoBehaviour
         //     playerStamina.SpendStamina(spendPointsWhenDashing);
         // }
         // else if (Running())
-        if (IsSprinting())
-        {
-            Sprint(direction, speed, speedIncreaseFactor);
-            //playerStamina.SpendStamina(spendPointsWhenRunning);
-        }
-        else
-        {
-            Move(direction, speed);
-        }
-    }
-
-    /*private void UpdateCrossHair()
-    {
-        if (GunSelector.ActiveGun.ShootConfig.ShootType == ShootType.FromGun)
-        {
-            Vector3 gunTipPoint = GunSelector.ActiveGun.GetRaycastOrigin();
-            Vector3 gunForward = GunSelector.ActiveGun.GetGunForward();
-            Vector3 hitPoint = gunTipPoint + gunForward * 10;
-
-            if (Physics.Raycast(
-                    gunTipPoint,
-                    gunForward,
-                    out RaycastHit hit,
-                    float.MaxValue,
-                    GunSelector.ActiveGun.ShootConfig.HitMask
-                ))
-            {
-                hitPoint = hit.point;
-            }
-
-            Vector3 screenSpaceLocation = GunSelector.Camera.WorldToScreenPoint(hitPoint);
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    (RectTransform)Crosshair.transform.parent,
-                    screenSpaceLocation,
-                    null,
-                    out Vector2 localPosition))
-            {
-                Crosshair.rectTransform.anchoredPosition = localPosition;
-            }
-            else
-            {
-                Crosshair.rectTransform.anchoredPosition = Vector2.zero;
-            }
-        }
-    }*/
-
-    /*private void FixedUpdate()
-    {
-        rb.velocity = new Vector3(_movementVector.x * speed, rb.velocity.y,
-            _movementVector.z * speed);
-    }*/
-
-    private void EndReload()
-    {
-        GunSelector.ActiveGun.EndReload();
-        isReloading = false;
-    }
-
-    private bool ShouldManualReload()
-    {
-        return !isReloading && isRKeyDown && GunSelector.ActiveGun.CanReload();
-    }
-
-    private bool ShouldAutoReload()
-    {
-        return !isReloading
-               && AutoReload
-               && GunSelector.ActiveGun.AmmoConfig.CurrentClipAmmo == 0
-               && GunSelector.ActiveGun.CanReload();
+        //Sprint(direction, speed, speedIncreaseFactor);
+        //playerStamina.SpendStamina(spendPointsWhenRunning);
     }
 
     private void RotateTowardsTarget()
@@ -252,7 +184,6 @@ public class PlayerController : MonoBehaviour
 
     private void ListenWASDKeyUp()
     {
-        // Баг 1    
         switch (playerActions.Gameplay.W.WasReleasedThisFrame(),
             playerActions.Gameplay.S.WasReleasedThisFrame(),
             playerActions.Gameplay.A.WasReleasedThisFrame(),
@@ -271,10 +202,8 @@ public class PlayerController : MonoBehaviour
                 RotateToDirection(Vector3.right);
                 break;
         }
-        // Баг 1
     }
-
-    // Баг 1
+    
     private void RotateToDirection(Vector3 direction)
     {
         if (direction != Vector3.zero)
@@ -283,8 +212,7 @@ public class PlayerController : MonoBehaviour
             isRotating = true;
         }
     }
-    // Баг 1
-
+    
     private void MoveAnimEnable()
     {
         OnMoveAnimation?.Invoke(_movementVector.magnitude);
@@ -316,7 +244,7 @@ public class PlayerController : MonoBehaviour
         movementVector = Vector3.ClampMagnitude(movementVector, maxMovementMagnitude);
 
         float targetMagnitude = isLShiftDown ? 1.5f : 1f;
-        float lerpedMagnitude = Mathf.MoveTowards(_movementVector.magnitude, targetMagnitude, 5f * Time.deltaTime);
+        float lerpedMagnitude = Mathf.MoveTowards(_movementVector.magnitude, targetMagnitude, 1.1f * Time.deltaTime);
         movementVector = movementVector.normalized * lerpedMagnitude;
 
         Vector3 relativeVector = transform.InverseTransformDirection(movementVector);
@@ -327,10 +255,8 @@ public class PlayerController : MonoBehaviour
 
     private void TurnCharacterInMovementDirection()
     {
-        if (rb.velocity.magnitude / speed > 0.1f)
-            transform.rotation = Quaternion.Lerp(transform.rotation,
-                Quaternion.LookRotation(new Vector3(rb.velocity.x, 0, rb.velocity.z)),
-                LERP_SPEED * Time.deltaTime);
+        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+        transform.rotation = Quaternion.Euler(0f, angle, 0f);
     }
 
     private void TurnToMousePosition()
@@ -344,13 +270,13 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(0f, targetRotation.eulerAngles.y, 0f);
     }
 
-    private void ResetAngularVelocity()
+    /*private void ResetAngularVelocity()
     {
         rb.angularVelocity = Vector3.zero;
-    }
+    }*/
 
-    private bool IsSprinting() =>
-        isLShiftDown && direction != Vector3.zero; // && playerStamina.GetStaminaPoints() > 0;
+    /*private bool IsSprinting() =>
+        isLShiftDown && direction != Vector3.zero; // && playerStamina.GetStaminaPoints() > 0;*/
 
     // private bool Vaulting()
     // {
@@ -367,17 +293,40 @@ public class PlayerController : MonoBehaviour
     // private bool Dashing() => 
     //     Input.GetKeyDown(KeyCode.Space) && direction != Vector2.zero && playerStamina.GetStaminaPoints() > 0;
 
-    public void Move(Vector3 direction, float speed)
+    /*public void Move(Vector3 direction, float speed)
     {
         rb.velocity = direction * speed;
-    }
-
-    public void Sprint(Vector3 direction, float speed, float speedIncreaseFactor)
+    }*/
+    
+    public void Move(bool isMoving)
     {
-        Move(direction, speed * speedIncreaseFactor);
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+        if (isGrounded && velocity.y < 0)
+        {
+            velocity.y = -2f; 
+        }
+
+        if (isMoving) 
+        {
+            targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+            if(!isLeftClickDown && !isRightClickDown) TurnCharacterInMovementDirection();
+
+            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+            float currentSpeed = isLShiftDown ? speed * speedIncreaseFactor : speed; 
+            controller.Move(moveDir.normalized * currentSpeed * Time.deltaTime); 
+        }
+        
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
+        
+        // if (Input.GetButtonDown("Jump") && isGrounded)
+        // {
+        //     velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        // }
     }
 
-    private void ShootAnimOn(bool isMove)
+    private void ShootAnimOn()
     {
         AimOn();
         OnShootAnimationEnable?.Invoke();
@@ -389,7 +338,6 @@ public class PlayerController : MonoBehaviour
         {
             AimOff();
         }
-        isShootingWhileRun = false;
         OnShootAnimationDiasble?.Invoke();
     }
 

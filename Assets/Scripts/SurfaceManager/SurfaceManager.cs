@@ -4,22 +4,17 @@ using UnityEngine;
 using UnityEngine.Pool;
 
 
-
 namespace LlamAcademy.ImpactSystem
 {
     public class SurfaceManager : MonoBehaviour
     {
+        [SerializeField] private Transform objectParent;
         private static SurfaceManager _instance;
+
         public static SurfaceManager Instance
         {
-            get
-            {
-                return _instance;
-            }
-            private set
-            {
-                _instance = value;
-            }
+            get { return _instance; }
+            private set { _instance = value; }
         }
 
         private void Awake()
@@ -34,20 +29,18 @@ namespace LlamAcademy.ImpactSystem
             Instance = this;
         }
 
-        [SerializeField]
-        private List<SurfaceType> Surfaces = new List<SurfaceType>();
-        [SerializeField]
-        private Surface DefaultSurface;
+        [SerializeField] private List<SurfaceType> Surfaces = new List<SurfaceType>();
+        [SerializeField] private Surface DefaultSurface;
         private Dictionary<GameObject, ObjectPool<GameObject>> ObjectPools = new();
 
-        public void HandleImpact(GameObject HitObject, Vector3 HitPoint, Vector3 HitNormal, ImpactType Impact, int TriangleIndex)
+        public void HandleImpact(GameObject HitObject, Vector3 HitPoint, Vector3 HitNormal, ImpactType Impact,
+            int TriangleIndex)
         {
             if (HitObject.TryGetComponent<Terrain>(out Terrain terrain))
             {
                 List<TextureAlpha> activeTextures = GetActiveTexturesFromTerrain(terrain, HitPoint);
                 foreach (TextureAlpha activeTexture in activeTextures)
                 {
-                    
                     SurfaceType surfaceType = Surfaces.Find(surface => surface.Albedo == activeTexture.Texture);
                     if (surfaceType != null)
                     {
@@ -55,7 +48,6 @@ namespace LlamAcademy.ImpactSystem
                         {
                             if (typeEffect.ImpactType == Impact)
                             {
-                                
                                 PlayEffects(HitPoint, HitNormal, typeEffect.SurfaceEffect, activeTexture.Alpha);
                             }
                         }
@@ -146,7 +138,8 @@ namespace LlamAcademy.ImpactSystem
                 return GetTextureFromMesh(mesh, TriangleIndex, Renderer.sharedMaterials);
             }
 
-            Debug.LogError($"{Renderer.name} has no MeshFilter or SkinnedMeshRenderer! Using default impact effect instead of texture-specific one because we'll be unable to find the correct texture!");
+            Debug.LogError(
+                $"{Renderer.name} has no MeshFilter or SkinnedMeshRenderer! Using default impact effect instead of texture-specific one because we'll be unable to find the correct texture!");
             return null;
         }
 
@@ -187,7 +180,12 @@ namespace LlamAcademy.ImpactSystem
                 {
                     if (!ObjectPools.ContainsKey(spawnObjectEffect.Prefab))
                     {
-                        ObjectPools.Add(spawnObjectEffect.Prefab, new ObjectPool<GameObject>(() => Instantiate(spawnObjectEffect.Prefab)));
+                        ObjectPools.Add(spawnObjectEffect.Prefab, new ObjectPool<GameObject>(() =>
+                        {
+                            // Создаем объект с правильным родителем
+                            GameObject spawnedObject = Instantiate(spawnObjectEffect.Prefab, objectParent);
+                            return spawnedObject;
+                        }));
                     }
 
                     GameObject instance = ObjectPools[spawnObjectEffect.Prefab].Get();
@@ -196,6 +194,7 @@ namespace LlamAcademy.ImpactSystem
                     {
                         poolable.Parent = ObjectPools[spawnObjectEffect.Prefab];
                     }
+
                     instance.SetActive(true);
                     instance.transform.position = HitPoint + HitNormal * 0.001f;
                     instance.transform.forward = HitNormal;
@@ -217,7 +216,12 @@ namespace LlamAcademy.ImpactSystem
             {
                 if (!ObjectPools.ContainsKey(playAudioEffect.AudioSourcePrefab.gameObject))
                 {
-                    ObjectPools.Add(playAudioEffect.AudioSourcePrefab.gameObject, new ObjectPool<GameObject>(() => Instantiate(playAudioEffect.AudioSourcePrefab.gameObject)));
+                    ObjectPools.Add(playAudioEffect.AudioSourcePrefab.gameObject, new ObjectPool<GameObject>(() =>
+                    {
+                        GameObject audioObject =
+                            Instantiate(playAudioEffect.AudioSourcePrefab.gameObject, objectParent);
+                        return audioObject;
+                    }));
                 }
 
                 AudioClip clip = playAudioEffect.AudioClips[Random.Range(0, playAudioEffect.AudioClips.Count)];
@@ -226,8 +230,10 @@ namespace LlamAcademy.ImpactSystem
                 AudioSource audioSource = instance.GetComponent<AudioSource>();
 
                 audioSource.transform.position = HitPoint;
-                audioSource.PlayOneShot(clip, SoundOffset * Random.Range(playAudioEffect.VolumeRange.x, playAudioEffect.VolumeRange.y));
-                StartCoroutine(DisableAudioSource(ObjectPools[playAudioEffect.AudioSourcePrefab.gameObject], audioSource, clip.length));
+                audioSource.PlayOneShot(clip,
+                    SoundOffset * Random.Range(playAudioEffect.VolumeRange.x, playAudioEffect.VolumeRange.y));
+                StartCoroutine(DisableAudioSource(ObjectPools[playAudioEffect.AudioSourcePrefab.gameObject],
+                    audioSource, clip.length));
             }
         }
 
@@ -238,6 +244,7 @@ namespace LlamAcademy.ImpactSystem
             AudioSource.gameObject.SetActive(false);
             Pool.Release(AudioSource.gameObject);
         }
+
 
         private class TextureAlpha
         {

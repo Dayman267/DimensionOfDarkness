@@ -74,67 +74,65 @@ public class GunSO : ScriptableObject
             ps.Play();
         }
     }
-    
-   public void TryToShoot()
-{
-    if (Time.time - LastShootTime - ShootConfig.FireRate > Time.deltaTime)
+
+    public void TryToShoot()
     {
-        float lastDuration = Mathf.Clamp(
-            0,
-            (StopShootingTime - InitialClickTime),
-            ShootConfig.MaxSpreadTime
-        );
-        float lerpTime = (ShootConfig.RecoilRecoverySpeed - (Time.time - StopShootingTime))
-                         / ShootConfig.RecoilRecoverySpeed;
-        InitialClickTime = Time.time - Mathf.Lerp(0, lastDuration, Mathf.Clamp01(lerpTime));
-    }
-    
-    if (Time.time > ShootConfig.FireRate + LastShootTime)
-    {
-        LastShootTime = Time.time;
-        
-        if (AmmoConfig.CurrentClipAmmo == 0)
+        if (Time.time - LastShootTime - ShootConfig.FireRate > Time.deltaTime)
         {
-            AudioConfig.PlayOutOfAmmoClip(ShootingAudioSource);
-            return;
+            float lastDuration = Mathf.Clamp(
+                0,
+                (StopShootingTime - InitialClickTime),
+                ShootConfig.MaxSpreadTime
+            );
+            float lerpTime = (ShootConfig.RecoilRecoverySpeed - (Time.time - StopShootingTime))
+                             / ShootConfig.RecoilRecoverySpeed;
+            InitialClickTime = Time.time - Mathf.Lerp(0, lastDuration, Mathf.Clamp01(lerpTime));
         }
 
-        PlayParticleSystems();
-        AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.CurrentClipAmmo == 1);
-        
-        Ray ray = ActiveCamera.ScreenPointToRay(Mouse.current.position.value);
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        if (Time.time > ShootConfig.FireRate + LastShootTime)
         {
-            Vector3 shootDirection = hit.point - ShootingStartPoint.transform.position;
-            
-            if (ShootConfig.IsHitScan)
+            LastShootTime = Time.time;
+
+            if (AmmoConfig.CurrentClipAmmo == 0)
             {
-                DoHitScanShoot(shootDirection);
+                AudioConfig.PlayOutOfAmmoClip(ShootingAudioSource);
+                return;
+            }
+
+            PlayParticleSystems();
+            AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.CurrentClipAmmo == 1);
+
+            Ray ray = ActiveCamera.ScreenPointToRay(Mouse.current.position.value);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+            {
+                Vector3 shootDirection = hit.point - ShootingStartPoint.transform.position;
+                if (ShootConfig.IsHitScan)
+                {
+                    DoHitScanShoot(shootDirection);
+                }
+                else
+                {
+                    DoProjectileShoot(shootDirection.normalized);
+                }
             }
             else
             {
-                DoProjectileShoot(shootDirection.normalized); 
+                Vector3 shootDirection = ray.direction;
+                if (ShootConfig.IsHitScan)
+                {
+                    DoHitScanShoot(shootDirection);
+                }
+                else
+                {
+                    DoProjectileShoot(shootDirection.normalized);
+                }
             }
-        }
-        else
-        {
-            Vector3 shootDirection = ray.direction;
 
-            if (ShootConfig.IsHitScan)
-            {
-                DoHitScanShoot(shootDirection);
-            }
-            else
-            {
-                DoProjectileShoot(shootDirection.normalized); 
-            }
+            AmmoConfig.CurrentClipAmmo--;
         }
-        
-        AmmoConfig.CurrentClipAmmo--;
     }
-}
     /*public void TryToShoot()
     {
         if (Time.time - LastShootTime - ShootConfig.FireRate > Time.deltaTime)
@@ -275,12 +273,12 @@ public class GunSO : ScriptableObject
         Collider HitCollider)
     {
         SurfaceManager.Instance.HandleImpact(
-                HitCollider.gameObject,
-                HitLocation,
-                HitNormal,
-                ImpactType,
-                0
-            );
+            HitCollider.gameObject,
+            HitLocation,
+            HitNormal,
+            ImpactType,
+            0
+        );
 
         if (HitCollider.TryGetComponent(out IDamageable damageable))
         {
@@ -318,7 +316,7 @@ public class GunSO : ScriptableObject
         }
     }
 
-   public Vector3 GetRaycastOrigin()
+    public Vector3 GetRaycastOrigin()
     {
         Vector3 origin = ShootingStartPoint.transform.position;
 
@@ -397,8 +395,8 @@ public class GunSO : ScriptableObject
         yield return null;
         instance.emitting = false;
         instance.gameObject.SetActive(false);
-        Destroy(instance.gameObject);
         //TrailPool.Release(instance);
+        Destroy(instance.gameObject);   
     }
 
     private TrailRenderer CreateTrail()

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Rifle Ammo Config
   m_EditorClassIdentifier: 
   ClipSize: 30
-  CurrentClipAmmo: 10000
+  CurrentClipAmmo: 30
