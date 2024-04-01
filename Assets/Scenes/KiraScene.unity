@@ -1447,6 +1447,19 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1002827543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1002827488}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac79a02e883c7940ba7b2e9d1a24e11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GunSelector: {fileID: 1002827512}
 --- !u!1 &1034488286
 GameObject:
   m_ObjectHideFlags: 0
@@ -2560,6 +2573,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5854484438722371457, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1002827537}
+    - targetCorrespondingSourceObject: {fileID: 5854484438722371457, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1002827543}
   m_SourcePrefab: {fileID: 100100000, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
 --- !u!4 &5948187983281849433 stripped
 Transform:

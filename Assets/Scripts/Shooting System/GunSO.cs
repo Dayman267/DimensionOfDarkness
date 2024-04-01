@@ -10,7 +10,7 @@ using UnityEngine.Rendering;
 using Random = UnityEngine.Random;
 
 [CreateAssetMenu(fileName = "Gun", menuName = "Guns/Gun", order = 0)]
-public class GunSO : ScriptableObject
+public class GunSO : ScriptableObject, ICloneable
 {
     public ImpactType ImpactType;
     public GunType Type;
@@ -45,7 +45,6 @@ public class GunSO : ScriptableObject
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
         this.ActiveCamera = ActiveCamera;
 
-        LastShootTime = 0; // in editor this will not be properly reset, in build it`s fine
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
         if (!ShootConfig.IsHitScan)
         {
@@ -102,12 +101,17 @@ public class GunSO : ScriptableObject
             PlayParticleSystems();
             AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.CurrentClipAmmo == 1);
 
+            Vector3 spreadAmount = ShootConfig.GetSpread(Time.time - InitialClickTime);
+            //Model.transform.forward += Model.transform.TransformDirection(spreadAmount);
+            //Quaternion rotation = Quaternion.Euler(spreadAmount);
+            //Model.transform.rotation *= rotation;
+            
             Ray ray = ActiveCamera.ScreenPointToRay(Mouse.current.position.value);
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
             {
-                Vector3 shootDirection = hit.point - ShootingStartPoint.transform.position;
+                Vector3 shootDirection = (hit.point - ShootingStartPoint.transform.position) + Model.transform.TransformDirection(spreadAmount);
                 if (ShootConfig.IsHitScan)
                 {
                     DoHitScanShoot(shootDirection);
@@ -418,5 +422,26 @@ public class GunSO : ScriptableObject
     private Bullet CreateBullet()
     {
         return Instantiate(ShootConfig.BulletPrefab);
+    }
+
+    public object Clone()
+    {
+        GunSO config = CreateInstance<GunSO>();
+        config.ImpactType = ImpactType;
+        config.Type = Type;
+        config.Name = Name;
+        config.name = name;
+        
+        config.DamageConfig = DamageConfig.Clone() as DamageConfigSO;
+        config.ShootConfig = ShootConfig.Clone() as ShootConfigurationSO;
+        config.TrailConfig = TrailConfig.Clone() as TrailConfigSO;
+        config.AmmoConfig = AmmoConfig.Clone() as AmmoConfigSO;
+        config.AudioConfig = AudioConfig.Clone() as AudioConfigSO;
+
+        config.ModelPrefab = ModelPrefab;
+        config.SpawnPoint = SpawnPoint;
+        config.SpawnRotation = SpawnRotation;
+
+        return config;
     }
 }

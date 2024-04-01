@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [CreateAssetMenu(fileName = "Audio Config", menuName = "Guns/Audio Config", order = 5)]
-public class AudioConfigSO : ScriptableObject
+public class AudioConfigSO : ScriptableObject, ICloneable
 {
     [Range(0,1f)]
     public float Volume = 1f;
@@ -39,5 +41,14 @@ public class AudioConfigSO : ScriptableObject
         {
             AudioSource.PlayOneShot(ReloadClip,Volume);
         }
+    }
+
+    public object Clone()
+    {
+        AudioConfigSO config = CreateInstance<AudioConfigSO>();
+        
+        Utilities.CopyValues(this, config);
+
+        return config;
     }
 }

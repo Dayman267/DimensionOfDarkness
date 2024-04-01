@@ -27,9 +27,10 @@ public class PlayerGunSelector : MonoBehaviour
             Debug.LogError($"No GunSO found for GunType: {gun}");
         }
 
-        ActiveGun = gun;
-        gun.Spawn(GunParent,this, Camera);
-        
+        ActiveGun = gun.Clone() as GunSO;
+        if (ActiveGun != null) 
+            ActiveGun.Spawn(GunParent, this, Camera);
+
         //Some magic for IK
         // video 1 - 14.18
         /*Transform[] allChildren = GunParent.GetComponentsInChildren<Transform>();

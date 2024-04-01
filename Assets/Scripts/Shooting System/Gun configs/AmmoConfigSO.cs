@@ -1,7 +1,8 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Ammo Config", menuName = "Guns/Ammo Config", order = 3)]
-public class AmmoConfigSO : ScriptableObject
+public class AmmoConfigSO : ScriptableObject,ICloneable
 {
     //public int MaxAmmo = 120;
     public int ClipSize = 30;
@@ -24,5 +25,14 @@ public class AmmoConfigSO : ScriptableObject
     {
         //return CurrentClipAmmo < ClipSize && CurrentAmmo > 0;
         return CurrentClipAmmo < ClipSize;
+    }
+
+    public object Clone()
+    {
+        AmmoConfigSO config = CreateInstance<AmmoConfigSO>();
+        
+        Utilities.CopyValues(this, config);
+
+        return config;
     }
 }

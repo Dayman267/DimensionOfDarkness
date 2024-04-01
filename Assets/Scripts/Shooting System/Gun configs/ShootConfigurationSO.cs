@@ -1,11 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [CreateAssetMenu(fileName = "Shoot Config", menuName = "Guns/Shoot Configuration", order = 2)]
-public class ShootConfigurationSO : ScriptableObject
+public class ShootConfigurationSO : ScriptableObject, ICloneable
 {
     public bool IsHitScan = true;
     public Bullet BulletPrefab;
@@ -18,7 +20,8 @@ public class ShootConfigurationSO : ScriptableObject
     public float RecoilRecoverySpeed = 1f;
     public float MaxSpreadTime = 1f;
     public BulletSpreadType SpreadType = BulletSpreadType.Simple;
-    [Header("Simple Spread")] public Vector3 Spread = new Vector3(0.1f, 0.1f, 0.1f);
+    [Header("Simple Spread")] 
+    public Vector3 Spread = new Vector3(0.1f, 0.1f, 0.1f);
 
     [Header("Texture-Based Spread")] [Range(0.001f, 5f)]
     public float SpreadMultiplier = 0.1f;
@@ -100,5 +103,13 @@ public class ShootConfigurationSO : ScriptableObject
         Vector2 direction = (targetPosition - halfSize) / halfSize.x;
 
         return direction;
+    }
+
+    public object Clone()
+    {
+        ShootConfigurationSO config = CreateInstance<ShootConfigurationSO>();
+
+        Utilities.CopyValues(this, config);
+        return config;
     }
 }
