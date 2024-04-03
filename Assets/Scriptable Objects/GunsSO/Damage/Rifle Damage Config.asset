@@ -47,3 +47,5 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_ConstantMin: 10
     m_ConstantMax: 15
+  CriticalChance: 0
+  CriticalMultiplier: 2

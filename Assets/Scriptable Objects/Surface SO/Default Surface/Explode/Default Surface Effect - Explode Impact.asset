@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 212b863f5d7288f4381f44dae6cb899d, type: 3}
-  m_Name: Lunar Surface Effect - Bullet Impact
+  m_Name: Default Surface Effect - Explode Impact
   m_EditorClassIdentifier: 
   SpawnObjectEffects:
-  - {fileID: 11400000, guid: 335661d8e0dceda488f0564d66edd757, type: 2}
+  - {fileID: 11400000, guid: b1081ac91fb94b74a847e7476e9e72cf, type: 2}
   PlayAudioEffects:
-  - {fileID: 11400000, guid: 160de124cc31f2542b8d90ec5341e220, type: 2}
+  - {fileID: 11400000, guid: c38eda936e2cd7b4183616cb8cfe07e2, type: 2}

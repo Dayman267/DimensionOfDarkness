@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7865fa125578dca41bb8741df26dbb7e, type: 3}
-  m_Name: Lunar Play Audio Effect - Bullet Impact
+  m_Name: Default Play Audio Effect - Bullet Impact
   m_EditorClassIdentifier: 
   AudioSourcePrefab: {fileID: 2200636529332987122, guid: aad7cbae6deee484f8abc2a8484ab90a, type: 3}
   AudioClips:

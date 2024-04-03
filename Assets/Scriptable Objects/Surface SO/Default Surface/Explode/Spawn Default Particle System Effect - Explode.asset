@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 61e813069bdcdf4479f0a2761def5edc, type: 3}
-  m_Name: Spawn Lunar Particle System Effect
+  m_Name: Spawn Default Particle System Effect - Explode
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 4203358848566134389, guid: 1423f65370e4ce54bbe3e135c8fab268, type: 3}
+  Prefab: {fileID: 1828176872806910, guid: b5604d53ba7eea04da000fc3479034d4, type: 3}
   Probability: 1
   RandomizeRotation: 0
   RandomizedRotationMultiplier: {x: 0, y: 0, z: 0}

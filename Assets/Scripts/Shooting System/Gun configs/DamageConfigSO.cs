@@ -7,6 +7,8 @@ using Random = UnityEngine.Random;
 public class DamageConfigSO : ScriptableObject, ICloneable
 {
     public MinMaxCurve DamageCurve;
+    public float CriticalChance = 0f;
+    public float CriticalMultiplier = 0f;
 
     private void Reset()
     {
@@ -15,13 +17,24 @@ public class DamageConfigSO : ScriptableObject, ICloneable
 
     public int GetDamage(float Distance = 0)
     {
-        return Mathf.CeilToInt(DamageCurve.Evaluate(Distance, Random.value));
+        float normalDamage = DamageCurve.Evaluate(Distance, UnityEngine.Random.value); // Получаем обычный урон
+        float finalDamage = normalDamage;
+        
+        if (Random.value <= CriticalChance)
+        {
+           
+            normalDamage *= (CriticalMultiplier);
+        }
+        
+        return Mathf.CeilToInt(normalDamage);
     }
 
     public object Clone()
     {
         DamageConfigSO config = CreateInstance<DamageConfigSO>();
         config.DamageCurve = DamageCurve;
+        config.CriticalChance = CriticalChance;
+        config.CriticalMultiplier = CriticalMultiplier;
         return config;
     }
 }

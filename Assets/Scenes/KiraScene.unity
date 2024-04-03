@@ -366,7 +366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39684f3b9516ab2489991d22fb41c825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _MaxHealth: 100
+  _MaxHealth: 50
   _Health: 0
 --- !u!114 &357151550
 MonoBehaviour:
@@ -630,7 +630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39684f3b9516ab2489991d22fb41c825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _MaxHealth: 100
+  _MaxHealth: 50
   _Health: 0
 --- !u!114 &433105602
 MonoBehaviour:
@@ -725,7 +725,7 @@ Transform:
   m_GameObject: {fileID: 433105599}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.16, y: 7.22, z: 0.95}
+  m_LocalPosition: {x: -0.2, y: 7.22, z: 3.16}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1360,8 +1360,8 @@ MonoBehaviour:
   GunParent: {fileID: 163870985}
   Guns:
   - {fileID: 11400000, guid: 2fbe4cdd96e3a9542a2f0842868a628d, type: 2}
-  - {fileID: 0}
-  ActiveGun: {fileID: 0}
+  - {fileID: 11400000, guid: 77ea2d7f441f5594b954c7926f823574, type: 2}
+  ActiveGun: {fileID: 11400000, guid: 2fbe4cdd96e3a9542a2f0842868a628d, type: 2}
 --- !u!95 &1002827520
 Animator:
   serializedVersion: 5
@@ -1459,6 +1459,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac79a02e883c7940ba7b2e9d1a24e11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ImpactTypeOverride: {fileID: 11400000, guid: b37716bad6a26e54d8521647459aa353, type: 2}
   GunSelector: {fileID: 1002827512}
 --- !u!1 &1034488286
 GameObject:
@@ -1961,7 +1962,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39684f3b9516ab2489991d22fb41c825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _MaxHealth: 100
+  _MaxHealth: 50
   _Health: 0
 --- !u!114 &1820093135
 MonoBehaviour:
@@ -2056,7 +2057,7 @@ Transform:
   m_GameObject: {fileID: 1820093132}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.306, y: 7.22, z: 1.553}
+  m_LocalPosition: {x: -3.08, y: 7.22, z: 3.54}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

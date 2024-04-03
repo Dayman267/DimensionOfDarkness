@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8387474380709990664}
   - component: {fileID: 2200636529332987122}
   m_Layer: 0
-  m_Name: AudioSource
+  m_Name: Surface System - Audio Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

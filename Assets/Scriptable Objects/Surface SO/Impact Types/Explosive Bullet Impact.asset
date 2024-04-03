@@ -9,9 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1034464f4285a4a4896573b05c7788ea, type: 3}
-  m_Name: Lunar Surface
+  m_Script: {fileID: 11500000, guid: 607e495f5a03e6e46b9fef1c7eae2989, type: 3}
+  m_Name: Explosive Bullet Impact
   m_EditorClassIdentifier: 
-  ImpactTypeEffects:
-  - ImpactType: {fileID: 11400000, guid: 1691feeaf5aa8824f944385edaaab490, type: 2}
-    SurfaceEffect: {fileID: 11400000, guid: bc9d4f3b204cfbb4ca7a30d98843c2bd, type: 2}

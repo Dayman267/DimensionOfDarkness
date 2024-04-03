@@ -1,13 +1,10 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using LlamAcademy.ImpactSystem;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 using UnityEngine.Rendering;
-using Random = UnityEngine.Random;
 
 [CreateAssetMenu(fileName = "Gun", menuName = "Guns/Gun", order = 0)]
 public class GunSO : ScriptableObject, ICloneable
@@ -24,6 +21,8 @@ public class GunSO : ScriptableObject, ICloneable
     public TrailConfigSO TrailConfig;
     public AmmoConfigSO AmmoConfig;
     public AudioConfigSO AudioConfig;
+
+    public ICollisionHandler[] BulletImpactEffects = Array.Empty<ICollisionHandler>();
 
     private MonoBehaviour ActiveMonoBehaviour;
     private GameObject Model;
@@ -44,7 +43,6 @@ public class GunSO : ScriptableObject, ICloneable
     {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
         this.ActiveCamera = ActiveCamera;
-
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
         if (!ShootConfig.IsHitScan)
         {
@@ -276,6 +274,7 @@ public class GunSO : ScriptableObject, ICloneable
         Vector3 HitNormal,
         Collider HitCollider)
     {
+        Debug.Log(ImpactType.name);
         SurfaceManager.Instance.HandleImpact(
             HitCollider.gameObject,
             HitLocation,
@@ -287,6 +286,11 @@ public class GunSO : ScriptableObject, ICloneable
         if (HitCollider.TryGetComponent(out IDamageable damageable))
         {
             damageable.TakeDamage(DamageConfig.GetDamage(DistanceTraveled));
+        }
+
+        foreach (ICollisionHandler handler in BulletImpactEffects)
+        {
+            handler.HandleImpact(HitCollider, HitLocation, HitNormal, this);
         }
     }
 

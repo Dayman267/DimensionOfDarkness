@@ -4920,7 +4920,7 @@ GameObject:
   - component: {fileID: 4077192571484236417}
   - component: {fileID: -3997885525830553129}
   m_Layer: 0
-  m_Name: HitEffect
+  m_Name: HitEffectDust
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
