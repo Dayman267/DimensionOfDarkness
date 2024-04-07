@@ -85,6 +85,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Change Gun Backward",
+                    "type": "Button",
+                    "id": "f75c2647-83f3-40cb-8722-f4aec766bdd7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Change Gun Forward",
+                    "type": "Button",
+                    "id": "21392919-16b5-420c-81a4-0a93a8288b15",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -250,6 +268,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Weapon Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "be1b359e-c129-4ef1-9805-b993de145042",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Change Gun Backward",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b46133d2-234b-4f14-8b87-2c8eac4d93e3",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Change Gun Forward",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

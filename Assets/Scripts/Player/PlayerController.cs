@@ -85,6 +85,13 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(Vector3.zero);
     }
 
+    static bool isRightClickDown;
+    static bool isLeftClickDown;
+    static bool isLShiftDown;
+    static bool isRKeyDown;
+    static bool isQKeyDown;
+    static bool isEKeyDown;
+    
     public static bool IsRightClickDown()
     {
         return isRightClickDown;
@@ -103,13 +110,16 @@ public class PlayerController : MonoBehaviour
     public static bool IsRKeyDown()
     {
         return isRKeyDown;
+    } 
+    public static bool IsQKeyDown()
+    {
+        return isQKeyDown;
+    }
+    public static bool IsEKeyDown()
+    {
+        return isEKeyDown;
     }
     
-    static bool isRightClickDown;
-    static bool isLeftClickDown;
-    static bool isLShiftDown;
-    static bool isRKeyDown;
-
     void Update()
     {
         _movementVector = CalculateMovementVector();
@@ -369,6 +379,12 @@ public class PlayerController : MonoBehaviour
 
         playerActions.Gameplay.WeaponReload.performed += ctx => isRKeyDown = true;
         playerActions.Gameplay.WeaponReload.canceled += ctx => isRKeyDown = false;
+        
+        playerActions.Gameplay.ChangeGunBackward.performed += ctx => isQKeyDown = true;
+        playerActions.Gameplay.ChangeGunBackward.canceled += ctx => isQKeyDown = false;
+        
+        playerActions.Gameplay.ChangeGunForward.performed += ctx => isEKeyDown = true;
+        playerActions.Gameplay.ChangeGunForward.canceled += ctx => isEKeyDown = false;
     }
 
     private void OnDisable()
@@ -380,10 +396,16 @@ public class PlayerController : MonoBehaviour
         playerActions.Gameplay.Shoot.performed -= ctx => isLeftClickDown = true;
         playerActions.Gameplay.Shoot.canceled -= ctx => isLeftClickDown = false;
 
-        playerActions.Gameplay.Sprint.performed += ctx => isLShiftDown = true;
-        playerActions.Gameplay.Sprint.canceled += ctx => isLShiftDown = false;
+        playerActions.Gameplay.Sprint.performed -= ctx => isLShiftDown = true;
+        playerActions.Gameplay.Sprint.canceled -= ctx => isLShiftDown = false;
 
         playerActions.Gameplay.WeaponReload.performed -= ctx => isRKeyDown = true;
         playerActions.Gameplay.WeaponReload.canceled -= ctx => isRKeyDown = false;
+        
+        playerActions.Gameplay.ChangeGunBackward.performed -= ctx => isQKeyDown = true;
+        playerActions.Gameplay.ChangeGunBackward.canceled -= ctx => isQKeyDown = false;
+        
+        playerActions.Gameplay.ChangeGunForward.performed -= ctx => isEKeyDown = true;
+        playerActions.Gameplay.ChangeGunForward.canceled -= ctx => isEKeyDown = false;
     }
 }

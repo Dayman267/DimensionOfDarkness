@@ -755,13 +755,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 444369609}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.244, y: 1.546, z: 0.694}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.04, y: -0.679, z: 0.044}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5948187983281849433}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Father: {fileID: 1373509545}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &633062414
 GameObject:
   m_ObjectHideFlags: 0
@@ -1356,12 +1356,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Camera: {fileID: 963194227}
-  Gun: 1
+  GunType: 0
   GunParent: {fileID: 163870985}
   Guns:
   - {fileID: 11400000, guid: 2fbe4cdd96e3a9542a2f0842868a628d, type: 2}
   - {fileID: 11400000, guid: 77ea2d7f441f5594b954c7926f823574, type: 2}
+  - {fileID: 11400000, guid: 87089f181ba1235489c43688de7f4734, type: 2}
   ActiveGun: {fileID: 11400000, guid: 2fbe4cdd96e3a9542a2f0842868a628d, type: 2}
+  ActiveBaseGun: {fileID: 0}
 --- !u!95 &1002827520
 Animator:
   serializedVersion: 5
@@ -1821,6 +1823,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ee13d518658eb2140a5cf1e59a3de544, type: 3}
+--- !u!4 &1373509545 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3526514594408595785, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
+  m_PrefabInstance: {fileID: 5948187983281849432}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1435694024
 GameObject:
   m_ObjectHideFlags: 0
@@ -2552,7 +2559,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1300952344343400094, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1470087083}
-    - targetCorrespondingSourceObject: {fileID: 3526514594408611149, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 3526514594408595785, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
       insertIndex: -1
       addedObject: {fileID: 444369610}
     m_AddedComponents:
@@ -2578,11 +2585,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1002827543}
   m_SourcePrefab: {fileID: 100100000, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
---- !u!4 &5948187983281849433 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3526514594408611149, guid: e76b5d6232df91c41a553ace9bbabe16, type: 3}
-  m_PrefabInstance: {fileID: 5948187983281849432}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

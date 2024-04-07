@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 139e9470703b2744b8f189136836be62, type: 3}
+  m_Name: Grande Launcher Shoot Config
+  m_EditorClassIdentifier: 
+  IsHitScan: 0
+  BulletPrefab: {fileID: 705683116906854266, guid: fa2afda599db7f249b7cf5dd4f9aefb6, type: 3}
+  BulletSpawnForce: 800
+  HitMask:
+    serializedVersion: 2
+    m_Bits: 1
+  FireRate: 2
+  ShootType: 1
+  RecoilRecoverySpeed: 1
+  MaxSpreadTime: 1
+  SpreadType: 1
+  Spread: {x: 0.1, y: 0.1, z: 0.1}
+  SpreadMultiplier: 0.1
+  SpreadTexture: {fileID: 0}

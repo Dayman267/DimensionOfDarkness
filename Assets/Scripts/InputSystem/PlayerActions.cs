@@ -107,6 +107,24 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Change Gun Backward"",
+                    ""type"": ""Button"",
+                    ""id"": ""f75c2647-83f3-40cb-8722-f4aec766bdd7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Change Gun Forward"",
+                    ""type"": ""Button"",
+                    ""id"": ""21392919-16b5-420c-81a4-0a93a8288b15"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -274,6 +292,28 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""action"": ""Weapon Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""be1b359e-c129-4ef1-9805-b993de145042"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Change Gun Backward"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b46133d2-234b-4f14-8b87-2c8eac4d93e3"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Change Gun Forward"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -297,6 +337,8 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         m_Gameplay_A = m_Gameplay.FindAction("A", throwIfNotFound: true);
         m_Gameplay_D = m_Gameplay.FindAction("D", throwIfNotFound: true);
         m_Gameplay_WeaponReload = m_Gameplay.FindAction("Weapon Reload", throwIfNotFound: true);
+        m_Gameplay_ChangeGunBackward = m_Gameplay.FindAction("Change Gun Backward", throwIfNotFound: true);
+        m_Gameplay_ChangeGunForward = m_Gameplay.FindAction("Change Gun Forward", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
     }
@@ -369,6 +411,8 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_A;
     private readonly InputAction m_Gameplay_D;
     private readonly InputAction m_Gameplay_WeaponReload;
+    private readonly InputAction m_Gameplay_ChangeGunBackward;
+    private readonly InputAction m_Gameplay_ChangeGunForward;
     public struct GameplayActions
     {
         private @PlayerActions m_Wrapper;
@@ -382,6 +426,8 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         public InputAction @A => m_Wrapper.m_Gameplay_A;
         public InputAction @D => m_Wrapper.m_Gameplay_D;
         public InputAction @WeaponReload => m_Wrapper.m_Gameplay_WeaponReload;
+        public InputAction @ChangeGunBackward => m_Wrapper.m_Gameplay_ChangeGunBackward;
+        public InputAction @ChangeGunForward => m_Wrapper.m_Gameplay_ChangeGunForward;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -418,6 +464,12 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @WeaponReload.started += instance.OnWeaponReload;
             @WeaponReload.performed += instance.OnWeaponReload;
             @WeaponReload.canceled += instance.OnWeaponReload;
+            @ChangeGunBackward.started += instance.OnChangeGunBackward;
+            @ChangeGunBackward.performed += instance.OnChangeGunBackward;
+            @ChangeGunBackward.canceled += instance.OnChangeGunBackward;
+            @ChangeGunForward.started += instance.OnChangeGunForward;
+            @ChangeGunForward.performed += instance.OnChangeGunForward;
+            @ChangeGunForward.canceled += instance.OnChangeGunForward;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -449,6 +501,12 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @WeaponReload.started -= instance.OnWeaponReload;
             @WeaponReload.performed -= instance.OnWeaponReload;
             @WeaponReload.canceled -= instance.OnWeaponReload;
+            @ChangeGunBackward.started -= instance.OnChangeGunBackward;
+            @ChangeGunBackward.performed -= instance.OnChangeGunBackward;
+            @ChangeGunBackward.canceled -= instance.OnChangeGunBackward;
+            @ChangeGunForward.started -= instance.OnChangeGunForward;
+            @ChangeGunForward.performed -= instance.OnChangeGunForward;
+            @ChangeGunForward.canceled -= instance.OnChangeGunForward;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -515,6 +573,8 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         void OnA(InputAction.CallbackContext context);
         void OnD(InputAction.CallbackContext context);
         void OnWeaponReload(InputAction.CallbackContext context);
+        void OnChangeGunBackward(InputAction.CallbackContext context);
+        void OnChangeGunForward(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

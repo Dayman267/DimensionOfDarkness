@@ -57,6 +57,8 @@ public class GunSO : ScriptableObject, ICloneable
         ShootSystem = Model.GetComponentsInChildren<ParticleSystem>();
         ShootingAudioSource = Model.GetComponent<AudioSource>();
         ShootingStartPoint = GameObject.FindWithTag("ShootingStartPoint");
+
+        //ShootingStartPoint.transform.position = ShootSystem[0].transform.position;
     }
 
     public void UpdateCamera(Camera ActiveCamera)
@@ -134,6 +136,19 @@ public class GunSO : ScriptableObject, ICloneable
 
             AmmoConfig.CurrentClipAmmo--;
         }
+    }
+
+    public void Despawn()
+    {
+        Model.SetActive(false);
+        Destroy(Model);
+        TrailPool.Clear();
+        if(BulletPool != null)
+            BulletPool.Clear();
+
+        ShootingAudioSource = null;
+        ShootSystem = null;
+        ShootingStartPoint = null;
     }
     /*public void TryToShoot()
     {
@@ -274,7 +289,6 @@ public class GunSO : ScriptableObject, ICloneable
         Vector3 HitNormal,
         Collider HitCollider)
     {
-        Debug.Log(ImpactType.name);
         SurfaceManager.Instance.HandleImpact(
             HitCollider.gameObject,
             HitLocation,
