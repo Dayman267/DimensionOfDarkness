@@ -14,6 +14,8 @@ public class PlayerGunSelector : MonoBehaviour
     [SerializeField] private Transform GunParent;
 
     [SerializeField] private List<GunSO> Guns;
+
+    public static event Action OnGunChanged;
     // video 1
     //  [SerializeField] private PlayerIK InversKinematics;
 
@@ -49,7 +51,7 @@ public class PlayerGunSelector : MonoBehaviour
     {
         if (PlayerController.IsQKeyDown() && !isQKeyDown)
         {
-            SwapGun(-1);
+            SwitchWeapon(-1);
             isQKeyDown = true;
         }
         else if (!PlayerController.IsQKeyDown() && isQKeyDown)
@@ -59,7 +61,7 @@ public class PlayerGunSelector : MonoBehaviour
 
         if (PlayerController.IsEKeyDown() && !isEKeyDown)
         {
-            SwapGun(1);
+            SwitchWeapon(1);
             isEKeyDown = true;
         }
         else if (!PlayerController.IsEKeyDown() && isEKeyDown)
@@ -74,7 +76,7 @@ public class PlayerGunSelector : MonoBehaviour
         Destroy(ActiveGun);
     }
 
-    private void SwapGun(int swapDirection)
+    private void SwitchWeapon(int swapDirection)
     {
         GunSO NewActiveGun;
         int ActiveGunPosition = Guns.FindIndex(gun => gun.Type == ActiveGun.Type);
@@ -85,13 +87,11 @@ public class PlayerGunSelector : MonoBehaviour
             NewActiveGun = Guns[0];
         else
             NewActiveGun = Guns[ActiveGunPosition + swapDirection];
-
-        Debug.Log(NewActiveGun.Name);
-        //Debug.Log($"Swap Direction: {swapDirection}");
-        //Debug.Log( $"Active Gun Pos: {ActiveGunPosition}");
-        //Debug.Log($"Sum: { ActiveGunPosition + swapDirection}");
+        
         DespawnActiveGun();
         SetupGun(NewActiveGun);
+        
+        OnGunChanged?.Invoke();
     }
 
     public void PickupGun(GunSO gun)

@@ -382,6 +382,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4722278292622257816}
     m_Modifications:
+    - target: {fileID: 2136736676975433534, guid: 2e1bec5dba0b3ee49861cde15651ace9, type: 3}
+      propertyPath: stopAction
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2261161316206865322, guid: 2e1bec5dba0b3ee49861cde15651ace9, type: 3}
       propertyPath: m_Name
       value: MuzzleFlash01 Variant
