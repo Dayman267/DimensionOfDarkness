@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26128dbc4ecdf8242a94bbdc3520a23f, type: 3}
+  m_Name: Shotgun
+  m_EditorClassIdentifier: 
+  ImpactType: {fileID: 11400000, guid: 1691feeaf5aa8824f944385edaaab490, type: 2}
+  Type: 4
+  Name: Shotgun
+  ModelPrefab: {fileID: 3348988483404475859, guid: e854c510400712b408052e00b5055c8c, type: 3}
+  SpawnPoint: {x: 0.02, y: 0.14, z: 0.18}
+  SpawnRotation: {x: -90, y: 0, z: 0}
+  DamageConfig: {fileID: 11400000, guid: 6b82f07d80a39714f8097ec65ada1704, type: 2}
+  ShootConfig: {fileID: 11400000, guid: 778555aecba36a8488ee7be9fe7a9953, type: 2}
+  TrailConfig: {fileID: 11400000, guid: 48dd37bb101f485419c5cf0d85911943, type: 2}
+  AmmoConfig: {fileID: 11400000, guid: 593c0e419c0dcb144a8c289540d8e0a2, type: 2}
+  AudioConfig: {fileID: 11400000, guid: e32a7440ccf0c314387144036f185fbb, type: 2}
+  BulletPenetrationConfig: {fileID: 11400000, guid: b0d697c2074ed38459efe54a60416a06, type: 2}

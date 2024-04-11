@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ClipSize: 6
   CurrentClipAmmo: 6
+  SingleBulletLoad: 1

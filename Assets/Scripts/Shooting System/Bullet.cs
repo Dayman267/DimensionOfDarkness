@@ -7,30 +7,39 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Bullet : MonoBehaviour
 {
-    private Rigidbody rigidbody;
+    private int ObjectsPenetrated;
 
-    [field: SerializeField]
-    public Vector3 SpawnLocation
-    {
-        get;
-        private set;
-    }
+    public Rigidbody Rigidbody { get; private set; }
+
+    [field: SerializeField] public Vector3 SpawnLocation { get; private set; }
 
     [SerializeField] private float DeleyedDisableTime = 2f;
 
-    public delegate void CollisionEvent(Bullet Bullet, Collision Collision);
+    //[SerializeField] private GameObject effectPrefab;
+    [SerializeField] private float effectDuration = 2f;
+
+    public delegate void CollisionEvent(Bullet Bullet, Collision Collision, int ObjectsPenetrated);
+
     public event CollisionEvent OnCollision;
 
     private void Awake()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        Rigidbody = GetComponent<Rigidbody>();
     }
 
     public void Spawn(Vector3 SpawnForce)
     {
+        /*if (effectPrefab != null)
+        {
+            GameObject effectInstance = Instantiate(effectPrefab, transform.position, Quaternion.identity);
+            effectInstance.transform.parent = transform;
+        }*/
+        
+        ObjectsPenetrated = 0;
         SpawnLocation = transform.position;
         transform.forward = SpawnForce.normalized;
-        rigidbody.AddForce(SpawnForce);
+        Rigidbody.AddForce(SpawnForce);
+        //SpawnVelocity = SpawnForce * Time.fixedDeltaTime / Rigidbody.mass;
         StartCoroutine(DeleyedDisable(DeleyedDisableTime));
     }
 
@@ -42,15 +51,34 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter(Collision Collision)
     {
-        OnCollision?.Invoke(this, Collision);
+        OnCollision?.Invoke(this, Collision, ObjectsPenetrated);
+        ObjectsPenetrated++;
+        
+        /*if (effectPrefab != null)
+        {
+            // Создаем экземпляр эффекта
+            GameObject effectInstance = Instantiate(effectPrefab, transform.position, Quaternion.identity);
+            // Запускаем корутину для его удаления через effectDuration секунд
+            StartCoroutine(DisableEffect(effectInstance, effectDuration));
+        }*/
+    }
+    
+    private IEnumerator DisableEffect(GameObject effectInstance, float duration)
+    {
+        // Ждем заданное время
+        yield return new WaitForSeconds(duration);
+        // После ожидания отключаем эффект
+        if (effectInstance != null)
+        {
+            Destroy(effectInstance);
+        }
     }
 
     private void OnDisable()
     {
         StopAllCoroutines();
-        rigidbody.velocity = Vector3.zero;
-        rigidbody.angularVelocity = Vector3.zero;
+        Rigidbody.velocity = Vector3.zero;
+        Rigidbody.angularVelocity = Vector3.zero;
         OnCollision = null;
-
     }
 }

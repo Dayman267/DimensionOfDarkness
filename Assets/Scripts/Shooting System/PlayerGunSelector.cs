@@ -76,17 +76,17 @@ public class PlayerGunSelector : MonoBehaviour
         Destroy(ActiveGun);
     }
 
-    private void SwitchWeapon(int swapDirection)
+    private void SwitchWeapon(int switchDirection)
     {
         GunSO NewActiveGun;
-        int ActiveGunPosition = Guns.FindIndex(gun => gun.Type == ActiveGun.Type);
+        int ActiveGunPosition = Guns.FindIndex(gun => gun.Name == ActiveGun.Name);
 
-        if (ActiveGunPosition + swapDirection < 0)
+        if (ActiveGunPosition + switchDirection < 0)
             NewActiveGun = Guns[Guns.Count - 1];
-        else if (ActiveGunPosition + swapDirection >= Guns.Count)
+        else if (ActiveGunPosition + switchDirection >= Guns.Count)
             NewActiveGun = Guns[0];
         else
-            NewActiveGun = Guns[ActiveGunPosition + swapDirection];
+            NewActiveGun = Guns[ActiveGunPosition + switchDirection];
         
         DespawnActiveGun();
         SetupGun(NewActiveGun);

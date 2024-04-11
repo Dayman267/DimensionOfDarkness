@@ -14,7 +14,8 @@ public class ShootConfigurationSO : ScriptableObject, ICloneable
     public float BulletSpawnForce = 1000;
     public LayerMask HitMask;
     public float FireRate = 0.25f;
-
+    public int BulletPerShot = 1;
+        
     public ShootType ShootType = ShootType.FromGun;
     
     public float RecoilRecoverySpeed = 1f;
@@ -22,6 +23,7 @@ public class ShootConfigurationSO : ScriptableObject, ICloneable
     public BulletSpreadType SpreadType = BulletSpreadType.Simple;
     [Header("Simple Spread")] 
     public Vector3 Spread = new Vector3(0.1f, 0.1f, 0.1f);
+    public Vector3 MinSpread = Vector3.zero;
 
     [Header("Texture-Based Spread")] [Range(0.001f, 5f)]
     public float SpreadMultiplier = 0.1f;
@@ -35,22 +37,17 @@ public class ShootConfigurationSO : ScriptableObject, ICloneable
         if (SpreadType == BulletSpreadType.Simple)
         {
             spread = Vector3.Lerp(
-                Vector3.zero,
                 new Vector3(
-                    Random.Range(
-                        -Spread.x,
-                        Spread.x
-                    ),
-                    Random.Range(
-                        -Spread.y,
-                        Spread.y
-                    ),
-                    Random.Range(
-                        -Spread.z,
-                        Spread.z
-                    )
+                    Random.Range(-MinSpread.x, MinSpread.x),
+                    Random.Range(-MinSpread.y, MinSpread.y),
+                    Random.Range(-MinSpread.z, MinSpread.z)
                 ),
-                Mathf.Clamp01(ShootTime / MaxSpreadTime) //Чем дольше спрей тем дольше разброс
+                new Vector3(
+                    Random.Range(-Spread.x, Spread.x),
+                    Random.Range(-Spread.y, Spread.y),
+                    Random.Range(-Spread.z, Spread.z)
+                ),
+                Mathf.Clamp01(ShootTime / MaxSpreadTime) //Чем дольше спрей тем больше разброс
             );
         }
         else if (SpreadType == BulletSpreadType.TextureBased)

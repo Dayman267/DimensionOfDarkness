@@ -54,6 +54,8 @@ public class PlayerAnimationsController : MonoBehaviour
 
     private void ReloadAnimation()
     {
+        // DisableAimAnimationHandler();
+        DisableShootAnimationHandler();
         animator.SetTrigger(reloadAnimHash);
     }
     

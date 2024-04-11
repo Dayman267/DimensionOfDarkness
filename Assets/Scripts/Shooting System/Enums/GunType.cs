@@ -7,5 +7,6 @@ public enum GunType
     Pistol,
     Rifle,
     Light,
-    GrandeLauncher
+    GrandeLauncher,
+    Shotgun
 }

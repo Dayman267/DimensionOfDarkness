@@ -15,26 +15,29 @@ public class DamageConfigSO : ScriptableObject, ICloneable
         DamageCurve.mode = ParticleSystemCurveMode.Curve;
     }
 
-    public int GetDamage(float Distance = 0)
+    /*public int GetDamage(float Distance = 0, float DamageMultiplier = 1 )
     {
-        float normalDamage = DamageCurve.Evaluate(Distance, UnityEngine.Random.value); // Получаем обычный урон
-        float finalDamage = normalDamage;
-        
-        if (Random.value <= CriticalChance)
+        float normalDamage = Mathf.CeilToInt(DamageCurve.Evaluate(Distance, Random.value)) * DamageMultiplier; // Получаем обычный урон
+
+        if (CriticalChance > 0 && Random.value <= CriticalChance)
         {
-           
             normalDamage *= (CriticalMultiplier);
         }
         
         return Mathf.CeilToInt(normalDamage);
+    }*/
+    
+    public int GetDamage(float Distance = 0, float DamageMultiplier = 1)
+    {
+        return Mathf.CeilToInt(
+            DamageCurve.Evaluate(Distance, Random.value) * DamageMultiplier
+        );
     }
 
     public object Clone()
     {
         DamageConfigSO config = CreateInstance<DamageConfigSO>();
-        config.DamageCurve = DamageCurve;
-        config.CriticalChance = CriticalChance;
-        config.CriticalMultiplier = CriticalMultiplier;
+        Utilities.CopyValues(this,config);
         return config;
     }
 }

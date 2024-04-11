@@ -127,7 +127,8 @@ public class PlayerController : MonoBehaviour
 
         bool inMovement = Mathf.Abs(direction.x) > 0 || Mathf.Abs(direction.z) > 0;
 
-        MoveAnimEnable();
+       // if(!PlayerShootController.IsReloading())
+            MoveAnimEnable();
 
         if (isRightClickDown)
         {
@@ -157,8 +158,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        
-        
         if (isDashing || isVaulting) return;
 
         Move(inMovement);
@@ -339,7 +338,8 @@ public class PlayerController : MonoBehaviour
     private void ShootAnimOn()
     {
         AimOn();
-        OnShootAnimationEnable?.Invoke();
+        if(!PlayerShootController.IsReloading())
+            OnShootAnimationEnable?.Invoke();
     }
 
     private void ShootAnimOff()

@@ -5,31 +5,60 @@ using UnityEngine;
 public class PlayerShootController : MonoBehaviour
 {
     public PlayerGunSelector GunSelector;
-    [SerializeField]  private bool AutoReload = false;
-    private bool isReloading = false;
-    
+    [SerializeField] private bool AutoReload = false;
+    private static bool isReloading = false;
+    private bool isStopReloading = false;
+
     public static event Action OnReloadAnimation;
-    
+
     void Update()
     {
-        if (GunSelector.ActiveGun != null)
+        if (GunSelector.ActiveGun != null && !isReloading)
         {
             GunSelector.ActiveGun.Tick(PlayerController.IsLeftClickDown());
         }
         
+        if (PlayerController.IsLeftClickDown() && isReloading)
+        {
+            isStopReloading = true;
+        }
+
         if (ShouldManualReload() || ShouldAutoReload())
         {
-            GunSelector.ActiveGun.StartReloading();
-            isReloading = true;
-            OnReloadAnimation?.Invoke();
+            Reload();
+        }
+    }
+
+    private void Reload()
+    {
+        GunSelector.ActiveGun.StartReloading();
+        isReloading = true;
+        OnReloadAnimation?.Invoke();
+    }
+
+    public static bool IsReloading()
+    {
+        return isReloading;
+    }
+
+    private void EndReload()
+    {
+        if (isStopReloading)
+        {
+            isStopReloading = false;
+            isReloading = false;
+            return;
+        }
+
+        GunSelector.ActiveGun.EndReload();
+        isReloading = false;
+        if (GunSelector.ActiveGun.CanReload())
+        {
+            Reload();
         }
     }
     
-    private void EndReload()
-    {
-        GunSelector.ActiveGun.EndReload();
-        isReloading = false;
-    }
+    
 
     private bool ShouldManualReload()
     {
@@ -43,7 +72,7 @@ public class PlayerShootController : MonoBehaviour
                && GunSelector.ActiveGun.AmmoConfig.CurrentClipAmmo == 0
                && GunSelector.ActiveGun.CanReload();
     }
-    
+
     /*private void UpdateCrossHair()
    {
        if (GunSelector.ActiveGun.ShootConfig.ShootType == ShootType.FromGun)
