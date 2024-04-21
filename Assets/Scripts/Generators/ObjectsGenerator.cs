@@ -1,17 +1,18 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectsGenerator : MonoBehaviour
 {
     private float objectSize;
     
-    public GameObject[] gameObjectPrefabs;
+    public List<GameObject> gameObjectPrefabs;
     
-    [SerializeField] private int minObjectsPerTile = 1;
-    [SerializeField] private int maxObjectsPerTile = 1;
+    public int minObjectsPerTile = 1;
+    public int maxObjectsPerTile = 1;
     
     public void Start()
     {
-        if(gameObjectPrefabs.Length == 0) return;
+        if(gameObjectPrefabs.Count == 0) return;
         
         Terrain terrain = transform.GetComponent<Terrain>();
         objectSize = terrain.terrainData.size.x;
@@ -28,7 +29,7 @@ public class ObjectsGenerator : MonoBehaviour
                 positionY, 
                 randPositionZ);
             Instantiate(
-                gameObjectPrefabs[Random.Range(0, gameObjectPrefabs.Length)], 
+                gameObjectPrefabs[Random.Range(0, gameObjectPrefabs.Count)], 
                 position + terrain.transform.position,
                 Quaternion.Euler(0, Random.Range(0f, 360f), 0),
                 transform);

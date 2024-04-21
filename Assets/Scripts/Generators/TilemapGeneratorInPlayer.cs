@@ -7,7 +7,10 @@ public class TilemapGeneratorInPlayer : MonoBehaviour
 
     private void OnTriggerEnter(Collider tile)
     {
-        if(tile.gameObject.CompareTag("Terrain"))
+        if (tile.gameObject.CompareTag("Terrain"))
+        {
             OnEnteredIntoATile?.Invoke(tile.transform.position);
+            Destroy(tile.gameObject.GetComponent<BoxCollider>());
+        }
     }
 }

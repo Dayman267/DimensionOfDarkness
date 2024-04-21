@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4285488470629184010}
   - component: {fileID: 6455917682329408167}
+  - component: {fileID: 6750088508744547877}
   m_Layer: 0
   m_Name: FlashLight
   m_TagString: Untagged
@@ -94,6 +95,20 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &6750088508744547877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5624431201196108467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dea2d1cdc02d3734d8d80f973e54cc52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxIntensity: 3
+  minIntensity: 0.5
 --- !u!1 &7301956895848653474
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +122,7 @@ GameObject:
   - component: {fileID: 4649940739637343002}
   - component: {fileID: 914776015347629224}
   m_Layer: 0
-  m_Name: Main_LOD_1
+  m_Name: VALERA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
