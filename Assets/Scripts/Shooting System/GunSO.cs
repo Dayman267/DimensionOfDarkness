@@ -462,18 +462,56 @@ public class GunSO : ScriptableObject, ICloneable
     {
         AudioConfig.PlayReloadClip(ShootingAudioSource);
     }
-
+    
+    private float currentChargeTime = 0.0f;
+    private bool isCharging = false;
+    
+    void StartCharging()
+    {
+        isCharging = true;
+        currentChargeTime = 0.0f;
+    }
+    
+    void StopCharging()
+    {
+        isCharging = false;
+    }
+    
+    
     public void Tick(bool WantsToShoot)
     {
+        
         if (WantsToShoot)
         {
-            LastFrameWantedToShoot = true;
-            TryToShoot();
+            if (ShootConfig.IsPreparedShot)
+            {
+                if (!isCharging)
+                    StartCharging();
+                else
+                {
+                    currentChargeTime += Time.deltaTime;
+                    if (currentChargeTime >= ShootConfig.chargeTime)
+                        TryToShoot();
+                        
+                    
+                }
+                
+            }
+            else
+            {
+                LastFrameWantedToShoot = true;
+                TryToShoot();
+            }
+            
         }
         else if (!WantsToShoot && LastFrameWantedToShoot)
         {
             StopShootingTime = Time.time;
             LastFrameWantedToShoot = false;
+        }
+        else
+        {
+            StopCharging();
         }
     }
 

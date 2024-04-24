@@ -18,6 +18,10 @@ public class ShootConfigurationSO : ScriptableObject, ICloneable
         
     public ShootType ShootType = ShootType.FromGun;
     
+    public bool IsPreparedShot = false;
+    public float chargeTime = 1.0f; 
+    
+    
     public float RecoilRecoverySpeed = 1f;
     public float MaxSpreadTime = 1f;
     public BulletSpreadType SpreadType = BulletSpreadType.Simple;
