@@ -59,7 +59,7 @@ public class GunSO : ScriptableObject, ICloneable
         Model.transform.localPosition = SpawnPoint;
         Model.transform.localRotation = Quaternion.Euler(SpawnRotation);
 
-        ShootSystem = Model.GetComponentsInChildren<ParticleSystem>();
+        ShootSystem = GameObject.FindWithTag("VFX_System").GetComponentsInChildren<ParticleSystem>();
         ShootingAudioSource = Model.GetComponent<AudioSource>();
         ShootingStartPoint = GameObject.FindWithTag("ShootingStartPoint");
 

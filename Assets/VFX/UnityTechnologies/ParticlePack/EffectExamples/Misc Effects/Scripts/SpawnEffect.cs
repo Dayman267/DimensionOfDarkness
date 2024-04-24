@@ -33,13 +33,7 @@ public class SpawnEffect : MonoBehaviour {
         {
             timer += Time.deltaTime;
         }
-        else
-        {
-            ps.Play();
-            timer = 0;
-        }
-
-
+        
         _renderer.material.SetFloat(shaderProperty, fadeIn.Evaluate( Mathf.InverseLerp(0, spawnEffectTime, timer)));
         
     }
