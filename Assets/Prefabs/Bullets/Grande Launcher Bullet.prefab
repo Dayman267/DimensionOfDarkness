@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8367086620755285621}
   - component: {fileID: 705683116906854266}
   - component: {fileID: 5285400407971814794}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Grande Launcher Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,7 +77,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <SpawnLocation>k__BackingField: {x: 0, y: 0, z: 0}
   DeleyedDisableTime: 2
-  effectPrefab: {fileID: 0}
   effectDuration: 2
 --- !u!65 &5285400407971814794
 BoxCollider:
@@ -111,6 +110,10 @@ PrefabInstance:
     - target: {fileID: 1735024089641582, guid: 894686e77f86ca549accefee45808127, type: 3}
       propertyPath: m_Name
       value: Steam - Granade Launcher Bullet
+      objectReference: {fileID: 0}
+    - target: {fileID: 1735024089641582, guid: 894686e77f86ca549accefee45808127, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4221402037530588, guid: 894686e77f86ca549accefee45808127, type: 3}
       propertyPath: m_LocalScale.x
@@ -217,6 +220,10 @@ PrefabInstance:
     - target: {fileID: 1388432215564494, guid: 818eebc32ffe82c48a228c6a0845633f, type: 3}
       propertyPath: m_Name
       value: Rocket08_Red
+      objectReference: {fileID: 0}
+    - target: {fileID: 1388432215564494, guid: 818eebc32ffe82c48a228c6a0845633f, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4903426692676784, guid: 818eebc32ffe82c48a228c6a0845633f, type: 3}
       propertyPath: m_LocalScale.x

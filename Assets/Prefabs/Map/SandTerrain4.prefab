@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 1423261751836162072}
   - component: {fileID: 2898166124100811}
   - component: {fileID: 5415938193758281104}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SandTerrain4
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647

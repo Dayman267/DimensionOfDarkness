@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8367086620755285621}
   - component: {fileID: 705683116906854266}
   - component: {fileID: 5285400407971814794}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,6 +75,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <SpawnLocation>k__BackingField: {x: 0, y: 0, z: 0}
   DeleyedDisableTime: 2
+  effectDuration: 2
 --- !u!65 &5285400407971814794
 BoxCollider:
   m_ObjectHideFlags: 0

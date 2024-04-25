@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 9203317744875641290}
   - component: {fileID: 1177095431094012829}
   - component: {fileID: 7207138050815266437}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SwampTerrain3
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
