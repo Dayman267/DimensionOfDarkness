@@ -1,25 +1,23 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Object = UnityEngine.Object;
 
+
+[DisallowMultipleComponent]
 public class PlayerController : MonoBehaviour
 {
+    //[SerializeField] private Image Crosshair;
     [SerializeField] private Transform _mainCamera;
-    [SerializeField] private Object weaponVFX;
     private Camera cam;
     private Vector3 direction;
-    private Rigidbody rb;
     private const float LERP_SPEED = 9;
+
 
     private Animator animator;
     private Vector3 _movementVector;
 
     private PlayerActions playerActions;
     private PlayerInput playerInput;
-
-    [SerializeField] private float shootingSpeedAcceleration = 0.5f;
 
     private bool isRotating;
     private Quaternion targetRotation;
@@ -41,27 +39,35 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float stayVaultRadius = 0.6f;
     [SerializeField] private float spendPointsWhenVaulting = 20f;
 
-    [SerializeField] private LayerMask mask;
-
     public static event Action<float> OnMoveAnimation;
     public static event Action OnAimAnimationEnable;
     public static event Action OnAimAnimationDiasble;
     public static event Action OnShootAnimationEnable;
     public static event Action OnShootAnimationDiasble;
     public static event Action<float, float> OnSend_X_Z_Pos;
+    
+    public float turnSmoothTime = 0.1f;
+    public float gravity = -9.81f;
+    //public float jumpHeight = 3f;
+    CharacterController controller;
+    public Transform groundCheck;
+    public LayerMask groundMask;
+    public float groundDistance = 0.4f;
+    float turnSmoothVelocity;
+    bool isGrounded;
+    Vector3 velocity;
+    private float targetAngle;
 
     //private PlayerStamina playerStamina;
-
-
+    
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
         cam = Camera.main;
 
         playerInput = GetComponent<PlayerInput>();
+        controller = GetComponent<CharacterController>();
         playerActions = new PlayerActions();
         playerActions.Gameplay.Enable();
-        //playerActions.Gameplay.Aim.performed += Aim;
     }
 
     private void Start()
@@ -75,16 +81,45 @@ public class PlayerController : MonoBehaviour
 
 
         //playerStamina = GetComponent<PlayerStamina>();
-
-        ResetAngularVelocity();
+        
         transform.rotation = Quaternion.Euler(Vector3.zero);
     }
 
-    bool isRightClickDown;
-    bool isLeftClickDown;
-    bool isLShiftDown;
-    bool isShootingWhileRun;
+    static bool isRightClickDown;
+    static bool isLeftClickDown;
+    static bool isLShiftDown;
+    static bool isRKeyDown;
+    static bool isQKeyDown;
+    static bool isEKeyDown;
+    
+    public static bool IsRightClickDown()
+    {
+        return isRightClickDown;
+    }
 
+    public static bool IsLeftClickDown()
+    {
+        return isLeftClickDown;
+    }
+
+    public static bool IsLShiftDown()
+    {
+        return isLShiftDown;
+    }
+
+    public static bool IsRKeyDown()
+    {
+        return isRKeyDown;
+    } 
+    public static bool IsQKeyDown()
+    {
+        return isQKeyDown;
+    }
+    public static bool IsEKeyDown()
+    {
+        return isEKeyDown;
+    }
+    
     void Update()
     {
         _movementVector = CalculateMovementVector();
@@ -92,8 +127,8 @@ public class PlayerController : MonoBehaviour
 
         bool inMovement = Mathf.Abs(direction.x) > 0 || Mathf.Abs(direction.z) > 0;
 
-        MoveAnimEnable();
-        ResetAngularVelocity();
+       // if(!PlayerShootController.IsReloading())
+            MoveAnimEnable();
 
         if (isRightClickDown)
         {
@@ -104,14 +139,14 @@ public class PlayerController : MonoBehaviour
             if (!isLeftClickDown)
                 AimOff();
         }
-
+        
         if (isLeftClickDown)
         {
-            ShootOn(inMovement);
+            ShootAnimOn();
         }
         else
         {
-            ShootOff();
+            ShootAnimOff();
         }
 
         if (!inMovement && !isRightClickDown && !isLeftClickDown)
@@ -123,9 +158,9 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-
         if (isDashing || isVaulting) return;
 
+        Move(inMovement);
         // if (Vaulting())
         // {
         //     RaycastHit2D hit = 
@@ -141,23 +176,9 @@ public class PlayerController : MonoBehaviour
         //     playerStamina.SpendStamina(spendPointsWhenDashing);
         // }
         // else if (Running())
-        if (IsSprinting())
-        {
-            Sprint(direction, speed, speedIncreaseFactor);
-            //playerStamina.SpendStamina(spendPointsWhenRunning);
-        }
-        else
-        {
-            Move(direction, speed);
-        }
+        //Sprint(direction, speed, speedIncreaseFactor);
+        //playerStamina.SpendStamina(spendPointsWhenRunning);
     }
-
-    /*private void FixedUpdate()
-    {
-        rb.velocity = new Vector3(_movementVector.x * speed, rb.velocity.y,
-            _movementVector.z * speed);
-    }*/
-
 
     private void RotateTowardsTarget()
     {
@@ -172,7 +193,6 @@ public class PlayerController : MonoBehaviour
 
     private void ListenWASDKeyUp()
     {
-        // Баг 1    
         switch (playerActions.Gameplay.W.WasReleasedThisFrame(),
             playerActions.Gameplay.S.WasReleasedThisFrame(),
             playerActions.Gameplay.A.WasReleasedThisFrame(),
@@ -191,10 +211,8 @@ public class PlayerController : MonoBehaviour
                 RotateToDirection(Vector3.right);
                 break;
         }
-        // Баг 1
     }
-
-    // Баг 1
+    
     private void RotateToDirection(Vector3 direction)
     {
         if (direction != Vector3.zero)
@@ -203,8 +221,7 @@ public class PlayerController : MonoBehaviour
             isRotating = true;
         }
     }
-    // Баг 1
-
+    
     private void MoveAnimEnable()
     {
         OnMoveAnimation?.Invoke(_movementVector.magnitude);
@@ -247,15 +264,8 @@ public class PlayerController : MonoBehaviour
 
     private void TurnCharacterInMovementDirection()
     {
-        if (rb.velocity.magnitude / speed > 0.1f)
-            transform.rotation = Quaternion.Lerp(transform.rotation,
-                Quaternion.LookRotation(new Vector3(rb.velocity.x, 0, rb.velocity.z)),
-                LERP_SPEED * Time.deltaTime);
-    }
-
-    public void FootStep()
-    {
-        // Воспроизведение звука шагов
+        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+        transform.rotation = Quaternion.Euler(0f, angle, 0f);
     }
 
     private void TurnToMousePosition()
@@ -269,13 +279,13 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(0f, targetRotation.eulerAngles.y, 0f);
     }
 
-    private void ResetAngularVelocity()
+    /*private void ResetAngularVelocity()
     {
         rb.angularVelocity = Vector3.zero;
-    }
+    }*/
 
-    private bool IsSprinting() =>
-        isLShiftDown && direction != Vector3.zero; // && playerStamina.GetStaminaPoints() > 0;
+    /*private bool IsSprinting() =>
+        isLShiftDown && direction != Vector3.zero; // && playerStamina.GetStaminaPoints() > 0;*/
 
     // private bool Vaulting()
     // {
@@ -292,43 +302,53 @@ public class PlayerController : MonoBehaviour
     // private bool Dashing() => 
     //     Input.GetKeyDown(KeyCode.Space) && direction != Vector2.zero && playerStamina.GetStaminaPoints() > 0;
 
-    public void Move(Vector3 direction, float speed)
+    /*public void Move(Vector3 direction, float speed)
     {
         rb.velocity = direction * speed;
-    }
-
-    public void Sprint(Vector3 direction, float speed, float speedIncreaseFactor)
+    }*/
+    
+    public void Move(bool isMoving)
     {
-        Move(direction, speed * speedIncreaseFactor);
-    }
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-    private void ShootOn(bool isMove)
-    {
-        if (isMove && !isRightClickDown)
+        if (isGrounded && velocity.y < 0)
         {
-            isShootingWhileRun = true;
+            velocity.y = -2f; 
         }
 
-        if (isShootingWhileRun)
+        if (isMoving) 
         {
-            AimOn();
-        }
+            targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+            if(!isLeftClickDown && !isRightClickDown) TurnCharacterInMovementDirection();
 
-        OnShootAnimationEnable?.Invoke();
-        weaponVFX.GameObject().SetActive(true);
+            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+            float currentSpeed = isLShiftDown ? speed * speedIncreaseFactor : speed; 
+            controller.Move(moveDir.normalized * currentSpeed * Time.deltaTime); 
+        }
+        
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
+        
+        // if (Input.GetButtonDown("Jump") && isGrounded)
+        // {
+        //     velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        // }
     }
 
-    private void ShootOff()
+    private void ShootAnimOn()
     {
-        if (isShootingWhileRun && !isRightClickDown)
+        AimOn();
+        if(!PlayerShootController.IsReloading())
+            OnShootAnimationEnable?.Invoke();
+    }
+
+    private void ShootAnimOff()
+    {
+        if (!isRightClickDown)
         {
             AimOff();
-            isShootingWhileRun = false;
         }
-
-
         OnShootAnimationDiasble?.Invoke();
-        weaponVFX.GameObject().SetActive(false);
     }
 
     private void AimOn()
@@ -342,7 +362,6 @@ public class PlayerController : MonoBehaviour
     {
         speed = 10f;
         TurnCharacterInMovementDirection();
-
         OnAimAnimationDiasble?.Invoke();
     }
 
@@ -357,6 +376,15 @@ public class PlayerController : MonoBehaviour
 
         playerActions.Gameplay.Sprint.performed += ctx => isLShiftDown = true;
         playerActions.Gameplay.Sprint.canceled += ctx => isLShiftDown = false;
+
+        playerActions.Gameplay.WeaponReload.performed += ctx => isRKeyDown = true;
+        playerActions.Gameplay.WeaponReload.canceled += ctx => isRKeyDown = false;
+        
+        playerActions.Gameplay.ChangeGunBackward.performed += ctx => isQKeyDown = true;
+        playerActions.Gameplay.ChangeGunBackward.canceled += ctx => isQKeyDown = false;
+        
+        playerActions.Gameplay.ChangeGunForward.performed += ctx => isEKeyDown = true;
+        playerActions.Gameplay.ChangeGunForward.canceled += ctx => isEKeyDown = false;
     }
 
     private void OnDisable()
@@ -368,7 +396,16 @@ public class PlayerController : MonoBehaviour
         playerActions.Gameplay.Shoot.performed -= ctx => isLeftClickDown = true;
         playerActions.Gameplay.Shoot.canceled -= ctx => isLeftClickDown = false;
 
-        playerActions.Gameplay.Sprint.performed += ctx => isLShiftDown = true;
-        playerActions.Gameplay.Sprint.canceled += ctx => isLShiftDown = false;
+        playerActions.Gameplay.Sprint.performed -= ctx => isLShiftDown = true;
+        playerActions.Gameplay.Sprint.canceled -= ctx => isLShiftDown = false;
+
+        playerActions.Gameplay.WeaponReload.performed -= ctx => isRKeyDown = true;
+        playerActions.Gameplay.WeaponReload.canceled -= ctx => isRKeyDown = false;
+        
+        playerActions.Gameplay.ChangeGunBackward.performed -= ctx => isQKeyDown = true;
+        playerActions.Gameplay.ChangeGunBackward.canceled -= ctx => isQKeyDown = false;
+        
+        playerActions.Gameplay.ChangeGunForward.performed -= ctx => isEKeyDown = true;
+        playerActions.Gameplay.ChangeGunForward.canceled -= ctx => isEKeyDown = false;
     }
 }
