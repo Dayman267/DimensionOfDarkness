@@ -803,7 +803,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mainCamera: {fileID: 963194228}
-  weaponVFX: {fileID: 0}
   speed: 5
   rotationSpeed: 500
   speedIncreaseFactor: 1.5
@@ -815,9 +814,6 @@ MonoBehaviour:
   vaultTime: 0.2
   stayVaultRadius: 0.6
   spendPointsWhenVaulting: 20
-  mask:
-    serializedVersion: 2
-    m_Bits: 0
   turnSmoothTime: 0.1
   gravity: -9.81
   groundCheck: {fileID: 0}
@@ -948,7 +944,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1435694025
 Transform:
   m_ObjectHideFlags: 0

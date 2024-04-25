@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Objects
   - Terrain
+  - ShootingStartPoint
+  - VFX_System
   layers:
   - Default
   - TransparentFX
@@ -14,7 +16,7 @@ TagManager:
   - Water
   - UI
   - Terrain
-  - 
+  - Bullets
   - 
   - 
   - 
