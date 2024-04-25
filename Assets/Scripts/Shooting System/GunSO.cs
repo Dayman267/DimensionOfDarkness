@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using LlamAcademy.ImpactSystem;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
@@ -118,7 +117,7 @@ public class GunSO : ScriptableObject, ICloneable
 
             PlayParticleSystems();
             AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.CurrentClipAmmo == 1);
-            
+            Crosshair.OnShotFired();
             AmmoConfig.CurrentClipAmmo--;
             
             for (int i = 0; i < ShootConfig.BulletPerShot; i++)
