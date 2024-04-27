@@ -225,18 +225,21 @@ namespace LlamAcademy.ImpactSystem
                 }
 
                 AudioClip clip = playAudioEffect.AudioClips[Random.Range(0, playAudioEffect.AudioClips.Count)];
-                GameObject instance = ObjectPools[playAudioEffect.AudioSourcePrefab.gameObject].Get();
-                instance.SetActive(true);
-                AudioSource audioSource = instance.GetComponent<AudioSource>();
+                if (clip != null)
+                {
+                    GameObject instance = ObjectPools[playAudioEffect.AudioSourcePrefab.gameObject].Get();
+                    instance.SetActive(true);
+                    AudioSource audioSource = instance.GetComponent<AudioSource>();
 
-                audioSource.transform.position = HitPoint;
-                audioSource.PlayOneShot(clip,
-                    SoundOffset * Random.Range(playAudioEffect.VolumeRange.x, playAudioEffect.VolumeRange.y));
-                StartCoroutine(DisableAudioSource(ObjectPools[playAudioEffect.AudioSourcePrefab.gameObject],
-                    audioSource, clip.length));
+                    audioSource.transform.position = HitPoint;
+                    audioSource.PlayOneShot(clip,
+                        SoundOffset * Random.Range(playAudioEffect.VolumeRange.x, playAudioEffect.VolumeRange.y));
+                    StartCoroutine(DisableAudioSource(ObjectPools[playAudioEffect.AudioSourcePrefab.gameObject],
+                        audioSource, clip.length));
+                }
             }
         }
-
+    
         private IEnumerator DisableAudioSource(ObjectPool<GameObject> Pool, AudioSource AudioSource, float Time)
         {
             yield return new WaitForSeconds(Time);
