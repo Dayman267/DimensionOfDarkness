@@ -534,7 +534,6 @@ public class GunSO : ScriptableObject, ICloneable
     {
         TrailRenderer instance = TrailPool.Get();
         instance.gameObject.SetActive(true);
-        instance.transform.SetParent(TrailPoolParent.transform);
         instance.transform.localPosition = StartPoint;
         yield return null; // avoid position carry-over from last frame if reused
 
