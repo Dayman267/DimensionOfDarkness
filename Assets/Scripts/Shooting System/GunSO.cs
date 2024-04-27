@@ -89,7 +89,7 @@ public class GunSO : ScriptableObject, ICloneable
         TrailPool.Clear();
         if (BulletPool != null)
             BulletPool.Clear();
-
+        
         ShootingAudioSource = null;
         VFX_System = null;
         ShootingStartPoint = null;
@@ -128,7 +128,8 @@ public class GunSO : ScriptableObject, ICloneable
 
             if (AmmoConfig.CurrentClipAmmo == 0)
             {
-                AudioConfig.PlayOutOfAmmoClip(ShootingAudioSource);
+                if(!ShootingAudioSource.isPlaying)
+                    AudioConfig.PlayOutOfAmmoClip(ShootingAudioSource);
                 return;
             }
 

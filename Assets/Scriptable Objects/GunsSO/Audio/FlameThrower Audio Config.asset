@@ -21,5 +21,5 @@ MonoBehaviour:
   - {fileID: 8300000, guid: bd8f2892ae883b14f8746ebaffd8ce43, type: 3}
   - {fileID: 8300000, guid: e5d7980dc359d49438f689abe6be0b9d, type: 3}
   EmptyClip: {fileID: 8300000, guid: 471da18941638b046bf896fa0410d35f, type: 3}
-  ReloadClip: {fileID: 8300000, guid: 7ce3e44239f06484c9e43a744bcd132d, type: 3}
+  ReloadClip: {fileID: 8300000, guid: c3675c58f0b986940ade3ec4415417dc, type: 3}
   LastBulletClip: {fileID: 0}
