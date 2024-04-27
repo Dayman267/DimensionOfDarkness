@@ -1,15 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
+
 
 [DisallowMultipleComponent]
 public class PlayerGunSelector : MonoBehaviour
 {
-    public Camera Camera;
+    private Camera Camera;
     [SerializeField] private GunType GunType;
     [SerializeField] private Transform GunParent;
 
@@ -25,6 +22,7 @@ public class PlayerGunSelector : MonoBehaviour
     private void Awake()
     {
         GunSO gun = Guns[0];
+        Camera = Camera.main;
 
         if (gun == null)
         {

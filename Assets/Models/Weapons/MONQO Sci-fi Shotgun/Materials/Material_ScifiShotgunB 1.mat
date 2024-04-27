@@ -107,7 +107,7 @@ Material:
     - _UVSec: 0
     - _Use_Gradient: 0
     - _ZWrite: 1
-    - _cutoff: 0
+    - _cutoff: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EdgeColor1: {r: 28.186356, g: 0.2818633, b: 0.2818633, a: 1}
