@@ -8,6 +8,8 @@ TagManager:
   - Terrain
   - ShootingStartPoint
   - VFX_System
+  - TrailPool
+  - BulletsPool
   layers:
   - Default
   - TransparentFX
