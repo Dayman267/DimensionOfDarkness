@@ -12,6 +12,10 @@ public class PlayerGunSelector : MonoBehaviour
 
     [SerializeField] private List<GunSO> Guns;
 
+    private List<int> runtimeCurrentAmmoClips;
+    private int ActiveGunPosition;
+    private int NewActiveGunPosition;
+
     public static event Action OnGunChanged;
     // video 1
     //  [SerializeField] private PlayerIK InversKinematics;
@@ -23,6 +27,13 @@ public class PlayerGunSelector : MonoBehaviour
     {
         GunSO gun = Guns[0];
         Camera = Camera.main;
+
+        runtimeCurrentAmmoClips = new List<int>(Guns.Count);
+        
+        for (int i = 0; i < Guns.Count; i++)
+        {
+            runtimeCurrentAmmoClips.Add(Guns[i].AmmoConfig.CurrentClipAmmo);
+        }
 
         if (gun == null)
         {
@@ -70,6 +81,7 @@ public class PlayerGunSelector : MonoBehaviour
 
     public void DespawnActiveGun()
     {
+        runtimeCurrentAmmoClips[ActiveGunPosition] = ActiveGun.AmmoConfig.CurrentClipAmmo;
         ActiveGun.Despawn();
         Destroy(ActiveGun);
     }
@@ -77,18 +89,27 @@ public class PlayerGunSelector : MonoBehaviour
     private void SwitchWeapon(int switchDirection)
     {
         GunSO NewActiveGun;
-        int ActiveGunPosition = Guns.FindIndex(gun => gun.Name == ActiveGun.Name);
+        ActiveGunPosition = Guns.FindIndex(gun => gun.Name == ActiveGun.Name);
 
         if (ActiveGunPosition + switchDirection < 0)
+        {
             NewActiveGun = Guns[Guns.Count - 1];
+            NewActiveGunPosition = Guns.Count - 1;
+        }
         else if (ActiveGunPosition + switchDirection >= Guns.Count)
+        {
             NewActiveGun = Guns[0];
+            NewActiveGunPosition = 0;
+        }
         else
+        {
             NewActiveGun = Guns[ActiveGunPosition + switchDirection];
-        
+            NewActiveGunPosition = ActiveGunPosition + switchDirection;
+        }
+
         DespawnActiveGun();
         SetupGun(NewActiveGun);
-        
+
         OnGunChanged?.Invoke();
     }
 
@@ -114,7 +135,12 @@ public class PlayerGunSelector : MonoBehaviour
         ActiveBaseGun = gun;
         ActiveGun = gun.Clone() as GunSO;
         if (ActiveGun != null)
+        {
             ActiveGun.Spawn(GunParent, this, Camera);
-    }
+            ActiveGun.AmmoConfig.CurrentClipAmmo = runtimeCurrentAmmoClips[NewActiveGunPosition];
+        }
 
+        
+        
+    }
 }

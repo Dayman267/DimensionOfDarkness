@@ -317,7 +317,8 @@ public class GunSO : ScriptableObject, ICloneable
         yield return null;
         trail.emitting = false;
         trail.gameObject.SetActive(false);
-        TrailPool.Release(trail);
+        //TrailPool.Release(trail);
+        Destroy(trail.gameObject);
     }
 
     // Video 6 - 10:39
@@ -565,7 +566,8 @@ public class GunSO : ScriptableObject, ICloneable
         yield return null;
         instance.emitting = false;
         instance.gameObject.SetActive(false);
-        TrailPool.Release(instance);
+        //TrailPool.Release(instance);
+        Destroy(instance.gameObject);
 
         if (BulletPenetrationConfig != null && BulletPenetrationConfig.MaxObjectsToPenetrate > Iteration)
         {
