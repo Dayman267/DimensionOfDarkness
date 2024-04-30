@@ -13,6 +13,7 @@ public class PlayerAnimationsController : MonoBehaviour
     private int horizontalAnimHash;
     private int verticalAnimHash;
     private int reloadAnimHash;
+    private int switchAnimHash;
 
     float shootingSpeed = 0.0f;
     
@@ -24,7 +25,8 @@ public class PlayerAnimationsController : MonoBehaviour
         shootingSpeedAnimHash = Animator.StringToHash("ShootingSpeed");
         horizontalAnimHash = Animator.StringToHash("Horizontal");
         verticalAnimHash = Animator.StringToHash("Vertical");
-        reloadAnimHash = Animator.StringToHash("isReload");
+        reloadAnimHash = Animator.StringToHash("Reload");
+        switchAnimHash = Animator.StringToHash("SwitchingWeapon");
     }
 
     private void OnEnable()
@@ -38,6 +40,8 @@ public class PlayerAnimationsController : MonoBehaviour
         
         PlayerShootController.OnReloadAnimation += ReloadAnimation;
         
+        PlayerGunSelector.OnSwitchWeapon += SwitchWeaponAnimation;       
+        
     }
 
     private void OnDisable()
@@ -50,13 +54,20 @@ public class PlayerAnimationsController : MonoBehaviour
         PlayerController.OnSend_X_Z_Pos -= Get_X_Z_PosHandler;
         
         PlayerShootController.OnReloadAnimation -= ReloadAnimation;
+        
+        PlayerGunSelector.OnSwitchWeapon -= SwitchWeaponAnimation;     
     }
 
     private void ReloadAnimation()
     {
-        // DisableAimAnimationHandler();
         DisableShootAnimationHandler();
         animator.SetTrigger(reloadAnimHash);
+    }
+    
+    private void SwitchWeaponAnimation()
+    {
+        //DisableShootAnimationHandler();
+        animator.SetTrigger(switchAnimHash);
     }
     
     private void Get_X_Z_PosHandler(float x, float z)

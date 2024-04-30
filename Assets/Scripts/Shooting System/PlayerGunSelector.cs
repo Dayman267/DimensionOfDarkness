@@ -22,6 +22,8 @@ public class PlayerGunSelector : MonoBehaviour
 
     [Space] [Header("Runtime Filled")] public GunSO ActiveGun;
     [SerializeField] private GunSO ActiveBaseGun;
+    
+    public static event Action OnSwitchWeapon;
 
     private void Awake()
     {
@@ -60,6 +62,7 @@ public class PlayerGunSelector : MonoBehaviour
     {
         if (PlayerController.IsQKeyDown() && !isQKeyDown)
         {
+            OnSwitchWeapon?.Invoke();
             SwitchWeapon(-1);
             isQKeyDown = true;
         }
@@ -70,6 +73,7 @@ public class PlayerGunSelector : MonoBehaviour
 
         if (PlayerController.IsEKeyDown() && !isEKeyDown)
         {
+            OnSwitchWeapon?.Invoke();
             SwitchWeapon(1);
             isEKeyDown = true;
         }
