@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
     Vector3 velocity;
     private float targetAngle;
 
-    //private PlayerStamina playerStamina;
+    private PlayerStamina playerStamina;
     
     private void Awake()
     {
@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
         // #endif
 
 
-        //playerStamina = GetComponent<PlayerStamina>();
+        playerStamina = GetComponent<PlayerStamina>();
         
         transform.rotation = Quaternion.Euler(Vector3.zero);
     }
@@ -328,7 +328,8 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded && velocity.y < 0)
         {
-            velocity.y = -2f; 
+            velocity.y = -2f;
+            
         }
 
         if (isMoving) 
@@ -337,7 +338,8 @@ public class PlayerController : MonoBehaviour
             if(!isLeftClickDown && !isRightClickDown) TurnCharacterInMovementDirection();
 
             Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            float currentSpeed = isLShiftDown ? speed * speedIncreaseFactor : speed; 
+            float currentSpeed = isLShiftDown ? speed * speedIncreaseFactor : speed;
+            if(isLShiftDown) playerStamina.SpendStamina(spendPointsWhenRunning);
             controller.Move(moveDir.normalized * currentSpeed * Time.deltaTime); 
         }
         

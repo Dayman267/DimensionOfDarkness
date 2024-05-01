@@ -10,6 +10,8 @@ TagManager:
   - VFX_System
   - TrailPool
   - BulletsPool
+  - SolidMaterial
+  - PointsManager
   layers:
   - Default
   - TransparentFX
