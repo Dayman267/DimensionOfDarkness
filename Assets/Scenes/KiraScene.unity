@@ -5846,9 +5846,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 2fbe4cdd96e3a9542a2f0842868a628d, type: 2}
     - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
+      propertyPath: gravity
+      value: -9.81
+      objectReference: {fileID: 0}
+    - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: _mainCamera
       value: 
       objectReference: {fileID: 963194228}
+    - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
+      propertyPath: groundMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 4002685295256456530, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
@@ -15972,11 +15980,11 @@ RectTransform:
   - {fileID: 2056223419}
   m_Father: {fileID: 2127748116}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 15, y: 15}
-  m_SizeDelta: {x: 256.9432, y: 64.2358}
-  m_Pivot: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -20, y: 20}
+  m_SizeDelta: {x: 256.94324, y: 64.23578}
+  m_Pivot: {x: 1, y: 0}
 --- !u!114 &1545808808
 MonoBehaviour:
   m_ObjectHideFlags: 0
