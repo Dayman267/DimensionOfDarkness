@@ -21,8 +21,9 @@ MonoBehaviour:
   FireRate: 0.1
   BulletPerShot: 1
   ShootType: 1
-  IsPreparedShot: 0
+  IsPreparedShot: 1
   chargeTime: 1
+  IsChargedShot: 1
   RecoilRecoverySpeed: 1
   MaxSpreadTime: 1
   SpreadType: 1

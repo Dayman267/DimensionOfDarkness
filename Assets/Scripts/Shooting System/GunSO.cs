@@ -347,8 +347,9 @@ public class GunSO : ScriptableObject, ICloneable
                     maxPercentDamage *= BulletPenetrationConfig.DamageRetentionPercentage;
                 }
             }
-
-            damageable.TakeDamage(DamageConfig.GetDamage(DistanceTraveled, maxPercentDamage));
+    
+            Debug.Log("Damage Gun " + chargingDamageMultiplier);
+            damageable.TakeDamage(DamageConfig.GetDamage(DistanceTraveled, maxPercentDamage, chargedDamageMultiplier));
         }
 
         foreach (ICollisionHandler collisionHandler in BulletImpactEffects)
@@ -422,16 +423,27 @@ public class GunSO : ScriptableObject, ICloneable
 
     private float currentChargeTime = 0.0f;
     private bool isCharging = false;
+    private float chargingDamageMultiplier = 1.0f;
+    private float chargedDamageMultiplier = 1.0f;
 
-    void StartCharging()
+    private void StartCharging()
     {
         isCharging = true;
         currentChargeTime = 0.0f;
+        chargingDamageMultiplier = 1.0f;
     }
 
-    void StopCharging()
+    private void StopCharging()
     {
+        currentChargeTime = 0;
         isCharging = false;
+    }
+
+    private void ChargedShoot()
+    {
+        chargedDamageMultiplier = chargingDamageMultiplier;
+        TryToShoot();
+        if(DamageConfig.IsChargedShot) StopCharging();
     }
 
 
@@ -446,9 +458,13 @@ public class GunSO : ScriptableObject, ICloneable
                 else
                 {
                     currentChargeTime += Time.deltaTime;
+                    
+                    if(DamageConfig.IsChargedShot)
+                        chargingDamageMultiplier = Mathf.Lerp(1.0f, DamageConfig.maxChargedDamageMultiplier, currentChargeTime / ShootConfig.chargeTime);
+
                     if (currentChargeTime >= ShootConfig.chargeTime)
                     {
-                        TryToShoot();
+                        ChargedShoot();
                     }
                 }
             }
@@ -457,6 +473,10 @@ public class GunSO : ScriptableObject, ICloneable
                 LastFrameWantedToShoot = true;
                 TryToShoot();
             }
+        }
+        else if(!WantsToShoot && DamageConfig.IsChargedShot && currentChargeTime > ShootConfig.chargeTime * 0.3)
+        {
+            ChargedShoot();
         }
         else if (!WantsToShoot && LastFrameWantedToShoot)
         {
