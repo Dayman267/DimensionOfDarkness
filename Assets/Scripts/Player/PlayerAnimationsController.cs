@@ -66,7 +66,7 @@ public class PlayerAnimationsController : MonoBehaviour
     
     private void SwitchWeaponAnimation()
     {
-        //DisableShootAnimationHandler();
+        DisableShootAnimationHandler();
         animator.SetTrigger(switchAnimHash);
     }
     

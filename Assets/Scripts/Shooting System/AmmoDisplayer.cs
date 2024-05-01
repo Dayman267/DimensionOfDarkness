@@ -28,7 +28,7 @@ public class AmmoDisplayer : MonoBehaviour
         int currentAmmo = GunSelector.ActiveGun.AmmoConfig.CurrentClipAmmo;
         int maxAmmo = GunSelector.ActiveGun.AmmoConfig.ClipSize;
 
-        AmmoText.SetText($"{currentAmmo} / {maxAmmo}");
+        AmmoText.SetText($"{currentAmmo} | {maxAmmo}");
 
         // Проверяем, достигли ли мы 0 патронов и начинаем трясти текст, если это так
         if (currentAmmo == 0 && !isShaking)

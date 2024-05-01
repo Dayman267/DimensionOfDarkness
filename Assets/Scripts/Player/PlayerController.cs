@@ -15,9 +15,9 @@ public class PlayerController : MonoBehaviour
 
     private Animator animator;
     private Vector3 _movementVector;
-
     private PlayerActions playerActions;
     private PlayerInput playerInput;
+    private static PlayerStates playerState = PlayerStates.idle;
 
     private bool isRotating;
     private Quaternion targetRotation;
@@ -91,6 +91,21 @@ public class PlayerController : MonoBehaviour
     static bool isRKeyDown;
     static bool isQKeyDown;
     static bool isEKeyDown;
+    
+    public static void SetPlayerState(PlayerStates state)
+    {
+        playerState = state;
+    }
+    
+    public static PlayerStates GetPlayerState()
+    {
+        return playerState;
+    }
+    
+    public static bool IsPlayerHasIdleState()
+    {
+        return playerState == PlayerStates.idle;
+    }
     
     public static bool IsRightClickDown()
     {
@@ -338,7 +353,7 @@ public class PlayerController : MonoBehaviour
     private void ShootAnimOn()
     {
         AimOn();
-        if(!PlayerShootController.IsReloading())
+        if(IsPlayerHasIdleState())
             OnShootAnimationEnable?.Invoke();
     }
 

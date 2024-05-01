@@ -22,7 +22,7 @@ public class PlayerGunSelector : MonoBehaviour
 
     [Space] [Header("Runtime Filled")] public GunSO ActiveGun;
     [SerializeField] private GunSO ActiveBaseGun;
-    
+
     public static event Action OnSwitchWeapon;
 
     private void Awake()
@@ -31,7 +31,7 @@ public class PlayerGunSelector : MonoBehaviour
         Camera = Camera.main;
 
         runtimeCurrentAmmoClips = new List<int>(Guns.Count);
-        
+
         for (int i = 0; i < Guns.Count; i++)
         {
             runtimeCurrentAmmoClips.Add(Guns[i].AmmoConfig.CurrentClipAmmo);
@@ -60,27 +60,37 @@ public class PlayerGunSelector : MonoBehaviour
 
     private void Update()
     {
-        if (PlayerController.IsQKeyDown() && !isQKeyDown)
+        if (PlayerController.IsPlayerHasIdleState() || PlayerController.GetPlayerState() == PlayerStates.switchingWeapon)
         {
-            OnSwitchWeapon?.Invoke();
-            SwitchWeapon(-1);
-            isQKeyDown = true;
-        }
-        else if (!PlayerController.IsQKeyDown() && isQKeyDown)
-        {
-            isQKeyDown = false;
-        }
+            if (PlayerController.IsQKeyDown() && !isQKeyDown)
+            {
+                InvokeSwitchWeaponAnimation();
+                SwitchWeapon(-1);
+                isQKeyDown = true;
+            }
+            else if (!PlayerController.IsQKeyDown() && isQKeyDown)
+            {
+                isQKeyDown = false;
+            }
 
-        if (PlayerController.IsEKeyDown() && !isEKeyDown)
-        {
+
+            if (PlayerController.IsEKeyDown() && !isEKeyDown)
+            {
+                InvokeSwitchWeaponAnimation();
+                SwitchWeapon(1);
+                isEKeyDown = true;
+            }
+            else if (!PlayerController.IsEKeyDown() && isEKeyDown)
+            {
+                isEKeyDown = false;
+            }
+        }
+    }
+
+    private void InvokeSwitchWeaponAnimation()
+    {
+        if (PlayerController.IsPlayerHasIdleState())
             OnSwitchWeapon?.Invoke();
-            SwitchWeapon(1);
-            isEKeyDown = true;
-        }
-        else if (!PlayerController.IsEKeyDown() && isEKeyDown)
-        {
-            isEKeyDown = false;
-        }
     }
 
     public void DespawnActiveGun()
@@ -92,6 +102,7 @@ public class PlayerGunSelector : MonoBehaviour
 
     private void SwitchWeapon(int switchDirection)
     {
+        PlayerController.SetPlayerState(PlayerStates.switchingWeapon);
         GunSO NewActiveGun;
         ActiveGunPosition = Guns.FindIndex(gun => gun.Name == ActiveGun.Name);
 
@@ -115,6 +126,11 @@ public class PlayerGunSelector : MonoBehaviour
         SetupGun(NewActiveGun);
 
         OnGunChanged?.Invoke();
+    }
+
+    public void SwitchingEnd()
+    {
+        PlayerController.SetPlayerState(PlayerStates.idle);
     }
 
     public void PickupGun(GunSO gun)
@@ -143,8 +159,5 @@ public class PlayerGunSelector : MonoBehaviour
             ActiveGun.Spawn(GunParent, this, Camera);
             ActiveGun.AmmoConfig.CurrentClipAmmo = runtimeCurrentAmmoClips[NewActiveGunPosition];
         }
-
-        
-        
     }
 }
