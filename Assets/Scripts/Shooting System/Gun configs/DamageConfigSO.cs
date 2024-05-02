@@ -25,7 +25,6 @@ public class DamageConfigSO : ScriptableObject, ICloneable
 
     public int GetDamage(float Distance = 0, float DamageLoosMultiplier = 1 , float ChargeDamageMultiplier = 1 )
     {
-        Debug.Log("Damage conf " + ChargeDamageMultiplier);
         float normalDamage = Mathf.CeilToInt(DamageCurve.Evaluate(Distance, Random.value)) * ChargeDamageMultiplier  * DamageLoosMultiplier ; // Получаем обычный урон
 
         if (CriticalChance > 0 && Random.value <= CriticalChance)

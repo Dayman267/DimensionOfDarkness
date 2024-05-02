@@ -12,14 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b804451292234304591151bdef2764e6, type: 3}
   m_Name: Sniperl Rifle Audio Config
   m_EditorClassIdentifier: 
-  Volume: 0.7
+  Volume: 0.4
   FireClips:
-  - {fileID: 8300000, guid: a5bb46a26a16ea2428ec5a777d38a0c1, type: 3}
-  - {fileID: 8300000, guid: f2f1f64e1aa1a8649925c8403a478cab, type: 3}
-  - {fileID: 8300000, guid: 1e88799368800c943b0b0a16a23829b7, type: 3}
-  - {fileID: 8300000, guid: 9befbded73a5b8b42bc63d94f18ccaf9, type: 3}
-  - {fileID: 8300000, guid: 851fc67f085cfc14e97012b21149f64d, type: 3}
-  - {fileID: 8300000, guid: 6754221c67803a8458d6428ba1529f28, type: 3}
+  - {fileID: 8300000, guid: 04a7682346e514f40b1fac223f44ea12, type: 3}
   EmptyClip: {fileID: 8300000, guid: df3f90173f71bc444ae1415b45922bb9, type: 3}
   ReloadClip: {fileID: 8300000, guid: 96878a066c2c12a47ad47098b266c8cb, type: 3}
   LastBulletClip: {fileID: 8300000, guid: b0260a9ada5eeeb4b8df3b5087061f64, type: 3}

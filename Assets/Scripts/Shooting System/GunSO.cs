@@ -219,7 +219,7 @@ public class GunSO : ScriptableObject, ICloneable
         {
             ActiveMonoBehaviour.StartCoroutine(
                 PlayTrail(
-                    ShootingStartPoint.transform.position,
+                    TrailOrigin,
                     TrailOrigin + (shootDirection * TrailConfig.MissDistance),
                     new RaycastHit(),
                     Iteration
@@ -273,7 +273,7 @@ public class GunSO : ScriptableObject, ICloneable
         if (collision != null && BulletPenetrationConfig != null &&
             BulletPenetrationConfig.MaxObjectsToPenetrate > objectsPenetrated)
         {
-            Vector3 direction = -collision.impulse.normalized;
+            Vector3 direction = (bullet.transform.position - bullet.SpawnLocation).normalized;
             ContactPoint contact = collision.GetContact(0);
             Vector3 backCastOrigin = contact.point + direction * BulletPenetrationConfig.MaxPenetrationDepth;
 
@@ -292,7 +292,7 @@ public class GunSO : ScriptableObject, ICloneable
                 );
                 bullet.transform.position = hit.point + direction * 0.01f;
 
-                bullet.Rigidbody.velocity = (-collision.impulse / bullet.Rigidbody.mass) + direction;
+                bullet.Rigidbody.velocity = bullet.SpawnVelocity - direction;
             }
             else
             {
@@ -581,7 +581,7 @@ public class GunSO : ScriptableObject, ICloneable
     {
         TrailRenderer instance = TrailPool.Get();
         instance.gameObject.SetActive(true);
-        instance.transform.localPosition = StartPoint;
+        instance.transform.position = StartPoint;
         yield return null; // avoid position carry-over from last frame if reused
 
         instance.emitting = true;
@@ -590,7 +590,7 @@ public class GunSO : ScriptableObject, ICloneable
         float remainingDistance = distance;
         while (remainingDistance > 0)
         {
-            instance.transform.localPosition = Vector3.Lerp(
+            instance.transform.position = Vector3.Lerp(
                 StartPoint,
                 EndPoint,
                 Mathf.Clamp01(1 - (remainingDistance / distance))
@@ -600,7 +600,7 @@ public class GunSO : ScriptableObject, ICloneable
             yield return null;
         }
 
-        instance.transform.localPosition = EndPoint;
+        instance.transform.position = EndPoint;
 
         if (Hit.collider != null)
         {
