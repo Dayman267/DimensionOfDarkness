@@ -5144,7 +5144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 0644b227bdf95e34c96d5299821cd4a7, type: 2}
+  m_Material: {fileID: 2100000, guid: 4ffe3ec7516708741ab3ccf3093bb543, type: 2}
   m_Color: {r: 1, g: 0.14509805, b: 0.13725491, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -5979,7 +5979,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 0644b227bdf95e34c96d5299821cd4a7, type: 2}
+  m_Material: {fileID: 2100000, guid: 4ffe3ec7516708741ab3ccf3093bb543, type: 2}
   m_Color: {r: 0, g: 0.8509804, b: 0.13725491, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -6464,26 +6464,30 @@ PrefabInstance:
       objectReference: {fileID: 963194227}
     - target: {fileID: 6009271767654756898, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: Guns.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6009271767654756898, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: Guns.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: 0a1c94bb21e39ee4da1398b358abbe35, type: 2}
+      objectReference: {fileID: 11400000, guid: f88e0079b2f930d48bcd41108534548a, type: 2}
     - target: {fileID: 6009271767654756898, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: Guns.Array.data[1]
       value: 
-      objectReference: {fileID: 11400000, guid: a471a152566c361498b72abf2f68e0d5, type: 2}
+      objectReference: {fileID: 11400000, guid: 0a1c94bb21e39ee4da1398b358abbe35, type: 2}
     - target: {fileID: 6009271767654756898, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: Guns.Array.data[2]
       value: 
-      objectReference: {fileID: 11400000, guid: ae59513c779a91c449f5c23a7400bdcc, type: 2}
+      objectReference: {fileID: 11400000, guid: a471a152566c361498b72abf2f68e0d5, type: 2}
     - target: {fileID: 6009271767654756898, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: Guns.Array.data[3]
       value: 
-      objectReference: {fileID: 11400000, guid: 87089f181ba1235489c43688de7f4734, type: 2}
+      objectReference: {fileID: 11400000, guid: ae59513c779a91c449f5c23a7400bdcc, type: 2}
     - target: {fileID: 6009271767654756898, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: Guns.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: 87089f181ba1235489c43688de7f4734, type: 2}
+    - target: {fileID: 6009271767654756898, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
+      propertyPath: Guns.Array.data[5]
       value: 
       objectReference: {fileID: 11400000, guid: 2fbe4cdd96e3a9542a2f0842868a628d, type: 2}
     - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
@@ -17094,7 +17098,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 0644b227bdf95e34c96d5299821cd4a7, type: 2}
+  m_Material: {fileID: 2100000, guid: 4ffe3ec7516708741ab3ccf3093bb543, type: 2}
   m_Color: {r: 0.13725491, g: 0.18039216, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}

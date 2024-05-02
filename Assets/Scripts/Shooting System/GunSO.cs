@@ -32,7 +32,8 @@ public class GunSO : ScriptableObject, ICloneable
 
     private MonoBehaviour ActiveMonoBehaviour;
     private GameObject Model;
-    private AudioSource ShootingAudioSource;
+    private AudioSource GunAudioSource;
+    private AudioSource ChargingAudioSource;
     private Camera ActiveCamera;
 
     private float LastShootTime;
@@ -43,7 +44,8 @@ public class GunSO : ScriptableObject, ICloneable
     private GameObject TrailPoolParent;
     private Transform BulletPoolParent;
 
-    private ParticleSystem[] VFX_System;
+    private ParticleSystem[] Shoot_VFX;
+    private ParticleSystem[] ChargeShoot_VFX;
     private GameObject ShootingStartPoint;
     private ObjectPool<TrailRenderer> TrailPool;
     private ObjectPool<Bullet> BulletPool;
@@ -65,16 +67,23 @@ public class GunSO : ScriptableObject, ICloneable
 
         TrailPoolParent = GameObject.FindWithTag("TrailPool");
         BulletPoolParent = GameObject.FindWithTag("BulletsPool").transform;
-
-        VFX_System = GameObject.FindWithTag("VFX_System").GetComponentsInChildren<ParticleSystem>();
-        ShootingAudioSource = Model.GetComponent<AudioSource>();
-        ShootingStartPoint = GameObject.FindWithTag("ShootingStartPoint");
-
         
-        GameObject vfxSystem = GameObject.FindWithTag("VFX_System");
-        if (vfxSystem != null)
+        GameObject shootFXSystem = GameObject.FindWithTag("VFX_System");
+        GameObject chargingFXSystem = GameObject.FindWithTag("Charging_VFX");
+
+        Shoot_VFX = shootFXSystem.GetComponentsInChildren<ParticleSystem>();
+        if (DamageConfig.IsChargedShot)
         {
-            ShootingStartPoint.transform.position = vfxSystem.transform.position;
+            ChargeShoot_VFX = chargingFXSystem.GetComponentsInChildren<ParticleSystem>();
+            ChargingAudioSource = chargingFXSystem.GetComponent<AudioSource>();
+        }
+        GunAudioSource = Model.GetComponent<AudioSource>();
+        
+        ShootingStartPoint = GameObject.FindWithTag("ShootingStartPoint");
+        
+        if (shootFXSystem != null)
+        {
+            ShootingStartPoint.transform.position = shootFXSystem.transform.position;
         }
         else
         {
@@ -90,8 +99,9 @@ public class GunSO : ScriptableObject, ICloneable
         if (BulletPool != null)
             BulletPool.Clear();
         
-        ShootingAudioSource = null;
-        VFX_System = null;
+        GunAudioSource = null;
+        Shoot_VFX = null;
+        ChargeShoot_VFX = null;
         ShootingStartPoint = null;
     }
 
@@ -100,12 +110,23 @@ public class GunSO : ScriptableObject, ICloneable
         this.ActiveCamera = ActiveCamera;
     }
 
-    public void PlayParticleSystems()
+    public void PlayParticleSystems(ParticleSystem[] particleSystem)
     {
-        foreach (ParticleSystem ps in VFX_System)
+        foreach (ParticleSystem ps in particleSystem)
         {
             ps.Play();
         }
+    }
+
+    private bool IsEmptyClipCheck()
+    {
+        if (AmmoConfig.CurrentClipAmmo == 0)
+        {
+            if(!GunAudioSource.isPlaying)
+                AudioConfig.PlayOutOfAmmoClip(GunAudioSource);
+            return true;
+        }
+        return false;
     }
 
     public void TryToShoot()
@@ -126,15 +147,13 @@ public class GunSO : ScriptableObject, ICloneable
         {
             LastShootTime = Time.time;
 
-            if (AmmoConfig.CurrentClipAmmo == 0)
+            if (IsEmptyClipCheck())
             {
-                if(!ShootingAudioSource.isPlaying)
-                    AudioConfig.PlayOutOfAmmoClip(ShootingAudioSource);
                 return;
             }
 
-            PlayParticleSystems();
-            AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.CurrentClipAmmo == 1);
+            PlayParticleSystems(Shoot_VFX);
+            AudioConfig.PlayShootingClip(GunAudioSource, AmmoConfig.CurrentClipAmmo == 1);
             Crosshair.OnShotFired();
             AmmoConfig.CurrentClipAmmo--;
 
@@ -347,8 +366,7 @@ public class GunSO : ScriptableObject, ICloneable
                     maxPercentDamage *= BulletPenetrationConfig.DamageRetentionPercentage;
                 }
             }
-    
-            Debug.Log("Damage Gun " + chargingDamageMultiplier);
+            
             damageable.TakeDamage(DamageConfig.GetDamage(DistanceTraveled, maxPercentDamage, chargedDamageMultiplier));
         }
 
@@ -418,7 +436,7 @@ public class GunSO : ScriptableObject, ICloneable
 
     public void StartReloading()
     {
-        AudioConfig.PlayReloadClip(ShootingAudioSource);
+        AudioConfig.PlayReloadClip(GunAudioSource);
     }
 
     private float currentChargeTime = 0.0f;
@@ -431,12 +449,19 @@ public class GunSO : ScriptableObject, ICloneable
         isCharging = true;
         currentChargeTime = 0.0f;
         chargingDamageMultiplier = 1.0f;
+        if (ChargeShoot_VFX != null && !IsEmptyClipCheck())
+        {
+            AudioConfig.PlayChargingShotClip(ChargingAudioSource);
+            PlayParticleSystems(ChargeShoot_VFX);
+        }
     }
 
     private void StopCharging()
     {
         currentChargeTime = 0;
         isCharging = false;
+        if(ChargeShoot_VFX != null)
+            ChargingAudioSource.Stop();
     }
 
     private void ChargedShoot()

@@ -12,6 +12,9 @@ TagManager:
   - BulletsPool
   - SolidMaterial
   - PointsManager
+  - Bullet
+  - Gun
+  - Charging_VFX
   layers:
   - Default
   - TransparentFX

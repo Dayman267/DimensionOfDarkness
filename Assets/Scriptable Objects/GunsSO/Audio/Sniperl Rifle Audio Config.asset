@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b804451292234304591151bdef2764e6, type: 3}
+  m_Name: Sniperl Rifle Audio Config
+  m_EditorClassIdentifier: 
+  Volume: 0.7
+  FireClips:
+  - {fileID: 8300000, guid: a5bb46a26a16ea2428ec5a777d38a0c1, type: 3}
+  - {fileID: 8300000, guid: f2f1f64e1aa1a8649925c8403a478cab, type: 3}
+  - {fileID: 8300000, guid: 1e88799368800c943b0b0a16a23829b7, type: 3}
+  - {fileID: 8300000, guid: 9befbded73a5b8b42bc63d94f18ccaf9, type: 3}
+  - {fileID: 8300000, guid: 851fc67f085cfc14e97012b21149f64d, type: 3}
+  - {fileID: 8300000, guid: 6754221c67803a8458d6428ba1529f28, type: 3}
+  EmptyClip: {fileID: 8300000, guid: df3f90173f71bc444ae1415b45922bb9, type: 3}
+  ReloadClip: {fileID: 8300000, guid: 96878a066c2c12a47ad47098b266c8cb, type: 3}
+  LastBulletClip: {fileID: 8300000, guid: b0260a9ada5eeeb4b8df3b5087061f64, type: 3}
+  ChargingShotClip: {fileID: 0}
