@@ -7,13 +7,13 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: UI Two way scanline shader
+  m_Name: Stamina bar hologram
   m_Shader: {fileID: 4800000, guid: 002f6eab9ba9b994d8eec7af12c232ac, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - SCAN2_OFF
-  m_InvalidKeywords: []
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _INVERT_ON
   m_LightmapFlags: 5
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -54,7 +54,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _Noise:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 0}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
@@ -85,13 +85,13 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Scan2:
-        m_Texture: {fileID: 2800000, guid: 271b03d57c528f349a661f8ae6c0d919, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
-        m_Offset: {x: -5, y: -10}
+        m_Offset: {x: 0, y: 0}
     - _Scanlines:
-        m_Texture: {fileID: 2800000, guid: 271b03d57c528f349a661f8ae6c0d919, type: 3}
-        m_Scale: {x: 0.5, y: 0.1}
-        m_Offset: {x: 1, y: -10}
+        m_Texture: {fileID: 2800000, guid: b9f945c9d4293bf4da7d4a00989d0a31, type: 3}
+        m_Scale: {x: 1, y: 0}
+        m_Offset: {x: 1.2, y: 0}
     - _SecondaryFlicker:
         m_Texture: {fileID: 2800000, guid: ac782bf64bc0d4447bfd606db3ca6968, type: 3}
         m_Scale: {x: 0.1, y: 0.1}
@@ -116,18 +116,18 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RimFalloff: 0.4
-    - _RimStrenght: 1.2
+    - _RimFalloff: 0.2
+    - _RimStrenght: 0.5
     - _ScanStr: 1
-    - _ScanStr2: 0.638
+    - _ScanStr2: 0
     - _Shading: 0.25
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 0, g: 0.23584908, b: 0.13951638, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FlickerColor: {r: 1, g: 1, b: 1, a: 1}
-    - _RimColor: {r: 0.9056604, g: 0.43666732, b: 0.18369527, a: 1}
+    - _RimColor: {r: 0, g: 0, b: 0, a: 1}
     - _ScanlineColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_BuildTextureStacks: []

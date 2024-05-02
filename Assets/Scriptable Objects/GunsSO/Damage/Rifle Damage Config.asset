@@ -49,3 +49,5 @@ MonoBehaviour:
     m_ConstantMax: 10
   CriticalChance: 0
   CriticalMultiplier: 0
+  IsChargedShot: 0
+  maxChargedDamageMultiplier: 2
