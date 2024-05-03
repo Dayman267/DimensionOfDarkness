@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 703471844543968341}
   - component: {fileID: 4691199224381256237}
   - component: {fileID: 8888233017372959092}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4853,7 +4853,7 @@ GameObject:
   - component: {fileID: 1257306224188180016}
   - component: {fileID: 4139437564012866047}
   - component: {fileID: 2608674351919543010}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Plasma Launcher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5073,7 +5073,7 @@ GameObject:
   - component: {fileID: 552145643387180589}
   - component: {fileID: 4739250457244982846}
   - component: {fileID: 3332455731313084160}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Embers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9840,7 +9840,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1354844837438067558}
   - component: {fileID: 7722029382448172960}
-  m_Layer: 0
+  - component: {fileID: 1377301423985807614}
+  m_Layer: 3
   m_Name: ChargingFX
   m_TagString: Charging_VFX
   m_Icon: {fileID: 0}
@@ -9960,6 +9961,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1377301423985807614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6496577686079166376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea09f14e52bb5544bada33477b0f1c04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8324865716880788804
 GameObject:
   m_ObjectHideFlags: 0
@@ -9969,9 +9982,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 49465149872115562}
-  m_Layer: 0
+  - component: {fileID: 7988428012347405502}
+  m_Layer: 3
   m_Name: ShootFX
-  m_TagString: VFX_System
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9992,6 +10006,18 @@ Transform:
   - {fileID: 8472294778262917565}
   m_Father: {fileID: 8659497253529199428}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7988428012347405502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8324865716880788804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716984a2b8abf83489304d0b54bf91b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8542160649753433324
 GameObject:
   m_ObjectHideFlags: 0
@@ -10003,7 +10029,7 @@ GameObject:
   - component: {fileID: 1435337167820978123}
   - component: {fileID: 868965500154913309}
   - component: {fileID: 9174910511177312369}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14900,6 +14926,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ExplotionPistol
       objectReference: {fileID: 0}
+    - target: {fileID: 2800740369002659599, guid: 9a3be8188bb61b743860d8a6c7d0f929, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14982,6 +15012,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnergyExplosion
       objectReference: {fileID: 0}
+    - target: {fileID: 5735388829508308548, guid: 25dbb5c6c9dd3b34ca8d8031bc82ccdf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5735425446046761954, guid: 25dbb5c6c9dd3b34ca8d8031bc82ccdf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5735995782584677586, guid: 25dbb5c6c9dd3b34ca8d8031bc82ccdf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5737426985737158532, guid: 25dbb5c6c9dd3b34ca8d8031bc82ccdf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15003,6 +15049,22 @@ PrefabInstance:
     - target: {fileID: 8201308238635682149, guid: c5a98871cf23e784baa3df9b21767ddf, type: 3}
       propertyPath: m_Name
       value: SparksEffect
+      objectReference: {fileID: 0}
+    - target: {fileID: 8201308238635682149, guid: c5a98871cf23e784baa3df9b21767ddf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8201308239176117005, guid: c5a98871cf23e784baa3df9b21767ddf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8201308239541149039, guid: c5a98871cf23e784baa3df9b21767ddf, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8201308245442901561, guid: c5a98871cf23e784baa3df9b21767ddf, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8204817556278205739, guid: c5a98871cf23e784baa3df9b21767ddf, type: 3}
       propertyPath: m_LocalPosition.x

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 854809947825033635}
   - component: {fileID: 679411709942270705}
   - component: {fileID: 653545375211412251}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Fire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4851,7 +4851,7 @@ GameObject:
   - component: {fileID: 847286285328100131}
   - component: {fileID: 654091894121827059}
   - component: {fileID: 653325617050971391}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9691,7 +9691,7 @@ GameObject:
   - component: {fileID: 847339508639163693}
   - component: {fileID: 679375038506963921}
   - component: {fileID: 654262619661282847}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: FireDark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14531,7 +14531,7 @@ GameObject:
   - component: {fileID: 855061062672020733}
   - component: {fileID: 653693792200565289}
   - component: {fileID: 655067609967505391}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Magic fire pro green
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19375,7 +19375,7 @@ GameObject:
   - component: {fileID: 847787751989133393}
   - component: {fileID: 653267093351563213}
   - component: {fileID: 654360959906045543}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24215,7 +24215,7 @@ GameObject:
   - component: {fileID: 1498148563631207446}
   - component: {fileID: 1498148563631207444}
   - component: {fileID: 1498148563631207445}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: EmbersPoints
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29043,7 +29043,7 @@ GameObject:
   - component: {fileID: 1498148564218539320}
   - component: {fileID: 1498148564218539321}
   - component: {fileID: 1498148564218539322}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Embers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33872,7 +33872,7 @@ GameObject:
   - component: {fileID: 3594127254109201458}
   - component: {fileID: 3594127254109201469}
   - component: {fileID: 3594127254109201468}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ExplotionShotGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33888,7 +33888,7 @@ Transform:
   m_GameObject: {fileID: 3594127254109201471}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.0075, z: -0}
+  m_LocalPosition: {x: 0, y: -0.1574, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -38758,7 +38758,7 @@ GameObject:
   - component: {fileID: 5781122347976504212}
   - component: {fileID: 5299852683575424423}
   - component: {fileID: 1384637856856544170}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Embers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43528,7 +43528,7 @@ GameObject:
   - component: {fileID: 5268453365586244722}
   - component: {fileID: 4061809465365293201}
   - component: {fileID: 4169860813811059358}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Atomic Overclocker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43748,7 +43748,7 @@ GameObject:
   - component: {fileID: 3225824227377011578}
   - component: {fileID: 7242376036302686630}
   - component: {fileID: 1343207558915714317}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48588,7 +48588,7 @@ GameObject:
   - component: {fileID: 5572874900591247762}
   - component: {fileID: 6066605262386637881}
   - component: {fileID: 8259212958128923581}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53438,9 +53438,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2877121666387551516}
-  m_Layer: 0
+  - component: {fileID: 5200070767242853386}
+  m_Layer: 3
   m_Name: ShootFX
-  m_TagString: VFX_System
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -53454,7 +53455,7 @@ Transform:
   m_GameObject: {fileID: 8397327299371481406}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0002, y: 0.2998, z: 0.0168}
+  m_LocalPosition: {x: 0.0002, y: 0.4482, z: 0.0168}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -53463,3 +53464,15 @@ Transform:
   - {fileID: 855061062672020733}
   m_Father: {fileID: 4510466800642145883}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5200070767242853386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8397327299371481406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716984a2b8abf83489304d0b54bf91b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

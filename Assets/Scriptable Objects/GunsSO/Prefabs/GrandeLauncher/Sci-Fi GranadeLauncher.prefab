@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5400280937894562565}
   - component: {fileID: 1674189410395907628}
   - component: {fileID: 4535900241380213951}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PartA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -156,7 +156,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7358848969765748744}
   - component: {fileID: 4565660777619051971}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Sci-Fi GranadeLauncher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -290,7 +290,7 @@ GameObject:
   - component: {fileID: 7274774450867481526}
   - component: {fileID: 3256817815823114824}
   - component: {fileID: 729546884988905495}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: PartB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -432,9 +432,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7817878567114875595}
-  m_Layer: 0
+  - component: {fileID: 7656717765068759073}
+  m_Layer: 3
   m_Name: ShootFX
-  m_TagString: VFX_System
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -455,6 +456,18 @@ Transform:
   - {fileID: 3814724199911018222}
   m_Father: {fileID: 7358848969765748744}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7656717765068759073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9198250361971308925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716984a2b8abf83489304d0b54bf91b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &640551413876166288
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -535,6 +548,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rings (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8120488851959821008, guid: 447ef5c4a4310984089a74456f566e2a, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 2876351361691708974, guid: 447ef5c4a4310984089a74456f566e2a, type: 3}
@@ -555,6 +572,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5534232137836663519}
     m_Modifications:
+    - target: {fileID: 2740398723699378366, guid: 447ef5c4a4310984089a74456f566e2a, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2876351361691708974, guid: 447ef5c4a4310984089a74456f566e2a, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4432484199216398222, guid: 447ef5c4a4310984089a74456f566e2a, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.2
@@ -627,6 +652,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rings (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8120488851959821008, guid: 447ef5c4a4310984089a74456f566e2a, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -645,9 +674,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7817878567114875595}
     m_Modifications:
+    - target: {fileID: 6711654165778254738, guid: 71cb0b46ff76b3d4e8371ee6da53c25b, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6712063652261124364, guid: 71cb0b46ff76b3d4e8371ee6da53c25b, type: 3}
       propertyPath: m_Name
       value: TinyExplosion
+      objectReference: {fileID: 0}
+    - target: {fileID: 6712063652261124364, guid: 71cb0b46ff76b3d4e8371ee6da53c25b, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6712223836671038358, guid: 71cb0b46ff76b3d4e8371ee6da53c25b, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6714037145261607140, guid: 71cb0b46ff76b3d4e8371ee6da53c25b, type: 3}
       propertyPath: m_LocalPosition.x

@@ -7,19 +7,18 @@ TagManager:
   - Objects
   - Terrain
   - ShootingStartPoint
-  - VFX_System
-  - TrailPool
   - BulletsPool
   - SolidMaterial
   - PointsManager
   - Bullet
-  - Gun
   - Charging_VFX
+  - BulletCasePool
+  - VFX_System
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Terrain
@@ -46,7 +45,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Bullet Case
   - Volume
   m_SortingLayers:
   - name: Default

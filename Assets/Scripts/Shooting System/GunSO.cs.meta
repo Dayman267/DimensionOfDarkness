@@ -3,7 +3,15 @@ guid: 26128dbc4ecdf8242a94bbdc3520a23f
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - ImpactType: {instanceID: 0}
+  - ModelPrefab: {instanceID: 0}
+  - DamageConfig: {instanceID: 0}
+  - ShootConfig: {instanceID: 0}
+  - TrailConfig: {fileID: 11400000, guid: 2109fec5a842def40aef4eda13fc3bf0, type: 2}
+  - AmmoConfig: {instanceID: 0}
+  - AudioConfig: {instanceID: 0}
+  - BulletPenetrationConfig: {fileID: 11400000, guid: e55ffc0f5108f3b48ad5ace8c4e3a614, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

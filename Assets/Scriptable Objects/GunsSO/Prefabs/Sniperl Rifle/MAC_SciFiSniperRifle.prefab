@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4716701187945981486}
-  m_Layer: 0
+  - component: {fileID: 324715027482398399}
+  m_Layer: 3
   m_Name: ShootFX
-  m_TagString: VFX_System
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32,6 +33,18 @@ Transform:
   - {fileID: 6267348743234630867}
   m_Father: {fileID: 1601344150782956513}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &324715027482398399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255287354175511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716984a2b8abf83489304d0b54bf91b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &612330427008487874
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,7 +55,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1601344150782956513}
   - component: {fileID: 2695135150690505036}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: MAC_SciFiSniperRifle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62,6 +75,7 @@ Transform:
   m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1248411652318534906}
   - {fileID: 4716701187945981486}
   - {fileID: 4530751700546145960}
   m_Father: {fileID: 0}
@@ -173,7 +187,7 @@ GameObject:
   - component: {fileID: 8591707661717132688}
   - component: {fileID: 2672987792850719910}
   - component: {fileID: 7045180285923611097}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Embers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4941,7 +4955,7 @@ GameObject:
   - component: {fileID: 2497642401691564310}
   - component: {fileID: 522886036248230167}
   - component: {fileID: 653779119479617368}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9793,7 +9807,7 @@ GameObject:
   - component: {fileID: 7865408791878794457}
   - component: {fileID: 3287723532330670176}
   - component: {fileID: 7019166253233365956}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: sniperScope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9876,7 +9890,7 @@ GameObject:
   - component: {fileID: 6242620519057501277}
   - component: {fileID: 4838114332082641565}
   - component: {fileID: 5013699295944568409}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14705,6 +14719,53 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &6009523364763258806
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1248411652318534906}
+  - component: {fileID: 7930649527193785266}
+  m_Layer: 3
+  m_Name: BulletCaseSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1248411652318534906
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6009523364763258806}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.6329999, y: 0.00000011161091, z: -0.2989999}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1601344150782956513}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!114 &7930649527193785266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6009523364763258806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b91667746016b1543aa9bf0c2e752668, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 1132226643721548, guid: e704a4a07412df74f8b81d86113f5933, type: 3}
+  rotationSpeed: 20
+  lifeTime: 30
 --- !u!1 &9077549942549013752
 GameObject:
   m_ObjectHideFlags: 0
@@ -14717,7 +14778,7 @@ GameObject:
   - component: {fileID: 2178380875831654726}
   - component: {fileID: 5520081514427591249}
   - component: {fileID: 4727265137399637732}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: sniperBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14844,6 +14905,14 @@ PrefabInstance:
     - target: {fileID: 7170400293815238368, guid: cf73b0d4172edd34f8c7262469f1bcf3, type: 3}
       propertyPath: m_Name
       value: MuzzleFlash01 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 7170400293815238368, guid: cf73b0d4172edd34f8c7262469f1bcf3, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7170650647428612938, guid: cf73b0d4172edd34f8c7262469f1bcf3, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7172853054469583674, guid: cf73b0d4172edd34f8c7262469f1bcf3, type: 3}
       propertyPath: m_LocalScale.x

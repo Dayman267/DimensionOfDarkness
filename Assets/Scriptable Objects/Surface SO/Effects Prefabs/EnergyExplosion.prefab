@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4865135451303388}
   - component: {fileID: 198856239026640498}
   - component: {fileID: 199756426985724656}
+  - component: {fileID: 7165267018640959756}
   m_Layer: 0
   m_Name: EnergyExplosion
   m_TagString: Untagged
@@ -4927,6 +4928,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &7165267018640959756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329845292236604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b44df75e97b08749883b3ae75319054, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1367458547200666
 GameObject:
   m_ObjectHideFlags: 0

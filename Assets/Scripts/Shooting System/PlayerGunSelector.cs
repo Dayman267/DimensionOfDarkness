@@ -8,7 +8,12 @@ public class PlayerGunSelector : MonoBehaviour
 {
     private Camera Camera;
     [SerializeField] private GunType GunType;
+    
     [SerializeField] private Transform GunParent;
+    [SerializeField] private Transform BulletPoolParent;
+    [SerializeField] private Transform BulletCasesPoolParent;
+    [SerializeField] private Transform ShootingStartPoint;
+  
 
     [SerializeField] private List<GunSO> Guns;
 
@@ -156,7 +161,7 @@ public class PlayerGunSelector : MonoBehaviour
         ActiveGun = gun.Clone() as GunSO;
         if (ActiveGun != null)
         {
-            ActiveGun.Spawn(GunParent, this, Camera);
+            ActiveGun.Spawn(GunParent, this,BulletPoolParent,BulletCasesPoolParent,ShootingStartPoint, Camera);
             ActiveGun.AmmoConfig.CurrentClipAmmo = runtimeCurrentAmmoClips[NewActiveGunPosition];
         }
     }

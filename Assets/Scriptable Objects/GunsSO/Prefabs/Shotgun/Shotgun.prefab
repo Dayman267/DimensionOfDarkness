@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4208084823954229971}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: WeaponGrip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 3331703904783371247}
   - component: {fileID: 6186625649828146315}
   - component: {fileID: 5917127903716478885}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4880,9 +4880,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3314320602793088505}
-  m_Layer: 0
+  - component: {fileID: 7887009708252324940}
+  m_Layer: 3
   m_Name: ShootFX
-  m_TagString: VFX_System
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4904,6 +4905,18 @@ Transform:
   - {fileID: 1895661221326989732}
   m_Father: {fileID: 6149488503387316133}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7887009708252324940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6986882491611389935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716984a2b8abf83489304d0b54bf91b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7368112532803807282
 GameObject:
   m_ObjectHideFlags: 0
@@ -4915,7 +4928,7 @@ GameObject:
   - component: {fileID: 8480709750681149977}
   - component: {fileID: 355810161792115104}
   - component: {fileID: 331907063421651799}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Embers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9683,7 +9696,7 @@ GameObject:
   - component: {fileID: 3614608640841773705}
   - component: {fileID: 7690056519369914597}
   - component: {fileID: 6644468689802051108}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14524,6 +14537,53 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &9072708932485266008
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5932961284282295519}
+  - component: {fileID: 3458667269879486163}
+  m_Layer: 3
+  m_Name: BulletCaseSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5932961284282295519
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9072708932485266008}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071068, y: -0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -0.564, y: 0.545, z: -0.397}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6149488503387316133}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!114 &3458667269879486163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9072708932485266008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b91667746016b1543aa9bf0c2e752668, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 4342120920096334080, guid: f3eff28fb46669046956efa65c7bffd2, type: 3}
+  rotationSpeed: 20
+  lifeTime: 30
 --- !u!1001 &627784633088217314
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14536,9 +14596,17 @@ PrefabInstance:
       propertyPath: stopAction
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2260921270512358912, guid: 2e1bec5dba0b3ee49861cde15651ace9, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2261161316206865322, guid: 2e1bec5dba0b3ee49861cde15651ace9, type: 3}
       propertyPath: m_Name
       value: MuzzleFlash01 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2261161316206865322, guid: 2e1bec5dba0b3ee49861cde15651ace9, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2263117046132237936, guid: 2e1bec5dba0b3ee49861cde15651ace9, type: 3}
       propertyPath: m_LocalScale.x
@@ -14610,9 +14678,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3314320602793088505}
     m_Modifications:
+    - target: {fileID: 4040007624716735317, guid: 122d341fc0cffe1429221370516300b6, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4040841905229116387, guid: 122d341fc0cffe1429221370516300b6, type: 3}
       propertyPath: m_Name
       value: PressurisedSteam
+      objectReference: {fileID: 0}
+    - target: {fileID: 4040841905229116387, guid: 122d341fc0cffe1429221370516300b6, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4042268790696811065, guid: 122d341fc0cffe1429221370516300b6, type: 3}
       propertyPath: m_LocalScale.x
@@ -14712,9 +14788,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 100000, guid: e870f12990348ad4b94b4cdb8f09b7a0, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: e870f12990348ad4b94b4cdb8f09b7a0, type: 3}
       propertyPath: m_Name
       value: Shotgun
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: e870f12990348ad4b94b4cdb8f09b7a0, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: e870f12990348ad4b94b4cdb8f09b7a0, type: 3}
       propertyPath: m_LocalScale.x
@@ -14778,9 +14862,12 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 400002, guid: e870f12990348ad4b94b4cdb8f09b7a0, type: 3}
       insertIndex: 0
-      addedObject: {fileID: 4208084823954229971}
+      addedObject: {fileID: 5932961284282295519}
     - targetCorrespondingSourceObject: {fileID: 400002, guid: e870f12990348ad4b94b4cdb8f09b7a0, type: 3}
       insertIndex: 1
+      addedObject: {fileID: 4208084823954229971}
+    - targetCorrespondingSourceObject: {fileID: 400002, guid: e870f12990348ad4b94b4cdb8f09b7a0, type: 3}
+      insertIndex: 2
       addedObject: {fileID: 3314320602793088505}
     - targetCorrespondingSourceObject: {fileID: 400000, guid: e870f12990348ad4b94b4cdb8f09b7a0, type: 3}
       insertIndex: -1

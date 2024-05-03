@@ -43,47 +43,47 @@ public class GunSO : ScriptableObject, ICloneable
 
     private GameObject TrailPoolParent;
     private Transform BulletPoolParent;
+    private Transform BulletCasesParent;
 
     private ParticleSystem[] Shoot_VFX;
     private ParticleSystem[] ChargeShoot_VFX;
-    private GameObject ShootingStartPoint;
+    private Transform ShootingStartPoint;
     private ObjectPool<TrailRenderer> TrailPool;
     private ObjectPool<Bullet> BulletPool;
+    private BulletCaseSpawner bulletCaseSpawner;
 
-    public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour, Camera ActiveCamera = null)
+    public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour, Transform BulletPoolParent,Transform BulletCasesParent,  Transform ShootingStartPoint, Camera ActiveCamera = null)
     {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
         this.ActiveCamera = ActiveCamera;
+        this.BulletPoolParent = BulletPoolParent;
+        this.BulletCasesParent = BulletCasesParent;
+        this.ShootingStartPoint = ShootingStartPoint;
+        
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
         if (!ShootConfig.IsHitScan)
         {
             BulletPool = new ObjectPool<Bullet>(CreateBullet);
         }
 
-        Model = Instantiate(ModelPrefab);
-        Model.transform.SetParent(Parent, false);
+        Model = Instantiate(ModelPrefab, Parent, false);
         Model.transform.localPosition = SpawnPoint;
         Model.transform.localRotation = Quaternion.Euler(SpawnRotation);
-
-        TrailPoolParent = GameObject.FindWithTag("TrailPool");
-        BulletPoolParent = GameObject.FindWithTag("BulletsPool").transform;
         
-        GameObject shootFXSystem = GameObject.FindWithTag("VFX_System");
-        GameObject chargingFXSystem = GameObject.FindWithTag("Charging_VFX");
-
+        GunAudioSource = Model.GetComponent<AudioSource>();
+        bulletCaseSpawner = Model.GetComponentInChildren<BulletCaseSpawner>();
+        Transform shootFXSystem = Model.GetComponentInChildren<Shooting_VFX_System_Mark>().transform;
         Shoot_VFX = shootFXSystem.GetComponentsInChildren<ParticleSystem>();
+        
         if (DamageConfig.IsChargedShot)
         {
+            Transform chargingFXSystem = Model.GetComponentInChildren<Charging_VFX_System_Mark>().transform;
             ChargeShoot_VFX = chargingFXSystem.GetComponentsInChildren<ParticleSystem>();
             ChargingAudioSource = chargingFXSystem.GetComponent<AudioSource>();
         }
-        GunAudioSource = Model.GetComponent<AudioSource>();
-        
-        ShootingStartPoint = GameObject.FindWithTag("ShootingStartPoint");
-        
         if (shootFXSystem != null)
         {
-            ShootingStartPoint.transform.position = shootFXSystem.transform.position;
+            ShootingStartPoint.position = shootFXSystem.transform.position;
         }
         else
         {
@@ -193,6 +193,8 @@ public class GunSO : ScriptableObject, ICloneable
                     }
                 }
             }
+            if(bulletCaseSpawner != null)
+                bulletCaseSpawner.SpawnBullet(BulletCasesParent);
         }
     }
 
@@ -254,8 +256,9 @@ public class GunSO : ScriptableObject, ICloneable
         TrailRenderer trail = TrailPool.Get();
         if (trail != null)
         {
-            trail.transform.SetParent(bullet.transform, false);
-            trail.transform.localPosition = Vector3.zero;
+            Transform transform;
+            (transform = trail.transform).SetParent(bullet.transform, false);
+            transform.localPosition = Vector3.zero;
             trail.emitting = true;
             trail.gameObject.SetActive(true);
         }
@@ -335,9 +338,10 @@ public class GunSO : ScriptableObject, ICloneable
         yield return new WaitForSeconds(TrailConfig.Duration);
         yield return null;
         trail.emitting = false;
-        trail.gameObject.SetActive(false);
+        GameObject gameObject;
+        (gameObject = trail.gameObject).SetActive(false);
         //TrailPool.Release(trail);
-        Destroy(trail.gameObject);
+        Destroy(gameObject);
     }
 
     // Video 6 - 10:39
@@ -610,9 +614,10 @@ public class GunSO : ScriptableObject, ICloneable
         yield return new WaitForSeconds(TrailConfig.Duration);
         yield return null;
         instance.emitting = false;
-        instance.gameObject.SetActive(false);
+        GameObject gameObject;
+        (gameObject = instance.gameObject).SetActive(false);
         //TrailPool.Release(instance);
-        Destroy(instance.gameObject);
+        Destroy(gameObject);
 
         if (BulletPenetrationConfig != null && BulletPenetrationConfig.MaxObjectsToPenetrate > Iteration)
         {

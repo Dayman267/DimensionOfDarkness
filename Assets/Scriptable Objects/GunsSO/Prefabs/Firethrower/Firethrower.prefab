@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8286326000111422685}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: WeaponGrip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 4167546136224007884}
   - component: {fileID: 4178804239815753553}
   - component: {fileID: 4291926538747803756}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Bottom_Part_04(Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 144016160394952235}
   - component: {fileID: 8227764917696603968}
   - component: {fileID: 7067900049224201002}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5017,7 +5017,7 @@ GameObject:
   - component: {fileID: 4989041978588902271}
   - component: {fileID: 5845624412894151332}
   - component: {fileID: 4390217291560756724}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9867,7 +9867,7 @@ GameObject:
   - component: {fileID: 3697184507773438518}
   - component: {fileID: 3276434454700401560}
   - component: {fileID: 3570641616603296732}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14717,7 +14717,7 @@ GameObject:
   - component: {fileID: 6970314663165699390}
   - component: {fileID: 7017928281866639759}
   - component: {fileID: 5121014113559325501}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19558,7 +19558,7 @@ GameObject:
   - component: {fileID: 7867281213733144855}
   - component: {fileID: 7978152339994054921}
   - component: {fileID: 2858388935390222672}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Muzzle_01(Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19681,7 +19681,7 @@ GameObject:
   - component: {fileID: 5432575766005009240}
   - component: {fileID: 555380853042374807}
   - component: {fileID: 879253396449788928}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Back_Part_01(Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19803,7 +19803,7 @@ GameObject:
   - component: {fileID: 2643936284168909205}
   - component: {fileID: 6362124626861573321}
   - component: {fileID: 5581560475670758476}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Embers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24570,7 +24570,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5764306396942370942}
   - component: {fileID: 9018932642191770224}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Firethrower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24708,7 +24708,7 @@ GameObject:
   - component: {fileID: 524464108540075477}
   - component: {fileID: 7135712886603993955}
   - component: {fileID: 3404246913863542004}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Handle_02(Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24830,7 +24830,7 @@ GameObject:
   - component: {fileID: 848916447204141717}
   - component: {fileID: 3921160192773302164}
   - component: {fileID: 4178281382931770159}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29681,7 +29681,7 @@ GameObject:
   - component: {fileID: 8540906107554870839}
   - component: {fileID: 4195733166364615288}
   - component: {fileID: 7826293854787290316}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Top_Part_03(Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29801,9 +29801,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3922751092911428642}
-  m_Layer: 0
+  - component: {fileID: 8823786392871943745}
+  m_Layer: 3
   m_Name: ShootFX
-  m_TagString: VFX_System
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29826,6 +29827,18 @@ Transform:
   - {fileID: 2068691230090282923}
   m_Father: {fileID: 5764306396942370942}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8823786392871943745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8000339300141448332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716984a2b8abf83489304d0b54bf91b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8150848297999912131
 GameObject:
   m_ObjectHideFlags: 0
@@ -29837,7 +29850,7 @@ GameObject:
   - component: {fileID: 5453358978900853352}
   - component: {fileID: 4474757671011769520}
   - component: {fileID: 486631525005594553}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34688,7 +34701,7 @@ GameObject:
   - component: {fileID: 8596151968587822404}
   - component: {fileID: 6223544608981690838}
   - component: {fileID: 8627910373232587007}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Middle_Part_02(Clone)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34810,7 +34823,7 @@ GameObject:
   - component: {fileID: 1648666796171690944}
   - component: {fileID: 3932871122736265641}
   - component: {fileID: 8432337029066319162}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39661,6 +39674,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlameThrower Effect PressurisedSteam
       objectReference: {fileID: 0}
+    - target: {fileID: 1141048382634232638, guid: 90da3729f9e36454aa47ce217686bd98, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1141337871741840264, guid: 90da3729f9e36454aa47ce217686bd98, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1143671539588309732, guid: 90da3729f9e36454aa47ce217686bd98, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.1
@@ -39739,6 +39760,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlameThrower
       objectReference: {fileID: 0}
+    - target: {fileID: 8503177443829710986, guid: 743fce04b090baf4d926672d0de89a4f, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8503193392694953364, guid: 743fce04b090baf4d926672d0de89a4f, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8503608826645944958, guid: 743fce04b090baf4d926672d0de89a4f, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8508669144110174456, guid: 743fce04b090baf4d926672d0de89a4f, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.8
@@ -39812,6 +39845,14 @@ PrefabInstance:
     - target: {fileID: 1141048382634232638, guid: 90da3729f9e36454aa47ce217686bd98, type: 3}
       propertyPath: m_Name
       value: PressurisedSteam
+      objectReference: {fileID: 0}
+    - target: {fileID: 1141048382634232638, guid: 90da3729f9e36454aa47ce217686bd98, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1141337871741840264, guid: 90da3729f9e36454aa47ce217686bd98, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1143671539588309732, guid: 90da3729f9e36454aa47ce217686bd98, type: 3}
       propertyPath: m_LocalScale.x
