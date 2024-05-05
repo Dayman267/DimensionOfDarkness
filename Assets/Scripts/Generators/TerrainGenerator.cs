@@ -24,6 +24,29 @@ public class TerrainGenerator : MonoBehaviour
         terrain.terrainData.terrainLayers = exampleTerrain.terrainData.terrainLayers;
         terrain.terrainData.RefreshPrototypes();
 
+        terrain.terrainData.detailPrototypes = exampleTerrain.terrainData.detailPrototypes;
+        terrain.terrainData.RefreshPrototypes();
+
+        for (int i = 0; i < exampleTerrain.terrainData.detailPrototypes.Length; i++)
+        {
+            int[,] detailLayer = null;
+            if (variant == 1)
+            {
+                detailLayer = RotateMatrix(exampleTerrain.terrainData.GetDetailLayer(
+                    0, 0, 
+                    exampleTerrain.terrainData.detailWidth, exampleTerrain.terrainData.detailHeight, 
+                    i));
+            }
+            else if (variant == 2)
+            {
+                detailLayer = MirrorMatrix(exampleTerrain.terrainData.GetDetailLayer(
+                    0, 0, 
+                    exampleTerrain.terrainData.detailWidth, exampleTerrain.terrainData.detailHeight, 
+                    i));
+            }
+            terrain.terrainData.SetDetailLayer(0, 0, i, detailLayer);
+        }
+
         BoxCollider boxCollider = terrainPrefab.AddComponent<BoxCollider>();
         BoxCollider exampleBoxCollider = exampleObject.GetComponent<BoxCollider>();
 
@@ -58,38 +81,42 @@ public class TerrainGenerator : MonoBehaviour
             exampleTerrain.terrainData.heightmapResolution);
         terrainData.heightmapResolution = exampleTerrainData.heightmapResolution;
 
-        if (variant == 1) terrainData.SetHeights(0, 0, RotateHeights(exampleTerrainHeights, exampleTerrain));
-        else if (variant == 2) terrainData.SetHeights(0, 0, MirrorHeights(exampleTerrainHeights, exampleTerrain));
+        terrainData.SetDetailResolution(exampleTerrainData.detailResolution, exampleTerrainData.detailResolutionPerPatch);
+
+        if (variant == 1) terrainData.SetHeights(0, 0, RotateMatrix(exampleTerrainHeights));
+        else if (variant == 2) terrainData.SetHeights(0, 0, MirrorMatrix(exampleTerrainHeights));
         terrainData.size = exampleTerrainData.size;
         return terrainData;
     }
 
-    private float[,] MirrorHeights(float[,] original, Terrain exampleTerrain)
+    private T[,] RotateMatrix<T>(T[,] original)
     {
-        int heightmapResolution = exampleTerrain.terrainData.heightmapResolution;
-        float[,] heights = new float[heightmapResolution, heightmapResolution];
-        for (int x = 0; x < heightmapResolution; x++)
+        int width = original.GetLength(0);
+        int height = original.GetLength(1);
+        T[,] rotated = new T[width, height];
+        
+        for (int x = 0; x < width; x++)
         {
-            for (int y = 0; y < heightmapResolution; y++)
+            for (int y = 0; y < height; y++)
             {
-                heights[x, y] = original[y, x];
+                rotated[y, width - 1 - x] = original[x, y];
             }
         }
-        return heights;
+        return rotated;
     }
 
-    private float[,] RotateHeights(float[,] original, Terrain exampleTerrain)
+    private T[,] MirrorMatrix<T>(T[,] original)
     {
-        int heightmapResolution = exampleTerrain.terrainData.heightmapResolution;
-        float[,] heights = new float[heightmapResolution, heightmapResolution];
-        
-        for (int x = 0; x < heightmapResolution; x++)
+        int width = original.GetLength(0);
+        int height = original.GetLength(1);
+        T[,] mirrored = new T[width, height];
+        for (int x = 0; x < width; x++)
         {
-            for (int y = 0; y < heightmapResolution; y++)
+            for (int y = 0; y < height; y++)
             {
-                heights[y, heightmapResolution - 1 - x] = original[x, y];
+                mirrored[x, y] = original[y, x];
             }
         }
-        return heights;
+        return mirrored;
     }
 }

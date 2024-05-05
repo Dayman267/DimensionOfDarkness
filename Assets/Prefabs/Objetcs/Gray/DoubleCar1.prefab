@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6892922411109510072}
+  - component: {fileID: 3484417310906277377}
   m_Layer: 0
   m_Name: DoubleCar1
   m_TagString: Untagged
@@ -33,6 +34,27 @@ Transform:
   - {fileID: 4727628477306707970}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3484417310906277377
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8049162677070700873}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.6257095, y: 1, z: 4.0089073}
+  m_Center: {x: 0.2805977, y: -2.13, z: 2.1524754}
 --- !u!1001 &732251639698534823
 PrefabInstance:
   m_ObjectHideFlags: 0
