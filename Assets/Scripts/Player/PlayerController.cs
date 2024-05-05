@@ -355,8 +355,8 @@ public class PlayerController : MonoBehaviour
     private void ShootAnimOn()
     {
         AimOn();
-        if(IsPlayerHasIdleState())
-            OnShootAnimationEnable?.Invoke();
+        /*if(IsPlayerHasIdleState())
+            OnShootAnimationEnable?.Invoke();*/
     }
 
     private void ShootAnimOff()
@@ -365,7 +365,7 @@ public class PlayerController : MonoBehaviour
         {
             AimOff();
         }
-        OnShootAnimationDiasble?.Invoke();
+        // OnShootAnimationDiasble?.Invoke();
     }
 
     private void AimOn()

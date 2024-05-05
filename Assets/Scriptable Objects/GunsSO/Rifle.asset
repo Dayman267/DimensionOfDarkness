@@ -18,9 +18,11 @@ MonoBehaviour:
   ModelPrefab: {fileID: 3348988483404475859, guid: e854c510400712b408052e00b5055c8c, type: 3}
   SpawnPoint: {x: 0.02, y: 0.14, z: 0.18}
   SpawnRotation: {x: -90, y: 0, z: 0}
+  AutoShootAnimationEnable: 1
   DamageConfig: {fileID: 11400000, guid: ee32a3dcc399432498ecc28fc31d4ebb, type: 2}
   ShootConfig: {fileID: 11400000, guid: 99a6bbacded4ad24481ba1a708e06fce, type: 2}
   TrailConfig: {fileID: 11400000, guid: e7392a659b813944e902d6e996150c07, type: 2}
   AmmoConfig: {fileID: 11400000, guid: 2b2501b843189c54b8799445f3b64ab5, type: 2}
   AudioConfig: {fileID: 11400000, guid: fcc339b1c5a9b1a46835e7b2e7cf74bc, type: 2}
   BulletPenetrationConfig: {fileID: 11400000, guid: 221613d3095ba734f9ee35288269984a, type: 2}
+  animatorOverrideController: {fileID: 22100000, guid: b6fb7a252d7bc5f4799c43cfe7955c47, type: 2}

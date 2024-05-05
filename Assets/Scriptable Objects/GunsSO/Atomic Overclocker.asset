@@ -24,3 +24,4 @@ MonoBehaviour:
   AmmoConfig: {fileID: 11400000, guid: 6890e10c8c582544abceec9ac6bb692b, type: 2}
   AudioConfig: {fileID: 11400000, guid: d6e42aaf86e0c3c43971e3454ad8c6ac, type: 2}
   BulletPenetrationConfig: {fileID: 11400000, guid: 9d13c9f2a72c05d46809fdf0ba4444d7, type: 2}
+  animatorOverrideController: {fileID: 22100000, guid: b6fb7a252d7bc5f4799c43cfe7955c47, type: 2}

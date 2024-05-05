@@ -5,11 +5,12 @@ public class PlayerAnimationsController : MonoBehaviour
 {
     private Animator animator;
 
-    [SerializeField] private float shootingSpeedAcceleration = 0.5f;
+    [SerializeField] private float shootingSpeedAcceleration = 1f;
     
     private int moveSpeedAnimHash;
     private int aimAnimHash;
-    private int shootingSpeedAnimHash;
+    private int autoShootingSpeedAnimHash;
+    private int singleShootingSpeedAnimHash;
     private int horizontalAnimHash;
     private int verticalAnimHash;
     private int reloadAnimHash;
@@ -22,11 +23,12 @@ public class PlayerAnimationsController : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         moveSpeedAnimHash = Animator.StringToHash("MovementSpeed");
         aimAnimHash = Animator.StringToHash("isAim");
-        shootingSpeedAnimHash = Animator.StringToHash("ShootingSpeed");
+        autoShootingSpeedAnimHash = Animator.StringToHash("ShootingSpeed");
         horizontalAnimHash = Animator.StringToHash("Horizontal");
         verticalAnimHash = Animator.StringToHash("Vertical");
         reloadAnimHash = Animator.StringToHash("Reload");
         switchAnimHash = Animator.StringToHash("SwitchingWeapon");
+        singleShootingSpeedAnimHash = Animator.StringToHash("SingleShoot");
     }
 
     private void OnEnable()
@@ -34,14 +36,15 @@ public class PlayerAnimationsController : MonoBehaviour
         PlayerController.OnMoveAnimation += MoveAnimationSwitcherHandler;
         PlayerController.OnAimAnimationEnable += EnableAimAnimationHandler;
         PlayerController.OnAimAnimationDiasble += DisableAimAnimationHandler;
-        PlayerController.OnShootAnimationEnable += EnableShootAnimationHandler;
-        PlayerController.OnShootAnimationDiasble += DisableShootAnimationHandler;
         PlayerController.OnSend_X_Z_Pos += Get_X_Z_PosHandler;
         
         PlayerShootController.OnReloadAnimation += ReloadAnimation;
         
-        PlayerGunSelector.OnSwitchWeapon += SwitchWeaponAnimation;       
+        PlayerGunSelector.OnSwitchWeapon += SwitchWeaponAnimation;    
         
+        GunSO.OnAutoShootAnimationEnable += EnableAutoShootAnimationHandler;
+        GunSO.OnAutoShootAnimationDiasble += DisableShootAnimationHandler;
+        GunSO.OnSingleShootAnimationEnable += SingleShootAnimation;
     }
 
     private void OnDisable()
@@ -49,19 +52,26 @@ public class PlayerAnimationsController : MonoBehaviour
         PlayerController.OnMoveAnimation -= MoveAnimationSwitcherHandler;
         PlayerController.OnAimAnimationEnable -= EnableAimAnimationHandler;
         PlayerController.OnAimAnimationDiasble -= DisableAimAnimationHandler;
-        PlayerController.OnShootAnimationEnable -= EnableShootAnimationHandler;
-        PlayerController.OnShootAnimationDiasble -= DisableShootAnimationHandler;
         PlayerController.OnSend_X_Z_Pos -= Get_X_Z_PosHandler;
         
         PlayerShootController.OnReloadAnimation -= ReloadAnimation;
         
         PlayerGunSelector.OnSwitchWeapon -= SwitchWeaponAnimation;     
+        
+        GunSO.OnAutoShootAnimationEnable -= EnableAutoShootAnimationHandler;
+        GunSO.OnAutoShootAnimationDiasble -= DisableShootAnimationHandler;
+        GunSO.OnSingleShootAnimationEnable -= SingleShootAnimation;
     }
 
     private void ReloadAnimation()
     {
         DisableShootAnimationHandler();
         animator.SetTrigger(reloadAnimHash);
+    }
+    
+    private void SingleShootAnimation()
+    {
+        animator.SetTrigger(singleShootingSpeedAnimHash);
     }
     
     private void SwitchWeaponAnimation()
@@ -92,18 +102,18 @@ public class PlayerAnimationsController : MonoBehaviour
         }
     }
     
-    private void EnableShootAnimationHandler()
+    private void EnableAutoShootAnimationHandler()
     {
         if (shootingSpeed <= 1f)
             shootingSpeed += Time.deltaTime * shootingSpeedAcceleration;
-        animator.SetFloat(shootingSpeedAnimHash, shootingSpeed);
+        animator.SetFloat(autoShootingSpeedAnimHash, shootingSpeed);
     }
 
     private void DisableShootAnimationHandler()
     {
         if (shootingSpeed > 0f)
             shootingSpeed = 0;
-        animator.SetFloat(shootingSpeedAnimHash, shootingSpeed);
+        animator.SetFloat(autoShootingSpeedAnimHash, shootingSpeed);
     }
 
 

@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using LlamAcademy.ImpactSystem;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 using UnityEngine.Rendering;
@@ -15,10 +17,11 @@ public class GunSO : ScriptableObject, ICloneable
     public string Name;
 
     public GameObject ModelPrefab;
-
-    //public RuntimeAnimatorController animator;
+    
     public Vector3 SpawnPoint;
     public Vector3 SpawnRotation;
+
+    public bool AutoShootAnimationEnable = false;
 
     public DamageConfigSO DamageConfig;
     public ShootConfigurationSO ShootConfig;
@@ -35,6 +38,8 @@ public class GunSO : ScriptableObject, ICloneable
     private AudioSource GunAudioSource;
     private AudioSource ChargingAudioSource;
     private Camera ActiveCamera;
+    private Animator animator;
+    public AnimatorOverrideController animatorOverrideController;
 
     private float LastShootTime;
     private float InitialClickTime;
@@ -51,6 +56,10 @@ public class GunSO : ScriptableObject, ICloneable
     private ObjectPool<TrailRenderer> TrailPool;
     private ObjectPool<Bullet> BulletPool;
     private BulletCaseSpawner bulletCaseSpawner;
+    
+    public static event Action OnAutoShootAnimationEnable;
+    public static event Action OnAutoShootAnimationDiasble;
+    public static event Action OnSingleShootAnimationEnable;
 
     public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour, Transform BulletPoolParent,Transform BulletCasesParent,  Transform ShootingStartPoint, Camera ActiveCamera = null)
     {
@@ -74,7 +83,10 @@ public class GunSO : ScriptableObject, ICloneable
         bulletCaseSpawner = Model.GetComponentInChildren<BulletCaseSpawner>();
         Transform shootFXSystem = Model.GetComponentInChildren<Shooting_VFX_System_Mark>().transform;
         Shoot_VFX = shootFXSystem.GetComponentsInChildren<ParticleSystem>();
-        
+        animator = Model.GetComponentInParent<Animator>();
+
+        animator.runtimeAnimatorController = animatorOverrideController;
+
         if (DamageConfig.IsChargedShot)
         {
             Transform chargingFXSystem = Model.GetComponentInChildren<Charging_VFX_System_Mark>().transform;
@@ -103,6 +115,7 @@ public class GunSO : ScriptableObject, ICloneable
         Shoot_VFX = null;
         ChargeShoot_VFX = null;
         ShootingStartPoint = null;
+        animatorOverrideController = null;
     }
 
     public void UpdateCamera(Camera ActiveCamera)
@@ -129,8 +142,11 @@ public class GunSO : ScriptableObject, ICloneable
         return false;
     }
 
+    
+    private bool isClipEmpty = false;
     public void TryToShoot()
     {
+        
         if (Time.time - LastShootTime - ShootConfig.FireRate > Time.deltaTime)
         {
             float lastDuration = Mathf.Clamp(
@@ -147,11 +163,21 @@ public class GunSO : ScriptableObject, ICloneable
         {
             LastShootTime = Time.time;
 
-            if (IsEmptyClipCheck())
+            isClipEmpty = IsEmptyClipCheck();
+            
+            if (isClipEmpty)
             {
+                OnAutoShootAnimationDiasble?.Invoke();
                 return;
             }
-
+            if (PlayerController.IsPlayerHasIdleState() && !isClipEmpty )
+            {
+                if(AutoShootAnimationEnable)
+                    OnAutoShootAnimationEnable?.Invoke();
+                else
+                    OnSingleShootAnimationEnable?.Invoke();
+            }
+            
             PlayParticleSystems(Shoot_VFX);
             AudioConfig.PlayShootingClip(GunAudioSource, AmmoConfig.CurrentClipAmmo == 1);
             Crosshair.OnShotFired();
@@ -506,15 +532,18 @@ public class GunSO : ScriptableObject, ICloneable
         else if(!WantsToShoot && DamageConfig.IsChargedShot && currentChargeTime > ShootConfig.chargeTime * 0.3)
         {
             ChargedShoot();
+            OnAutoShootAnimationDiasble?.Invoke();
         }
         else if (!WantsToShoot && LastFrameWantedToShoot)
         {
             StopShootingTime = Time.time;
             LastFrameWantedToShoot = false;
+            OnAutoShootAnimationDiasble?.Invoke();
         }
         else
         {
             StopCharging();
+            OnAutoShootAnimationDiasble?.Invoke();
         }
     }
 
@@ -684,6 +713,9 @@ public class GunSO : ScriptableObject, ICloneable
         config.ModelPrefab = ModelPrefab;
         config.SpawnPoint = SpawnPoint;
         config.SpawnRotation = SpawnRotation;
+
+        config.animatorOverrideController = animatorOverrideController;
+        config.AutoShootAnimationEnable = AutoShootAnimationEnable;
 
         return config;
     }
