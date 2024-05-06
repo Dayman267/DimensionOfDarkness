@@ -338,7 +338,8 @@ public class PlayerController : MonoBehaviour
             if(!isLeftClickDown && !isRightClickDown) TurnCharacterInMovementDirection();
 
             Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            float currentSpeed = isLShiftDown ? speed * speedIncreaseFactor : speed;
+            float currentSpeed = isLShiftDown && playerStamina.GetStaminaPoints() > 0 ? speed * speedIncreaseFactor : speed;
+            //Debug.Log(currentSpeed); TODO: player animation
             if(isLShiftDown) playerStamina.SpendStamina(spendPointsWhenRunning);
             controller.Move(moveDir.normalized * currentSpeed * Time.deltaTime); 
         }
