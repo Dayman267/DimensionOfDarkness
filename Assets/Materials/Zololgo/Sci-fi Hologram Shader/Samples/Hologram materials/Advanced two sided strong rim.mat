@@ -91,7 +91,7 @@ Material:
     - _Scanlines:
         m_Texture: {fileID: 2800000, guid: d6717a765e8c7c44ab4227d5d07ecfac, type: 3}
         m_Scale: {x: 0.1, y: 0.1}
-        m_Offset: {x: 0, y: -1}
+        m_Offset: {x: 0, y: -10}
     - _SecondaryFlicker:
         m_Texture: {fileID: 2800000, guid: ac782bf64bc0d4447bfd606db3ca6968, type: 3}
         m_Scale: {x: 0.1, y: 0.1}
@@ -116,7 +116,7 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RimFalloff: 0.5
+    - _RimFalloff: 0
     - _RimStrenght: 2
     - _ScanStr: 1
     - _ScanStr2: 1
@@ -128,6 +128,6 @@ Material:
     - _Color: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FlickerColor: {r: 1, g: 1, b: 1, a: 1}
-    - _RimColor: {r: 0.0754717, g: 0.0754717, b: 0.0754717, a: 1}
+    - _RimColor: {r: 0, g: 0, b: 0, a: 1}
     - _ScanlineColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_BuildTextureStacks: []

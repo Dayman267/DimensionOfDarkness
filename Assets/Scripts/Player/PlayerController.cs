@@ -7,9 +7,8 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     //[SerializeField] private Image Crosshair;
-    [SerializeField] private Transform _mainCamera;
     private Camera cam;
-    private Vector3 direction;
+    public static Vector3 direction;
     private const float LERP_SPEED = 9;
 
 
@@ -42,8 +41,6 @@ public class PlayerController : MonoBehaviour
     public static event Action<float> OnMoveAnimation;
     public static event Action OnAimAnimationEnable;
     public static event Action OnAimAnimationDiasble;
-    public static event Action OnShootAnimationEnable;
-    public static event Action OnShootAnimationDiasble;
     public static event Action<float, float> OnSend_X_Z_Pos;
     
     public float turnSmoothTime = 0.1f;
@@ -134,13 +131,15 @@ public class PlayerController : MonoBehaviour
     {
         return isEKeyDown;
     }
-    
+
+    public static bool inMovement;
+
     void Update()
     {
         _movementVector = CalculateMovementVector();
         direction = playerActions.Gameplay.Movement.ReadValue<Vector3>();
-
-        bool inMovement = Mathf.Abs(direction.x) > 0 || Mathf.Abs(direction.z) > 0;
+        
+        inMovement = Mathf.Abs(direction.x) > 0 || Mathf.Abs(direction.z) > 0;
 
        // if(!PlayerShootController.IsReloading())
             MoveAnimEnable();
@@ -249,8 +248,8 @@ public class PlayerController : MonoBehaviour
         float h = direction.x;
         float v = direction.z;
 
-        Vector3 cameraR = _mainCamera.right;
-        Vector3 cameraF = _mainCamera.forward;
+        Vector3 cameraR = cam.transform.right;
+        Vector3 cameraF = cam.transform.forward;
 
         cameraR.y = 0;
         cameraF.y = 0;
