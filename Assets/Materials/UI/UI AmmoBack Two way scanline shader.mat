@@ -104,7 +104,7 @@ Material:
     - _3: 0
     - _4: 100
     - _Advanced: 0
-    - _Brightness: 2
+    - _Brightness: 4
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -117,7 +117,7 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _RimFalloff: 1
-    - _RimStrenght: 1.2
+    - _RimStrenght: 1.153
     - _ScanStr: 1
     - _ScanStr2: 0.638
     - _Shading: 0.25
@@ -125,9 +125,9 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 0.90588236, g: 0.43529412, b: 0.18431373, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FlickerColor: {r: 1, g: 1, b: 1, a: 1}
-    - _RimColor: {r: 0.9056604, g: 0.43666732, b: 0.18369527, a: 1}
+    - _RimColor: {r: 0, g: 0, b: 0, a: 1}
     - _ScanlineColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_BuildTextureStacks: []

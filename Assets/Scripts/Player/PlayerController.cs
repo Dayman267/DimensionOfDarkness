@@ -16,13 +16,18 @@ public class PlayerController : MonoBehaviour
     private PlayerInput playerInput;
     private static PlayerStates playerState = PlayerStates.idle;
 
+    private bool isAiming = false;
     private bool isRotating;
     private Quaternion targetRotation;
-
-    [Header("Running")] [SerializeField] private float speed = 5f;
-    [SerializeField] private float rotationSpeed = 500f;
+    
+    [Header("Player Speed")]
     [SerializeField] private float speedIncreaseFactor = 1.5f;
     [SerializeField] private float spendPointsWhenRunning = 0.3f;
+    [SerializeField] private float speedRun = 10f;
+    [SerializeField] private float speedAim = 1.5f;
+    [SerializeField] private float rotationSpeed = 500f;
+    private float currentSpeed = 5f;
+    
 
 
     private bool isDashing;
@@ -335,10 +340,10 @@ public class PlayerController : MonoBehaviour
             if(!isLeftClickDown && !isRightClickDown) TurnCharacterInMovementDirection();
 
             Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            float currentSpeed = isLShiftDown && playerStamina.GetStaminaPoints() > 0 ? speed * speedIncreaseFactor : speed;
+            float speed = isLShiftDown && playerStamina.GetStaminaPoints() > 0 && !isAiming ? currentSpeed * speedIncreaseFactor : currentSpeed;
             //Debug.Log(currentSpeed); TODO: player animation
             if(isLShiftDown) playerStamina.SpendStamina(spendPointsWhenRunning);
-            controller.Move(moveDir.normalized * currentSpeed * Time.deltaTime); 
+            controller.Move(moveDir.normalized * speed * Time.deltaTime); 
         }
         
         velocity.y += gravity * Time.deltaTime;
@@ -368,14 +373,16 @@ public class PlayerController : MonoBehaviour
 
     private void AimOn()
     {
+        isAiming = true;
         TurnToMousePosition();
-        speed = 1.5f;
+        currentSpeed = speedAim;
         OnAimAnimationEnable?.Invoke();
     }
 
     private void AimOff()
     {
-        speed = 10f;
+        isAiming = false;
+        currentSpeed = speedRun;
         TurnCharacterInMovementDirection();
         OnAimAnimationDiasble?.Invoke();
     }
