@@ -38,6 +38,10 @@ public class PlayerShootController : MonoBehaviour
         OnReloadAnimation?.Invoke();
     }
 
+    
+    /// <summary>
+    ///  EndReload is switch animation method
+    /// </summary>
     private void EndReload()
     {
         if (isStopReloading)

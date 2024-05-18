@@ -8,11 +8,9 @@ public class PlayerController : MonoBehaviour
 {
     //[SerializeField] private Image Crosshair;
     private Camera cam;
-    public static Vector3 direction;
+    private static Vector3 direction;
     private const float LERP_SPEED = 9;
-
-
-    private Animator animator;
+    
     private Vector3 _movementVector;
     private PlayerActions playerActions;
     private PlayerInput playerInput;
@@ -320,8 +318,8 @@ public class PlayerController : MonoBehaviour
     {
         rb.velocity = direction * speed;
     }*/
-    
-    public void Move(bool isMoving)
+
+    private void Move(bool isMoving)
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
@@ -371,7 +369,7 @@ public class PlayerController : MonoBehaviour
     private void AimOn()
     {
         TurnToMousePosition();
-        speed = 2f;
+        speed = 1.5f;
         OnAimAnimationEnable?.Invoke();
     }
 

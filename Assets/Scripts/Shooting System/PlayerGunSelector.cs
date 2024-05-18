@@ -20,13 +20,15 @@ public class PlayerGunSelector : MonoBehaviour
     private List<int> runtimeCurrentAmmoClips;
     private int ActiveGunPosition;
     private int NewActiveGunPosition;
+    
+    [Space] [Header("Runtime Filled")] public GunSO ActiveGun;
+    [SerializeField] private GunSO ActiveBaseGun;
 
     public static event Action OnGunChanged;
     // video 1
     //  [SerializeField] private PlayerIK InversKinematics;
 
-    [Space] [Header("Runtime Filled")] public GunSO ActiveGun;
-    [SerializeField] private GunSO ActiveBaseGun;
+    
 
     public static event Action OnSwitchWeapon;
 
@@ -133,6 +135,9 @@ public class PlayerGunSelector : MonoBehaviour
         OnGunChanged?.Invoke();
     }
 
+    /// <summary>
+    ///  SwitchingEnd is switch animation method
+    /// </summary>
     public void SwitchingEnd()
     {
         PlayerController.SetPlayerState(PlayerStates.idle);

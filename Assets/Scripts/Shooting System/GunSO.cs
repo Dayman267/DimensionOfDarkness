@@ -123,7 +123,7 @@ public class GunSO : ScriptableObject, ICloneable
         this.ActiveCamera = ActiveCamera;
     }
 
-    public void PlayParticleSystems(ParticleSystem[] particleSystem)
+    private void PlayParticleSystems(ParticleSystem[] particleSystem)
     {
         foreach (ParticleSystem ps in particleSystem)
         {
@@ -144,7 +144,8 @@ public class GunSO : ScriptableObject, ICloneable
 
     
     private bool isClipEmpty = false;
-    public void TryToShoot()
+
+    private void TryToShoot()
     {
         
         if (Time.time - LastShootTime - ShootConfig.FireRate > Time.deltaTime)

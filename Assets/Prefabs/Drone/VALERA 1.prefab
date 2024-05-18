@@ -698,6 +698,7 @@ MonoBehaviour:
   player: {fileID: 0}
   heightOffset: 5
   smoothSpeed: 5
+  canvasSmoothSpeed: 200
 --- !u!1 &7385509099542251889
 GameObject:
   m_ObjectHideFlags: 0

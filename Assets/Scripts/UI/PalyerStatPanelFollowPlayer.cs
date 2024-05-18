@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,18 +12,18 @@ public class PalyerStatPanelFollowPlayer : MonoBehaviour
     public float posYOffset = 5f;
     public float posZOffset = 5f;
     public float speedAccelerationFactor = 1f;
-    private float originsmothSpeed;
+    private float originSmoothSpeed;
 
     private void Awake()
     {
         player = GameObject.FindWithTag("Player").transform;
         cam = Camera.main;
-        originsmothSpeed = smoothSpeed;
+        originSmoothSpeed = smoothSpeed;
     }
 
     
     
-    private void Update()
+    /*private void Update()
     {
         Vector3 playerPos = player.position;
         transform.LookAt(cam.transform);
@@ -33,25 +34,27 @@ public class PalyerStatPanelFollowPlayer : MonoBehaviour
         playerPos.z += posZOffset;
     
         targetPosition = Vector3.Lerp(transform.position, playerPos, smoothSpeed * Time.deltaTime);
+        
 
-        if (PlayerController.direction.x < 0)
-        {
-            Debug.Log("isGoing Left");
-        }
-        else
-        {
-            Debug.Log("isGoing Right");
-        }
-
-        if (transform.position != targetPosition && smoothSpeed <= 100f)
+        /*if (transform.position != targetPosition && smoothSpeed <= 100f)
         {
             smoothSpeed += Time.deltaTime * speedAccelerationFactor;
         }
         else if(!PlayerController.inMovement)
         {
-            smoothSpeed = originsmothSpeed;
-        }
+            smoothSpeed = originSmoothSpeed;
+        }#1#
     
         transform.position = targetPosition;
+    }*/
+
+    private void Update()
+    {
+        transform.LookAt(cam.transform);
+        
+        Vector3 playerPos = player.position;
+        /*playerPos.x += posXOffset;
+        playerPos.y += posYOffset;
+        playerPos.z += posZOffset;*/
     }
 }

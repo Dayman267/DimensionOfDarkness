@@ -14,6 +14,7 @@ TagManager:
   - Charging_VFX
   - BulletCasePool
   - VFX_System
+  - StatsCanvas
   layers:
   - Default
   - TransparentFX
