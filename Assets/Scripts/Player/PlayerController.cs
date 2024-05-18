@@ -263,8 +263,8 @@ public class PlayerController : MonoBehaviour
 
         Vector3 movementVector = cameraF.normalized * v + cameraR.normalized * h;
         movementVector = Vector3.ClampMagnitude(movementVector, maxMovementMagnitude);
-
-        float targetMagnitude = isLShiftDown ? 1.5f : 1f;
+        
+        float targetMagnitude = isLShiftDown && playerStamina.GetStaminaPoints() > 0 ? 1.5f : 1f;
         float lerpedMagnitude = Mathf.MoveTowards(_movementVector.magnitude, targetMagnitude, 1.1f * Time.deltaTime);
         movementVector = movementVector.normalized * lerpedMagnitude;
 
