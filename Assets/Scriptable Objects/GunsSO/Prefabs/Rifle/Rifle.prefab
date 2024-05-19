@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4473064897842079348}
   - component: {fileID: 180840590594759703}
   - component: {fileID: 4127679571119087912}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4852,6 +4852,53 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &2577875365481460164
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4267217248877644536}
+  - component: {fileID: 8282887242261498515}
+  m_Layer: 3
+  m_Name: BulletCaseSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4267217248877644536
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2577875365481460164}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.0504, y: -0, z: -0.162}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3598953162095018286}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8282887242261498515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2577875365481460164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b91667746016b1543aa9bf0c2e752668, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 1452539032381934522, guid: 04ff247412203ab4c9ab49ff24f21565, type: 3}
+  rotationSpeed: 20
+  lifeTime: 30
 --- !u!1 &3348988483404475859
 GameObject:
   m_ObjectHideFlags: 0
@@ -4864,7 +4911,7 @@ GameObject:
   - component: {fileID: 6094350404944136211}
   - component: {fileID: 7299720239326569111}
   - component: {fileID: 6761843378802532136}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Rifle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4887,6 +4934,7 @@ Transform:
   - {fileID: 4473064897842079348}
   - {fileID: 4468099008014467868}
   - {fileID: 4722278292622257816}
+  - {fileID: 4267217248877644536}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!137 &6094350404944136211
@@ -5086,9 +5134,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4722278292622257816}
-  m_Layer: 0
+  - component: {fileID: 6621762073240013075}
+  m_Layer: 3
   m_Name: ShootFX
-  m_TagString: VFX_System
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5111,6 +5160,18 @@ Transform:
   - {fileID: 4604209213196849872}
   m_Father: {fileID: 3598953162095018286}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6621762073240013075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3949909736999809606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 716984a2b8abf83489304d0b54bf91b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5111555066283796334
 GameObject:
   m_ObjectHideFlags: 0
@@ -5122,7 +5183,7 @@ GameObject:
   - component: {fileID: 6716750256838370218}
   - component: {fileID: 3938780459563548825}
   - component: {fileID: 8417574415066580566}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Embers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9888,7 +9949,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4468099008014467868}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: WeaponGrip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9921,7 +9982,7 @@ GameObject:
   - component: {fileID: 5030668406012624856}
   - component: {fileID: 7911246002624399970}
   - component: {fileID: 2597277446309596725}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14758,9 +14819,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4722278292622257816}
     m_Modifications:
+    - target: {fileID: 2997142984687270804, guid: 041b31557348a3c43878f6670a2c5773, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997142990232626848, guid: 041b31557348a3c43878f6670a2c5773, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997142990588743874, guid: 041b31557348a3c43878f6670a2c5773, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2997142990756037832, guid: 041b31557348a3c43878f6670a2c5773, type: 3}
       propertyPath: m_Name
       value: SparksEffect - 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997142990756037832, guid: 041b31557348a3c43878f6670a2c5773, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2997785292101144710, guid: 041b31557348a3c43878f6670a2c5773, type: 3}
       propertyPath: m_LocalPosition.x
@@ -14820,9 +14897,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4722278292622257816}
     m_Modifications:
+    - target: {fileID: 2997142984687270804, guid: 041b31557348a3c43878f6670a2c5773, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997142990232626848, guid: 041b31557348a3c43878f6670a2c5773, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997142990588743874, guid: 041b31557348a3c43878f6670a2c5773, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2997142990756037832, guid: 041b31557348a3c43878f6670a2c5773, type: 3}
       propertyPath: m_Name
       value: SparksEffect - 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997142990756037832, guid: 041b31557348a3c43878f6670a2c5773, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2997785292101144710, guid: 041b31557348a3c43878f6670a2c5773, type: 3}
       propertyPath: m_LocalPosition.x
@@ -14886,9 +14979,17 @@ PrefabInstance:
       propertyPath: stopAction
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2260921270512358912, guid: 2e1bec5dba0b3ee49861cde15651ace9, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2261161316206865322, guid: 2e1bec5dba0b3ee49861cde15651ace9, type: 3}
       propertyPath: m_Name
       value: MuzzleFlash01 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 2261161316206865322, guid: 2e1bec5dba0b3ee49861cde15651ace9, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2263117046132237936, guid: 2e1bec5dba0b3ee49861cde15651ace9, type: 3}
       propertyPath: m_LocalPosition.x

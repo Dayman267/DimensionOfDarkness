@@ -7,16 +7,19 @@ TagManager:
   - Objects
   - Terrain
   - ShootingStartPoint
-  - VFX_System
-  - TrailPool
   - BulletsPool
   - SolidMaterial
   - PointsManager
+  - Bullet
+  - Charging_VFX
+  - BulletCasePool
+  - VFX_System
+  - StatsCanvas
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Terrain
@@ -43,12 +46,15 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
+  - Bullet Case
+  - Volume
   m_SortingLayers:
   - name: UI
     uniqueID: 1290963793
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UI
+    uniqueID: 38845485
     locked: 0

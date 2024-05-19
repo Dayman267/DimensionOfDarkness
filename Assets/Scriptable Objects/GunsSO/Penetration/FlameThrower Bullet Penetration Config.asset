@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: FlameThrower Bullet Penetration Config
   m_EditorClassIdentifier: 
   MaxObjectsToPenetrate: 3
-  MaxPenetrationDepth: 0.275
-  AccuracyLoss: {x: 0.1, y: 0.1, z: 0.1}
-  DamageRetentionPercentage: 0
+  MaxPenetrationDepth: 2
+  AccuracyLoss: {x: 0, y: 0, z: 0}
+  DamageRetentionPercentage: 0.8

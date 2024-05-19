@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7865fa125578dca41bb8741df26dbb7e, type: 3}
+  m_Name: Default Audio Effect - Plasma Bullet Impact
+  m_EditorClassIdentifier: 
+  AudioSourcePrefab: {fileID: 2200636529332987122, guid: aad7cbae6deee484f8abc2a8484ab90a, type: 3}
+  AudioClips:
+  - {fileID: 8300000, guid: 4c27badf9844cb94888db8a0c301e924, type: 3}
+  VolumeRange: {x: 0, y: 1}

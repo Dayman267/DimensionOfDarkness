@@ -14,6 +14,7 @@ public class AudioConfigSO : ScriptableObject, ICloneable
     public AudioClip EmptyClip;
     public AudioClip ReloadClip;
     public AudioClip LastBulletClip;
+    public AudioClip ChargingShotClip;
 
     public void PlayShootingClip(AudioSource AudioSource, bool IsLastBullet = false)
     {
@@ -24,6 +25,22 @@ public class AudioConfigSO : ScriptableObject, ICloneable
         else
         {
             AudioSource.PlayOneShot(FireClips[Random.Range(0, FireClips.Length)], Volume);
+        }
+    }
+
+    public void PlayChargingShotClip(AudioSource AudioSource)
+    {
+        if (ChargingShotClip != null)
+        {
+            AudioSource.PlayOneShot(ChargingShotClip,Volume);
+        }
+    }
+
+    public void StopChargingShotClip(AudioSource AudioSource)
+    {
+        if (ChargingShotClip != null)
+        {
+            AudioSource.Stop();
         }
     }
 

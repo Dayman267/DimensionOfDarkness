@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b804451292234304591151bdef2764e6, type: 3}
   m_Name: Shotgun Audio Config
   m_EditorClassIdentifier: 
-  Volume: 0.3
+  Volume: 0.2
   FireClips:
   - {fileID: 8300000, guid: cff1f72e1c72b8c4782b260471f1b011, type: 3}
   EmptyClip: {fileID: 8300000, guid: c8260d5036382e743bf0fa8294e5550c, type: 3}
   ReloadClip: {fileID: 8300000, guid: b4bdab4f372862146867194d35def00a, type: 3}
   LastBulletClip: {fileID: 8300000, guid: 407292aa56b8bdb4898112ee49a4a1eb, type: 3}
+  ChargingShotClip: {fileID: 0}

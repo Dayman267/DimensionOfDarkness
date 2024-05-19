@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -18,10 +15,11 @@ public class ShootConfigurationSO : ScriptableObject, ICloneable
         
     public ShootType ShootType = ShootType.FromGun;
     
+    [Header("Prepeared shot")] 
     public bool IsPreparedShot = false;
-    public float chargeTime = 1.0f; 
-    
-    
+    public float chargeTime = 1.0f;
+
+    [Header("Increasing the spread of firing time")] 
     public float RecoilRecoverySpeed = 1f;
     public float MaxSpreadTime = 1f;
     public BulletSpreadType SpreadType = BulletSpreadType.Simple;

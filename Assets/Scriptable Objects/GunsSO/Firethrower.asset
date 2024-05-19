@@ -20,7 +20,8 @@ MonoBehaviour:
   SpawnRotation: {x: 90, y: 0, z: 0}
   DamageConfig: {fileID: 11400000, guid: 59d25650eaf624447ab4a18d96398e0c, type: 2}
   ShootConfig: {fileID: 11400000, guid: 3a72b4d13339c294aa924b1d78f5c0b3, type: 2}
-  TrailConfig: {fileID: 11400000, guid: 20b90e77bf3df5f409c73ea4a329998e, type: 2}
+  TrailConfig: {fileID: 11400000, guid: 2109fec5a842def40aef4eda13fc3bf0, type: 2}
   AmmoConfig: {fileID: 11400000, guid: 3f30cbb0847336342a22ba5acf9b158b, type: 2}
   AudioConfig: {fileID: 11400000, guid: 8b84179e6211f4c4c901ab729c979ecc, type: 2}
   BulletPenetrationConfig: {fileID: 11400000, guid: 210c428c0205e6f40a890031387771a7, type: 2}
+  animatorOverrideController: {fileID: 22100000, guid: b6fb7a252d7bc5f4799c43cfe7955c47, type: 2}

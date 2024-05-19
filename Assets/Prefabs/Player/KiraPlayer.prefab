@@ -93,7 +93,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d16695f39016b040bf302ad090aed6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mainCamera: {fileID: 0}
   speed: 5
   rotationSpeed: 500
   speedIncreaseFactor: 1.2
@@ -321,6 +320,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GunType: 0
   GunParent: {fileID: 2252682893084740199}
+  BulletPoolParent: {fileID: 0}
+  BulletCasesPoolParent: {fileID: 0}
+  ShootingStartPoint: {fileID: 0}
   Guns:
   - {fileID: 11400000, guid: a471a152566c361498b72abf2f68e0d5, type: 2}
   - {fileID: 11400000, guid: ae59513c779a91c449f5c23a7400bdcc, type: 2}

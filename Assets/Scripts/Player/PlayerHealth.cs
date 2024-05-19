@@ -7,6 +7,11 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private float maxHealthPoints = 100f;
     
     private Image bar;
+
+    public float GetHealth()
+    {
+        return healthPoints;
+    }
     
     private void Start()
     {

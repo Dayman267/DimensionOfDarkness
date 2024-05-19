@@ -85,8 +85,20 @@ public class PlayerShield : MonoBehaviour
                     yield return new WaitForSeconds(waitSecAfterDamage);
                     isDamagedRecently = false;
                 }
-                RestoreShield(1);
-                yield return new WaitForSeconds(waitSecBetweenRestoring);
+
+                float targetShieldPoints = shieldPoints + 1;
+                float duration = waitSecBetweenRestoring; // время восстановления
+                float elapsed = 0;
+
+                while (elapsed < duration)
+                {
+                    shieldPoints = Mathf.Lerp(shieldPoints, targetShieldPoints, elapsed / duration);
+                    ChangeShieldBar(shieldPoints);
+                    elapsed += Time.deltaTime;
+                    yield return null;
+                }
+
+                shieldPoints = targetShieldPoints;
             }
             yield return null;
         }
