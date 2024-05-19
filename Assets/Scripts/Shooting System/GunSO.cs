@@ -17,7 +17,7 @@ public class GunSO : ScriptableObject, ICloneable
     public string Name;
 
     public GameObject ModelPrefab;
-    
+
     public Vector3 SpawnPoint;
     public Vector3 SpawnRotation;
 
@@ -56,19 +56,20 @@ public class GunSO : ScriptableObject, ICloneable
     private ObjectPool<TrailRenderer> TrailPool;
     private ObjectPool<Bullet> BulletPool;
     private BulletCaseSpawner bulletCaseSpawner;
-    
+
     public static event Action OnAutoShootAnimationEnable;
     public static event Action OnAutoShootAnimationDiasble;
     public static event Action OnSingleShootAnimationEnable;
 
-    public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour, Transform BulletPoolParent,Transform BulletCasesParent,  Transform ShootingStartPoint, Camera ActiveCamera = null)
+    public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour, Transform BulletPoolParent,
+        Transform BulletCasesParent, Transform ShootingStartPoint, Camera ActiveCamera = null)
     {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
         this.ActiveCamera = ActiveCamera;
         this.BulletPoolParent = BulletPoolParent;
         this.BulletCasesParent = BulletCasesParent;
         this.ShootingStartPoint = ShootingStartPoint;
-        
+
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
         if (!ShootConfig.IsHitScan)
         {
@@ -78,7 +79,7 @@ public class GunSO : ScriptableObject, ICloneable
         Model = Instantiate(ModelPrefab, Parent, false);
         Model.transform.localPosition = SpawnPoint;
         Model.transform.localRotation = Quaternion.Euler(SpawnRotation);
-        
+
         GunAudioSource = Model.GetComponent<AudioSource>();
         bulletCaseSpawner = Model.GetComponentInChildren<BulletCaseSpawner>();
         Transform shootFXSystem = Model.GetComponentInChildren<Shooting_VFX_System_Mark>().transform;
@@ -93,6 +94,7 @@ public class GunSO : ScriptableObject, ICloneable
             ChargeShoot_VFX = chargingFXSystem.GetComponentsInChildren<ParticleSystem>();
             ChargingAudioSource = chargingFXSystem.GetComponent<AudioSource>();
         }
+
         if (shootFXSystem != null)
         {
             ShootingStartPoint.position = shootFXSystem.transform.position;
@@ -110,7 +112,7 @@ public class GunSO : ScriptableObject, ICloneable
         TrailPool.Clear();
         if (BulletPool != null)
             BulletPool.Clear();
-        
+
         GunAudioSource = null;
         Shoot_VFX = null;
         ChargeShoot_VFX = null;
@@ -135,19 +137,19 @@ public class GunSO : ScriptableObject, ICloneable
     {
         if (AmmoConfig.CurrentClipAmmo == 0)
         {
-            if(!GunAudioSource.isPlaying)
+            if (!GunAudioSource.isPlaying)
                 AudioConfig.PlayOutOfAmmoClip(GunAudioSource);
             return true;
         }
+
         return false;
     }
 
-    
+
     private bool isClipEmpty = false;
 
     private void TryToShoot()
     {
-        
         if (Time.time - LastShootTime - ShootConfig.FireRate > Time.deltaTime)
         {
             float lastDuration = Mathf.Clamp(
@@ -165,20 +167,21 @@ public class GunSO : ScriptableObject, ICloneable
             LastShootTime = Time.time;
 
             isClipEmpty = IsEmptyClipCheck();
-            
+
             if (isClipEmpty)
             {
                 OnAutoShootAnimationDiasble?.Invoke();
                 return;
             }
-            if (PlayerController.IsPlayerHasIdleState() && !isClipEmpty )
+
+            if (PlayerController.IsPlayerHasIdleState() && !isClipEmpty)
             {
-                if(AutoShootAnimationEnable)
+                if (AutoShootAnimationEnable)
                     OnAutoShootAnimationEnable?.Invoke();
                 else
                     OnSingleShootAnimationEnable?.Invoke();
             }
-            
+
             PlayParticleSystems(Shoot_VFX);
             AudioConfig.PlayShootingClip(GunAudioSource, AmmoConfig.CurrentClipAmmo == 1);
             Crosshair.OnShotFired();
@@ -220,7 +223,8 @@ public class GunSO : ScriptableObject, ICloneable
                     }
                 }
             }
-            if(bulletCaseSpawner != null)
+
+            if (bulletCaseSpawner != null)
                 bulletCaseSpawner.SpawnBullet(BulletCasesParent);
         }
     }
@@ -397,7 +401,7 @@ public class GunSO : ScriptableObject, ICloneable
                     maxPercentDamage *= BulletPenetrationConfig.DamageRetentionPercentage;
                 }
             }
-            
+
             damageable.TakeDamage(DamageConfig.GetDamage(DistanceTraveled, maxPercentDamage, chargedDamageMultiplier));
         }
 
@@ -491,7 +495,7 @@ public class GunSO : ScriptableObject, ICloneable
     {
         currentChargeTime = 0;
         isCharging = false;
-        if(ChargeShoot_VFX != null)
+        if (ChargeShoot_VFX != null)
             ChargingAudioSource.Stop();
     }
 
@@ -499,11 +503,16 @@ public class GunSO : ScriptableObject, ICloneable
     {
         chargedDamageMultiplier = chargingDamageMultiplier;
         TryToShoot();
-        if(DamageConfig.IsChargedShot) StopCharging();
+        if (DamageConfig.IsChargedShot) StopCharging();
     }
 
 
-    public void Tick(bool WantsToShoot)
+    public void CallTick(bool WantsToShoot)
+    {
+        Tick(WantsToShoot);
+    }
+
+    private void Tick(bool WantsToShoot)
     {
         if (WantsToShoot)
         {
@@ -514,9 +523,10 @@ public class GunSO : ScriptableObject, ICloneable
                 else
                 {
                     currentChargeTime += Time.deltaTime;
-                    
-                    if(DamageConfig.IsChargedShot)
-                        chargingDamageMultiplier = Mathf.Lerp(1.0f, DamageConfig.maxChargedDamageMultiplier, currentChargeTime / ShootConfig.chargeTime);
+
+                    if (DamageConfig.IsChargedShot)
+                        chargingDamageMultiplier = Mathf.Lerp(1.0f, DamageConfig.maxChargedDamageMultiplier,
+                            currentChargeTime / ShootConfig.chargeTime);
 
                     if (currentChargeTime >= ShootConfig.chargeTime)
                     {
@@ -530,7 +540,7 @@ public class GunSO : ScriptableObject, ICloneable
                 TryToShoot();
             }
         }
-        else if(!WantsToShoot && DamageConfig.IsChargedShot && currentChargeTime > ShootConfig.chargeTime * 0.3)
+        else if (!WantsToShoot && DamageConfig.IsChargedShot && currentChargeTime > ShootConfig.chargeTime * 0.3)
         {
             ChargedShoot();
             OnAutoShootAnimationDiasble?.Invoke();

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 [DisallowMultipleComponent]
@@ -17,7 +18,7 @@ public class PlayerShootController : MonoBehaviour
     {
         if (GunSelector.ActiveGun != null && PlayerController.IsPlayerHasIdleState())
         {
-            GunSelector.ActiveGun.Tick(PlayerController.IsLeftClickDown());
+            GunSelector.ActiveGun.CallTick(PlayerController.IsLeftClickDown());
         }
 
         if (PlayerController.IsLeftClickDown() && PlayerController.GetPlayerState() == PlayerStates.reloading && GunSelector.ActiveGun.AmmoConfig.SingleBulletLoad)
