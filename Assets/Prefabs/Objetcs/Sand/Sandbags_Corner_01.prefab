@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8425424062692653596}
   - component: {fileID: 3353697950817949018}
   - component: {fileID: 2307722902497464880}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sandbags_Corner_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

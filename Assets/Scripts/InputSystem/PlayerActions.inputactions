@@ -103,6 +103,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Change Action Map",
+                    "type": "Button",
+                    "id": "6076584b-864c-49c7-b060-9cd8f90fad34",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -292,14 +301,47 @@
                     "action": "Change Gun Forward",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "64941152-fd2e-4d4a-9146-889531cd5d6f",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Change Action Map",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
         {
             "name": "UI",
             "id": "9bc9bd6b-d36a-47f7-9f03-edfaef723e3b",
-            "actions": [],
-            "bindings": []
+            "actions": [
+                {
+                    "name": "Change Action Map",
+                    "type": "Button",
+                    "id": "449f5e19-1428-4a15-9353-a4333160e14b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "51b5ef92-0e68-40c8-aaf5-951daf2b3433",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Change Action Map",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

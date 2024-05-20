@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class VALERAController : MonoBehaviour
+public class VALERAController : MonoBehaviour, IPausable
 {
     private Camera cam;
 
@@ -17,6 +17,20 @@ public class VALERAController : MonoBehaviour
 
     private bool isRotating = false;
 
+    private bool isPaused = false;
+
+    private void OnEnable()
+    {
+        PauseGame.OnGamePaused += OnPause;
+        PauseGame.OnGameResumed += OnResume;
+    }
+
+    private void OnDisable()
+    {
+        PauseGame.OnGamePaused -= OnPause;
+        PauseGame.OnGameResumed -= OnResume;
+    }
+    
     void Start()
     {
         cam = Camera.main;
@@ -26,6 +40,8 @@ public class VALERAController : MonoBehaviour
 
     void Update()
     {
+        if (isPaused) return;
+        
         Vector3 mousePosition = Input.mousePosition;
         Ray ray = cam.ScreenPointToRay(mousePosition);
         RaycastHit hit;
@@ -98,5 +114,15 @@ public class VALERAController : MonoBehaviour
         float currentRotationY =
             Mathf.Lerp(canvas.localEulerAngles.y, targetRotationY, Time.deltaTime * canvasSmoothSpeed);
         canvas.localEulerAngles = new Vector3(currentRotationX, currentRotationY , canvas.localEulerAngles.z);
+    }
+
+    public void OnPause()
+    {
+        isPaused = true;
+    }
+
+    public void OnResume()
+    {
+        isPaused = false;
     }
 }

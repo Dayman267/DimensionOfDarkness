@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7703822175197374815}
   - component: {fileID: 1553514055226828957}
   - component: {fileID: 7653377506965055597}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sandbags_Line_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

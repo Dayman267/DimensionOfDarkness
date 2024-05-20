@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 
 [DisallowMultipleComponent]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IPausable
 {
     //[SerializeField] private Image Crosshair;
     private Camera cam;
@@ -67,6 +67,8 @@ public class PlayerController : MonoBehaviour
     private float targetAngle;
 
     private PlayerStamina playerStamina;
+
+    private bool isPaused = false;
 
     private void Awake()
     {
@@ -153,6 +155,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (isPaused) return;
+        
         _movementVector = CalculateMovementVector();
         direction = playerActions.Gameplay.Movement.ReadValue<Vector3>();
 
@@ -469,6 +473,9 @@ public class PlayerController : MonoBehaviour
 
         playerActions.Gameplay.ChangeGunForward.performed += ctx => isEKeyDown = true;
         playerActions.Gameplay.ChangeGunForward.canceled += ctx => isEKeyDown = false;
+        
+        PauseGame.OnGamePaused += OnPause;
+        PauseGame.OnGameResumed += OnResume;
     }
 
     private void OnDisable()
@@ -491,5 +498,18 @@ public class PlayerController : MonoBehaviour
 
         playerActions.Gameplay.ChangeGunForward.performed -= ctx => isEKeyDown = true;
         playerActions.Gameplay.ChangeGunForward.canceled -= ctx => isEKeyDown = false;
+        
+        PauseGame.OnGamePaused -= OnPause;
+        PauseGame.OnGameResumed -= OnResume;
+    }
+
+    public void OnPause()
+    {
+        isPaused = true;
+    }
+
+    public void OnResume()
+    {
+        isPaused = false;
     }
 }
