@@ -7606,21 +7606,33 @@ PrefabInstance:
       value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
+      propertyPath: offset
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: gravity
       value: -9.81
       objectReference: {fileID: 0}
     - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: speedAim
-      value: 2
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: speedRun
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: _mainCamera
       value: 
       objectReference: {fileID: 963194228}
+    - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
+      propertyPath: cameraController
+      value: 
+      objectReference: {fileID: 963194229}
     - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: groundMask.m_Bits
       value: 64
@@ -7628,6 +7640,10 @@ PrefabInstance:
     - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: speedIncreaseFactor
       value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
+      propertyPath: spendPointsWhenDashing
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: speedTransitionDuration

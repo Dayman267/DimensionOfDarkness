@@ -17,7 +17,6 @@ public class SoundController : MonoBehaviour
     public void FootStepWhileAiming()
     {
         IsStepSoundsAvailable();
-
         audioSource.pitch = 0.6f;
         PlayNextStepSound();
     }

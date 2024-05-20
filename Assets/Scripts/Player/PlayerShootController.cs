@@ -16,7 +16,9 @@ public class PlayerShootController : MonoBehaviour
 
     void Update()
     {
-        if (GunSelector.ActiveGun != null && PlayerController.IsPlayerHasIdleState())
+        if (GunSelector.ActiveGun != null && 
+            PlayerController.IsPlayerHasIdleState() && 
+            PlayerController.GetPlayerMoveState() != PlayerMoveStates.dashing)
         {
             GunSelector.ActiveGun.CallTick(PlayerController.IsLeftClickDown());
         }
