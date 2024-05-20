@@ -7,7 +7,12 @@ using UnityEngine.Serialization;
 public class SoundController : MonoBehaviour
 {
     [SerializeField] private AudioSource audioSource;
+    [Header("Steps sounds")]
     [SerializeField] private AudioClip[] stepSounds;
+    [Header("Rolling sounds")]
+    [SerializeField] private AudioClip startRollingSound;
+    [SerializeField] private AudioClip rollingSound;
+    [SerializeField] private AudioClip endRollingSound;
 
     private void Awake()
     {
@@ -33,6 +38,24 @@ public class SoundController : MonoBehaviour
         IsStepSoundsAvailable();
         audioSource.pitch = 1f;
         PlayNextStepSound();
+    }
+
+    public void StartRollSound()
+    {
+        audioSource.pitch = 0.8f;
+        audioSource.PlayOneShot(startRollingSound);
+    }
+
+    public void RollSound()
+    {
+        audioSource.pitch = 0.8f;
+        audioSource.PlayOneShot(rollingSound);
+    }
+
+    public void EndRollingSound()
+    {
+        audioSource.pitch = 0.8f;
+        audioSource.PlayOneShot(endRollingSound);
     }
 
     private int currentIndex = 0;

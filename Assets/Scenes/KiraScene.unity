@@ -7626,6 +7626,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
+      propertyPath: speedDash
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8710095707253688691, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: _mainCamera
       value: 
       objectReference: {fileID: 963194228}
@@ -7653,6 +7657,18 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8872789978533678941, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
+      propertyPath: rollingSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 600c75a0a4deaaa4788ee654ea0641fd, type: 3}
+    - target: {fileID: 8872789978533678941, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
+      propertyPath: endRollingSound
+      value: 
+      objectReference: {fileID: 8300000, guid: e79af2db1d2075a4d9d9f943e0a6349f, type: 3}
+    - target: {fileID: 8872789978533678941, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
+      propertyPath: startRollingSound
+      value: 
+      objectReference: {fileID: 8300000, guid: e79af2db1d2075a4d9d9f943e0a6349f, type: 3}
     - target: {fileID: 9189211374864688256, guid: 08ff80fc3ff19fd498fc2b6ff47f4ecd, type: 3}
       propertyPath: m_IsActive
       value: 1
