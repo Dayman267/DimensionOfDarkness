@@ -10,6 +10,7 @@ public class TrailConfigSO : ScriptableObject, ICloneable
     public float Duration = 0.5f;
     public float MinVertexDistance = 0.1f;
     public Gradient Color;
+    public GameObject BulletParticlePrefab;
 
     public float MissDistance = 100f;
     public float SimulationSpeed = 100f;

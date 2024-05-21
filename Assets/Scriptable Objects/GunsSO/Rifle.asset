@@ -16,6 +16,7 @@ MonoBehaviour:
   Type: 1
   Name: Rifle Model One
   ModelPrefab: {fileID: 3348988483404475859, guid: e854c510400712b408052e00b5055c8c, type: 3}
+  BulletParticlePrefab: {fileID: 5749892945899594870, guid: 3b1f481cdb7e0de45bdf98a208586981, type: 3}
   SpawnPoint: {x: 0.02, y: 0.14, z: 0.18}
   SpawnRotation: {x: -90, y: 0, z: 0}
   AutoShootAnimationEnable: 1

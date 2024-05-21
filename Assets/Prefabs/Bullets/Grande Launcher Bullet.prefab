@@ -76,6 +76,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <SpawnLocation>k__BackingField: {x: 0, y: 0, z: 0}
+  <SpawnVelocity>k__BackingField: {x: 0, y: 0, z: 0}
   DeleyedDisableTime: 2
   effectDuration: 2
 --- !u!65 &5285400407971814794
@@ -169,7 +170,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 198603562046773920, guid: 894686e77f86ca549accefee45808127, type: 3}
       propertyPath: lengthInSec
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 198603562046773920, guid: 894686e77f86ca549accefee45808127, type: 3}
       propertyPath: UVModule.flipU
@@ -178,6 +179,14 @@ PrefabInstance:
     - target: {fileID: 198603562046773920, guid: 894686e77f86ca549accefee45808127, type: 3}
       propertyPath: UVModule.flipV
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 198603562046773920, guid: 894686e77f86ca549accefee45808127, type: 3}
+      propertyPath: moveWithTransform
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 198603562046773920, guid: 894686e77f86ca549accefee45808127, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 198603562046773920, guid: 894686e77f86ca549accefee45808127, type: 3}
       propertyPath: InitialModule.startRotation.scalar
