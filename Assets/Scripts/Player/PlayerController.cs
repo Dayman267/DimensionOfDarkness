@@ -84,7 +84,7 @@ public class PlayerController : MonoBehaviour
         // #if UNITY_EDITOR
         //     EditorApplication.isPlaying = false;
         // #endif
-        
+
         playerStamina = GetComponent<PlayerStamina>();
 
         transform.rotation = Quaternion.Euler(Vector3.zero);
@@ -145,10 +145,14 @@ public class PlayerController : MonoBehaviour
                 speedTransitionProgress = 0f;
 
                 AimOn();
+
+                cameraController.LookAround(Mouse.current.position.value);
             }
             else
             {
                 AimOff();
+                
+                cameraController.StopLookingAround();   
             }
         }
 
@@ -190,12 +194,12 @@ public class PlayerController : MonoBehaviour
         if (_playerMoveState == PlayerMoveStates.dashing) return;
 
         AimOff();
-    
+
         // Determine the dash direction based on movement or facing direction
         _playerMoveState = PlayerMoveStates.dashing;
         Vector3 dashDirection = _direction != Vector3.zero ? _direction : transform.forward;
         StartCoroutine(PerformDash(dashDirection));
-        
+
         OnDashAnimation?.Invoke();
     }
 
@@ -205,28 +209,32 @@ public class PlayerController : MonoBehaviour
         // Calculate the dash direction relative to the camera
         if (dashDirection != transform.forward)
         {
-            float targetAngle = Mathf.Atan2(dashDirection.x, dashDirection.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
+            float targetAngle = Mathf.Atan2(dashDirection.x, dashDirection.z) * Mathf.Rad2Deg +
+                                cam.transform.eulerAngles.y;
             dashDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
         }
 
         while (Time.time < startTime + dashTime)
         {
             RotateCharacterTowardsDashDirection();
-            
+
             controller.Move(dashDirection.normalized * dashSpeed * Time.deltaTime);
             yield return null;
         }
     }
-    
+
     private void RotateCharacterTowardsDashDirection()
     {
         // If there's movement input, rotate towards that direction; otherwise, use current facing direction
-        float targetAngle = _direction != Vector3.zero ? Mathf.Atan2(_direction.x, _direction.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y : transform.eulerAngles.y;
-        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+        float targetAngle = _direction != Vector3.zero
+            ? Mathf.Atan2(_direction.x, _direction.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y
+            : transform.eulerAngles.y;
+        float angle =
+            Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
 
         transform.rotation = Quaternion.Euler(0f, angle, 0f);
     }
-    
+
     public void EndRoll()
     {
         currentSpeed = 0f;
@@ -327,7 +335,8 @@ public class PlayerController : MonoBehaviour
         movementVector = Vector3.ClampMagnitude(movementVector, maxMovementMagnitude);
 
         float targetMagnitude = _isLShiftDown && playerStamina.GetStaminaPoints() > 0 ? 1.5f : 1f;
-        float lerpedMagnitude = Mathf.MoveTowards(this.movementVector.magnitude, targetMagnitude, 1.1f * Time.deltaTime);
+        float lerpedMagnitude =
+            Mathf.MoveTowards(this.movementVector.magnitude, targetMagnitude, 1.1f * Time.deltaTime);
         movementVector = movementVector.normalized * lerpedMagnitude;
 
         Vector3 relativeVector = transform.InverseTransformDirection(movementVector);
@@ -468,7 +477,7 @@ public class PlayerController : MonoBehaviour
     private void AimOn()
     {
         _playerMoveState = PlayerMoveStates.aiming;
-        if(_playerMoveState != PlayerMoveStates.dashing)
+        if (_playerMoveState != PlayerMoveStates.dashing)
             TurnToMousePosition();
         OnAimAnimationEnable?.Invoke();
     }
@@ -476,7 +485,7 @@ public class PlayerController : MonoBehaviour
     private void AimOff()
     {
         _playerMoveState = PlayerMoveStates.idle;
-        if(_playerMoveState != PlayerMoveStates.dashing)
+        if (_playerMoveState != PlayerMoveStates.dashing)
             TurnCharacterInMovementDirection();
         OnAimAnimationDiasble?.Invoke();
     }

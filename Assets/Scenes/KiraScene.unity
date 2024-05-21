@@ -7805,11 +7805,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84332dc219080de43b12f6ef198b1edb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1676350021}
+  player: {fileID: 1676350034}
   offsetX: 0
-  offsetY: 12
-  offsetZ: -5
-  rotation: 70
+  offsetY: 11
+  offsetZ: -6
+  lookOffset: 5
+  rotation: 60
+  smoothSpeed: 0.125
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0

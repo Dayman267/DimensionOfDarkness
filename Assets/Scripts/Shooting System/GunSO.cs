@@ -657,7 +657,7 @@ private IEnumerator UpdateParticleSystem(ParticleSystem particleSystem, Bullet b
 
     public object Clone()
     {
-        /*GunSO config = CreateInstance<GunSO>();
+        GunSO config = CreateInstance<GunSO>();
         config.ImpactType = ImpactType;
         config.Type = Type;
         config.Name = Name;
@@ -676,12 +676,6 @@ private IEnumerator UpdateParticleSystem(ParticleSystem particleSystem, Bullet b
 
         config.animatorOverrideController = animatorOverrideController;
         config.AutoShootAnimationEnable = AutoShootAnimationEnable;
-
-        return config;*/
-        
-        GunSO config = CreateInstance<GunSO>();
-
-        Utilities.CopyValues(this, config);
 
         return config;
     }
