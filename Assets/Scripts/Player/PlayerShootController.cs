@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class PlayerShootController : MonoBehaviour
+public class PlayerShootController : MonoBehaviour, IPausable
 {
     public PlayerGunSelector GunSelector;
 
@@ -11,11 +11,27 @@ public class PlayerShootController : MonoBehaviour
 
     //private static bool isReloading = false;
     private bool isStopReloading = false;
+    
+    private bool isPaused = false;
 
     public static event Action OnReloadAnimation;
+    
+    private void OnEnable()
+    {
+        PauseGame.OnGamePaused += OnPause;
+        PauseGame.OnGameResumed += OnResume;
+    }
+
+    private void OnDisable()
+    {
+        PauseGame.OnGamePaused -= OnPause;
+        PauseGame.OnGameResumed -= OnResume;
+    }
 
     void Update()
     {
+        if (isPaused) return;
+        
         if (GunSelector.ActiveGun != null && PlayerController.IsPlayerHasIdleState())
         {
             GunSelector.ActiveGun.CallTick(PlayerController.IsLeftClickDown());
@@ -109,4 +125,13 @@ public class PlayerShootController : MonoBehaviour
            }
        }
    }*/
+    public void OnPause()
+    {
+        isPaused = true;
+    }
+
+    public void OnResume()
+    {
+        isPaused = false;
+    }
 }
