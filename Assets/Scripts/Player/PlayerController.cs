@@ -1,31 +1,39 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 
 [DisallowMultipleComponent]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IPausable
 {
     //[SerializeField] private Image Crosshair;
-    [SerializeField] private Transform _mainCamera;
     private Camera cam;
-    private Vector3 direction;
-    private const float LERP_SPEED = 9;
+    private static Vector3 direction;
 
-
-    private Animator animator;
     private Vector3 _movementVector;
-
     private PlayerActions playerActions;
-    private PlayerInput playerInput;
+    private static PlayerStates playerState = PlayerStates.idle;
+    private static PlayerMoveStates playerMoveState = PlayerMoveStates.idle;
 
+
+    private bool isAiming = false;
     private bool isRotating;
     private Quaternion targetRotation;
 
-    [Header("Running")] [SerializeField] private float speed = 5f;
-    [SerializeField] private float rotationSpeed = 500f;
-    [SerializeField] private float speedIncreaseFactor = 1.5f;
+    [Header("Player Speed")] [SerializeField]
+    private float speedIncreaseFactor = 1.5f;
+
     [SerializeField] private float spendPointsWhenRunning = 0.3f;
+    [SerializeField] private float speedRun = 10f;
+    [SerializeField] private float speedAim = 1.5f;
+    [SerializeField] private float rotationSpeed = 500f;
+    private float currentSpeed = 5f;
+    private float targetSpeed = 5f;
+    private float speedTransitionDuration = 0.5f;
+    private float speedTransitionProgress = 0f;
+
+    private float runShootDeley = 0f;
 
 
     private bool isDashing;
@@ -42,12 +50,12 @@ public class PlayerController : MonoBehaviour
     public static event Action<float> OnMoveAnimation;
     public static event Action OnAimAnimationEnable;
     public static event Action OnAimAnimationDiasble;
-    public static event Action OnShootAnimationEnable;
-    public static event Action OnShootAnimationDiasble;
     public static event Action<float, float> OnSend_X_Z_Pos;
-    
-    public float turnSmoothTime = 0.1f;
+
+    public float turnSmoothTime = 0.3f;
+
     public float gravity = -9.81f;
+
     //public float jumpHeight = 3f;
     CharacterController controller;
     public Transform groundCheck;
@@ -59,12 +67,13 @@ public class PlayerController : MonoBehaviour
     private float targetAngle;
 
     private PlayerStamina playerStamina;
-    
+
+    private bool isPaused = false;
+
     private void Awake()
     {
         cam = Camera.main;
-
-        playerInput = GetComponent<PlayerInput>();
+        
         controller = GetComponent<CharacterController>();
         playerActions = new PlayerActions();
         playerActions.Gameplay.Enable();
@@ -81,7 +90,7 @@ public class PlayerController : MonoBehaviour
 
 
         playerStamina = GetComponent<PlayerStamina>();
-        
+
         transform.rotation = Quaternion.Euler(Vector3.zero);
     }
 
@@ -91,7 +100,27 @@ public class PlayerController : MonoBehaviour
     static bool isRKeyDown;
     static bool isQKeyDown;
     static bool isEKeyDown;
-    
+
+    public static void SetPlayerState(PlayerStates state)
+    {
+        playerState = state;
+    }
+
+    public static PlayerStates GetPlayerState()
+    {
+        return playerState;
+    }
+
+    public static PlayerMoveStates GetPlayerMoveState()
+    {
+        return playerMoveState;
+    }
+
+    public static bool IsPlayerHasIdleState()
+    {
+        return playerState == PlayerStates.idle;
+    }
+
     public static bool IsRightClickDown()
     {
         return isRightClickDown;
@@ -110,27 +139,56 @@ public class PlayerController : MonoBehaviour
     public static bool IsRKeyDown()
     {
         return isRKeyDown;
-    } 
+    }
+
     public static bool IsQKeyDown()
     {
         return isQKeyDown;
     }
+
     public static bool IsEKeyDown()
     {
         return isEKeyDown;
     }
-    
+
+    public static bool inMovement;
+
     void Update()
     {
+        if (isPaused) return;
+        
         _movementVector = CalculateMovementVector();
         direction = playerActions.Gameplay.Movement.ReadValue<Vector3>();
 
-        bool inMovement = Mathf.Abs(direction.x) > 0 || Mathf.Abs(direction.z) > 0;
+        inMovement = Mathf.Abs(direction.x) > 0 || Mathf.Abs(direction.z) > 0;
 
-       // if(!PlayerShootController.IsReloading())
-            MoveAnimEnable();
 
-        if (isRightClickDown)
+        if (inMovement)
+        {
+            if (playerMoveState != PlayerMoveStates.aiming)
+            {
+                playerMoveState = PlayerMoveStates.running;
+            }
+        }
+        else
+        {
+            if(playerMoveState != PlayerMoveStates.aiming)
+                playerMoveState = PlayerMoveStates.idle;
+        }
+        
+        // if(!PlayerShootController.IsReloading())
+        MoveAnimEnable();
+
+        if (isRightClickDown || isLeftClickDown)
+        {
+            AimOn();
+        }
+        else
+        {
+            AimOff();
+        }
+
+        /*f (isRightClickDown)
         {
             AimOn();
         }
@@ -139,7 +197,7 @@ public class PlayerController : MonoBehaviour
             if (!isLeftClickDown)
                 AimOff();
         }
-        
+
         if (isLeftClickDown)
         {
             ShootAnimOn();
@@ -148,6 +206,7 @@ public class PlayerController : MonoBehaviour
         {
             ShootAnimOff();
         }
+        */
 
         if (!inMovement && !isRightClickDown && !isLeftClickDown)
         {
@@ -159,6 +218,8 @@ public class PlayerController : MonoBehaviour
         }
 
         if (isDashing || isVaulting) return;
+        
+        ChangeSpeed();
 
         Move(inMovement);
         // if (Vaulting())
@@ -178,6 +239,38 @@ public class PlayerController : MonoBehaviour
         // else if (Running())
         //Sprint(direction, speed, speedIncreaseFactor);
         //playerStamina.SpendStamina(spendPointsWhenRunning);
+    }
+
+
+    private void ChangeSpeed()
+    {
+        if (inMovement && playerMoveState != PlayerMoveStates.aiming)
+        {
+            targetSpeed = speedRun;
+            speedTransitionDuration = 0.1f;
+        }
+        else if (playerMoveState == PlayerMoveStates.aiming)
+        {
+            targetSpeed = speedAim;
+            speedTransitionDuration = 1f;
+        }
+        else
+        {
+            targetSpeed = 0f;
+            speedTransitionDuration = 1f;
+        }
+
+        if (currentSpeed != targetSpeed)
+        {
+            speedTransitionProgress += Time.deltaTime / speedTransitionDuration;
+            currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, speedTransitionProgress);
+        }
+    }
+
+    private IEnumerator ChangePlayerMoveStateWithDelay(PlayerMoveStates newState, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        playerMoveState = newState;
     }
 
     private void RotateTowardsTarget()
@@ -212,7 +305,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
     }
-    
+
     private void RotateToDirection(Vector3 direction)
     {
         if (direction != Vector3.zero)
@@ -221,7 +314,7 @@ public class PlayerController : MonoBehaviour
             isRotating = true;
         }
     }
-    
+
     private void MoveAnimEnable()
     {
         OnMoveAnimation?.Invoke(_movementVector.magnitude);
@@ -234,8 +327,8 @@ public class PlayerController : MonoBehaviour
         float h = direction.x;
         float v = direction.z;
 
-        Vector3 cameraR = _mainCamera.right;
-        Vector3 cameraF = _mainCamera.forward;
+        Vector3 cameraR = cam.transform.right;
+        Vector3 cameraF = cam.transform.forward;
 
         cameraR.y = 0;
         cameraF.y = 0;
@@ -252,7 +345,7 @@ public class PlayerController : MonoBehaviour
         Vector3 movementVector = cameraF.normalized * v + cameraR.normalized * h;
         movementVector = Vector3.ClampMagnitude(movementVector, maxMovementMagnitude);
 
-        float targetMagnitude = isLShiftDown ? 1.5f : 1f;
+        float targetMagnitude = isLShiftDown && playerStamina.GetStaminaPoints() > 0 ? 1.5f : 1f;
         float lerpedMagnitude = Mathf.MoveTowards(_movementVector.magnitude, targetMagnitude, 1.1f * Time.deltaTime);
         movementVector = movementVector.normalized * lerpedMagnitude;
 
@@ -264,19 +357,25 @@ public class PlayerController : MonoBehaviour
 
     private void TurnCharacterInMovementDirection()
     {
-        float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+        float angle =
+            Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
         transform.rotation = Quaternion.Euler(0f, angle, 0f);
     }
 
     private void TurnToMousePosition()
     {
         Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z =
-            cam.transform.position.y - transform.position.y; // Устанавливаем Z равным расстоянию от камеры до персонажа
+        mousePosition.z = cam.transform.position.y - transform.position.y; // Устанавливаем Z равным расстоянию от камеры до персонажа
         mousePosition = cam.ScreenToWorldPoint(mousePosition);
-        // Поворот персонажа курсором мыши
+
+        // Поворот персонажа курсором мыши с использованием интерполяции
         Quaternion targetRotation = Quaternion.LookRotation(mousePosition - transform.position);
-        transform.rotation = Quaternion.Euler(0f, targetRotation.eulerAngles.y, 0f);
+        float rotationSpeed = 10f; // Скорость поворота (можете настроить под свои нужды)
+
+        // Ограничиваем вращение только по оси Y
+        targetRotation.eulerAngles = new Vector3(0f, targetRotation.eulerAngles.y, 0f);
+
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
     }
 
     /*private void ResetAngularVelocity()
@@ -306,63 +405,50 @@ public class PlayerController : MonoBehaviour
     {
         rb.velocity = direction * speed;
     }*/
-    
-    public void Move(bool isMoving)
+
+    private void Move(bool isMoving)
     {
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
-            
         }
 
-        if (isMoving) 
+        if (isMoving)
         {
             targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
-            if(!isLeftClickDown && !isRightClickDown) TurnCharacterInMovementDirection();
+            if (!isLeftClickDown && !isRightClickDown) TurnCharacterInMovementDirection();
 
             Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
-            float currentSpeed = isLShiftDown ? speed * speedIncreaseFactor : speed;
-            if(isLShiftDown) playerStamina.SpendStamina(spendPointsWhenRunning);
-            controller.Move(moveDir.normalized * currentSpeed * Time.deltaTime); 
+            float speed = isLShiftDown &&
+                          playerStamina.GetStaminaPoints() > 0 &&
+                          playerMoveState != PlayerMoveStates.aiming
+                ? currentSpeed * speedIncreaseFactor
+                : currentSpeed;
+            if (isLShiftDown) playerStamina.SpendStamina(spendPointsWhenRunning);
+            controller.Move(moveDir.normalized * speed * Time.deltaTime);
         }
-        
+
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
-        
+
         // if (Input.GetButtonDown("Jump") && isGrounded)
         // {
         //     velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         // }
     }
 
-    private void ShootAnimOn()
-    {
-        AimOn();
-        if(!PlayerShootController.IsReloading())
-            OnShootAnimationEnable?.Invoke();
-    }
-
-    private void ShootAnimOff()
-    {
-        if (!isRightClickDown)
-        {
-            AimOff();
-        }
-        OnShootAnimationDiasble?.Invoke();
-    }
-
     private void AimOn()
     {
+        playerMoveState = PlayerMoveStates.aiming;
         TurnToMousePosition();
-        speed = 2f;
         OnAimAnimationEnable?.Invoke();
     }
 
     private void AimOff()
     {
-        speed = 10f;
+        playerMoveState = PlayerMoveStates.idle;
         TurnCharacterInMovementDirection();
         OnAimAnimationDiasble?.Invoke();
     }
@@ -381,12 +467,15 @@ public class PlayerController : MonoBehaviour
 
         playerActions.Gameplay.WeaponReload.performed += ctx => isRKeyDown = true;
         playerActions.Gameplay.WeaponReload.canceled += ctx => isRKeyDown = false;
-        
+
         playerActions.Gameplay.ChangeGunBackward.performed += ctx => isQKeyDown = true;
         playerActions.Gameplay.ChangeGunBackward.canceled += ctx => isQKeyDown = false;
-        
+
         playerActions.Gameplay.ChangeGunForward.performed += ctx => isEKeyDown = true;
         playerActions.Gameplay.ChangeGunForward.canceled += ctx => isEKeyDown = false;
+        
+        PauseGame.OnGamePaused += OnPause;
+        PauseGame.OnGameResumed += OnResume;
     }
 
     private void OnDisable()
@@ -403,11 +492,24 @@ public class PlayerController : MonoBehaviour
 
         playerActions.Gameplay.WeaponReload.performed -= ctx => isRKeyDown = true;
         playerActions.Gameplay.WeaponReload.canceled -= ctx => isRKeyDown = false;
-        
+
         playerActions.Gameplay.ChangeGunBackward.performed -= ctx => isQKeyDown = true;
         playerActions.Gameplay.ChangeGunBackward.canceled -= ctx => isQKeyDown = false;
-        
+
         playerActions.Gameplay.ChangeGunForward.performed -= ctx => isEKeyDown = true;
         playerActions.Gameplay.ChangeGunForward.canceled -= ctx => isEKeyDown = false;
+        
+        PauseGame.OnGamePaused -= OnPause;
+        PauseGame.OnGameResumed -= OnResume;
+    }
+
+    public void OnPause()
+    {
+        isPaused = true;
+    }
+
+    public void OnResume()
+    {
+        isPaused = false;
     }
 }

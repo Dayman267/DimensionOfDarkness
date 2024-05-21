@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using LlamAcademy.ImpactSystem;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 using UnityEngine.Rendering;
@@ -16,9 +18,10 @@ public class GunSO : ScriptableObject, ICloneable
 
     public GameObject ModelPrefab;
 
-    //public RuntimeAnimatorController animator;
     public Vector3 SpawnPoint;
     public Vector3 SpawnRotation;
+
+    public bool AutoShootAnimationEnable = false;
 
     public DamageConfigSO DamageConfig;
     public ShootConfigurationSO ShootConfig;
@@ -32,8 +35,11 @@ public class GunSO : ScriptableObject, ICloneable
 
     private MonoBehaviour ActiveMonoBehaviour;
     private GameObject Model;
-    private AudioSource ShootingAudioSource;
+    private AudioSource GunAudioSource;
+    private AudioSource ChargingAudioSource;
     private Camera ActiveCamera;
+    private Animator animator;
+    public AnimatorOverrideController animatorOverrideController;
 
     private float LastShootTime;
     private float InitialClickTime;
@@ -42,39 +48,56 @@ public class GunSO : ScriptableObject, ICloneable
 
     private GameObject TrailPoolParent;
     private Transform BulletPoolParent;
+    private Transform BulletCasesParent;
 
-    private ParticleSystem[] VFX_System;
-    private GameObject ShootingStartPoint;
+    private ParticleSystem[] Shoot_VFX;
+    private ParticleSystem[] ChargeShoot_VFX;
+    private Transform ShootingStartPoint;
     private ObjectPool<TrailRenderer> TrailPool;
     private ObjectPool<Bullet> BulletPool;
+    private BulletCaseSpawner bulletCaseSpawner;
 
-    public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour, Camera ActiveCamera = null)
+    public static event Action OnAutoShootAnimationEnable;
+    public static event Action OnAutoShootAnimationDiasble;
+    public static event Action OnSingleShootAnimationEnable;
+
+    public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour, Transform BulletPoolParent,
+        Transform BulletCasesParent, Transform ShootingStartPoint, Camera ActiveCamera = null)
     {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
         this.ActiveCamera = ActiveCamera;
+        this.BulletPoolParent = BulletPoolParent;
+        this.BulletCasesParent = BulletCasesParent;
+        this.ShootingStartPoint = ShootingStartPoint;
+
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
         if (!ShootConfig.IsHitScan)
         {
             BulletPool = new ObjectPool<Bullet>(CreateBullet);
         }
 
-        Model = Instantiate(ModelPrefab);
-        Model.transform.SetParent(Parent, false);
+        Model = Instantiate(ModelPrefab, Parent, false);
         Model.transform.localPosition = SpawnPoint;
         Model.transform.localRotation = Quaternion.Euler(SpawnRotation);
 
-        TrailPoolParent = GameObject.FindWithTag("TrailPool");
-        BulletPoolParent = GameObject.FindWithTag("BulletsPool").transform;
+        GunAudioSource = Model.GetComponent<AudioSource>();
+        bulletCaseSpawner = Model.GetComponentInChildren<BulletCaseSpawner>();
+        Transform shootFXSystem = Model.GetComponentInChildren<Shooting_VFX_System_Mark>().transform;
+        Shoot_VFX = shootFXSystem.GetComponentsInChildren<ParticleSystem>();
+        animator = Model.GetComponentInParent<Animator>();
 
-        VFX_System = GameObject.FindWithTag("VFX_System").GetComponentsInChildren<ParticleSystem>();
-        ShootingAudioSource = Model.GetComponent<AudioSource>();
-        ShootingStartPoint = GameObject.FindWithTag("ShootingStartPoint");
+        animator.runtimeAnimatorController = animatorOverrideController;
 
-        
-        GameObject vfxSystem = GameObject.FindWithTag("VFX_System");
-        if (vfxSystem != null)
+        if (DamageConfig.IsChargedShot)
         {
-            ShootingStartPoint.transform.position = vfxSystem.transform.position;
+            Transform chargingFXSystem = Model.GetComponentInChildren<Charging_VFX_System_Mark>().transform;
+            ChargeShoot_VFX = chargingFXSystem.GetComponentsInChildren<ParticleSystem>();
+            ChargingAudioSource = chargingFXSystem.GetComponent<AudioSource>();
+        }
+
+        if (shootFXSystem != null)
+        {
+            ShootingStartPoint.position = shootFXSystem.transform.position;
         }
         else
         {
@@ -89,10 +112,12 @@ public class GunSO : ScriptableObject, ICloneable
         TrailPool.Clear();
         if (BulletPool != null)
             BulletPool.Clear();
-        
-        ShootingAudioSource = null;
-        VFX_System = null;
+
+        GunAudioSource = null;
+        Shoot_VFX = null;
+        ChargeShoot_VFX = null;
         ShootingStartPoint = null;
+        animatorOverrideController = null;
     }
 
     public void UpdateCamera(Camera ActiveCamera)
@@ -100,15 +125,30 @@ public class GunSO : ScriptableObject, ICloneable
         this.ActiveCamera = ActiveCamera;
     }
 
-    public void PlayParticleSystems()
+    private void PlayParticleSystems(ParticleSystem[] particleSystem)
     {
-        foreach (ParticleSystem ps in VFX_System)
+        foreach (ParticleSystem ps in particleSystem)
         {
             ps.Play();
         }
     }
 
-    public void TryToShoot()
+    private bool IsEmptyClipCheck()
+    {
+        if (AmmoConfig.CurrentClipAmmo == 0)
+        {
+            if (!GunAudioSource.isPlaying)
+                AudioConfig.PlayOutOfAmmoClip(GunAudioSource);
+            return true;
+        }
+
+        return false;
+    }
+
+
+    private bool isClipEmpty = false;
+
+    private void TryToShoot()
     {
         if (Time.time - LastShootTime - ShootConfig.FireRate > Time.deltaTime)
         {
@@ -126,15 +166,24 @@ public class GunSO : ScriptableObject, ICloneable
         {
             LastShootTime = Time.time;
 
-            if (AmmoConfig.CurrentClipAmmo == 0)
+            isClipEmpty = IsEmptyClipCheck();
+
+            if (isClipEmpty)
             {
-                if(!ShootingAudioSource.isPlaying)
-                    AudioConfig.PlayOutOfAmmoClip(ShootingAudioSource);
+                OnAutoShootAnimationDiasble?.Invoke();
                 return;
             }
 
-            PlayParticleSystems();
-            AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.CurrentClipAmmo == 1);
+            if (PlayerController.IsPlayerHasIdleState() && !isClipEmpty)
+            {
+                if (AutoShootAnimationEnable)
+                    OnAutoShootAnimationEnable?.Invoke();
+                else
+                    OnSingleShootAnimationEnable?.Invoke();
+            }
+
+            PlayParticleSystems(Shoot_VFX);
+            AudioConfig.PlayShootingClip(GunAudioSource, AmmoConfig.CurrentClipAmmo == 1);
             Crosshair.OnShotFired();
             AmmoConfig.CurrentClipAmmo--;
 
@@ -174,6 +223,9 @@ public class GunSO : ScriptableObject, ICloneable
                     }
                 }
             }
+
+            if (bulletCaseSpawner != null)
+                bulletCaseSpawner.SpawnBullet(BulletCasesParent);
         }
     }
 
@@ -200,7 +252,7 @@ public class GunSO : ScriptableObject, ICloneable
         {
             ActiveMonoBehaviour.StartCoroutine(
                 PlayTrail(
-                    ShootingStartPoint.transform.position,
+                    TrailOrigin,
                     TrailOrigin + (shootDirection * TrailConfig.MissDistance),
                     new RaycastHit(),
                     Iteration
@@ -235,8 +287,9 @@ public class GunSO : ScriptableObject, ICloneable
         TrailRenderer trail = TrailPool.Get();
         if (trail != null)
         {
-            trail.transform.SetParent(bullet.transform, false);
-            trail.transform.localPosition = Vector3.zero;
+            Transform transform;
+            (transform = trail.transform).SetParent(bullet.transform, false);
+            transform.localPosition = Vector3.zero;
             trail.emitting = true;
             trail.gameObject.SetActive(true);
         }
@@ -254,7 +307,7 @@ public class GunSO : ScriptableObject, ICloneable
         if (collision != null && BulletPenetrationConfig != null &&
             BulletPenetrationConfig.MaxObjectsToPenetrate > objectsPenetrated)
         {
-            Vector3 direction = -collision.impulse.normalized;
+            Vector3 direction = (bullet.transform.position - bullet.SpawnLocation).normalized;
             ContactPoint contact = collision.GetContact(0);
             Vector3 backCastOrigin = contact.point + direction * BulletPenetrationConfig.MaxPenetrationDepth;
 
@@ -273,7 +326,7 @@ public class GunSO : ScriptableObject, ICloneable
                 );
                 bullet.transform.position = hit.point + direction * 0.01f;
 
-                bullet.Rigidbody.velocity = (-collision.impulse / bullet.Rigidbody.mass) + direction;
+                bullet.Rigidbody.velocity = bullet.SpawnVelocity - direction;
             }
             else
             {
@@ -316,8 +369,10 @@ public class GunSO : ScriptableObject, ICloneable
         yield return new WaitForSeconds(TrailConfig.Duration);
         yield return null;
         trail.emitting = false;
-        trail.gameObject.SetActive(false);
-        TrailPool.Release(trail);
+        GameObject gameObject;
+        (gameObject = trail.gameObject).SetActive(false);
+        //TrailPool.Release(trail);
+        Destroy(gameObject);
     }
 
     // Video 6 - 10:39
@@ -347,7 +402,7 @@ public class GunSO : ScriptableObject, ICloneable
                 }
             }
 
-            damageable.TakeDamage(DamageConfig.GetDamage(DistanceTraveled, maxPercentDamage));
+            damageable.TakeDamage(DamageConfig.GetDamage(DistanceTraveled, maxPercentDamage, chargedDamageMultiplier));
         }
 
         foreach (ICollisionHandler collisionHandler in BulletImpactEffects)
@@ -416,25 +471,48 @@ public class GunSO : ScriptableObject, ICloneable
 
     public void StartReloading()
     {
-        AudioConfig.PlayReloadClip(ShootingAudioSource);
+        AudioConfig.PlayReloadClip(GunAudioSource);
     }
 
     private float currentChargeTime = 0.0f;
     private bool isCharging = false;
+    private float chargingDamageMultiplier = 1.0f;
+    private float chargedDamageMultiplier = 1.0f;
 
-    void StartCharging()
+    private void StartCharging()
     {
         isCharging = true;
         currentChargeTime = 0.0f;
+        chargingDamageMultiplier = 1.0f;
+        if (ChargeShoot_VFX != null && !IsEmptyClipCheck())
+        {
+            AudioConfig.PlayChargingShotClip(ChargingAudioSource);
+            PlayParticleSystems(ChargeShoot_VFX);
+        }
     }
 
-    void StopCharging()
+    private void StopCharging()
     {
+        currentChargeTime = 0;
         isCharging = false;
+        if (ChargeShoot_VFX != null)
+            ChargingAudioSource.Stop();
+    }
+
+    private void ChargedShoot()
+    {
+        chargedDamageMultiplier = chargingDamageMultiplier;
+        TryToShoot();
+        if (DamageConfig.IsChargedShot) StopCharging();
     }
 
 
-    public void Tick(bool WantsToShoot)
+    public void CallTick(bool WantsToShoot)
+    {
+        Tick(WantsToShoot);
+    }
+
+    private void Tick(bool WantsToShoot)
     {
         if (WantsToShoot)
         {
@@ -445,9 +523,14 @@ public class GunSO : ScriptableObject, ICloneable
                 else
                 {
                     currentChargeTime += Time.deltaTime;
+
+                    if (DamageConfig.IsChargedShot)
+                        chargingDamageMultiplier = Mathf.Lerp(1.0f, DamageConfig.maxChargedDamageMultiplier,
+                            currentChargeTime / ShootConfig.chargeTime);
+
                     if (currentChargeTime >= ShootConfig.chargeTime)
                     {
-                        TryToShoot();
+                        ChargedShoot();
                     }
                 }
             }
@@ -457,14 +540,21 @@ public class GunSO : ScriptableObject, ICloneable
                 TryToShoot();
             }
         }
+        else if (!WantsToShoot && DamageConfig.IsChargedShot && currentChargeTime > ShootConfig.chargeTime * 0.3)
+        {
+            ChargedShoot();
+            OnAutoShootAnimationDiasble?.Invoke();
+        }
         else if (!WantsToShoot && LastFrameWantedToShoot)
         {
             StopShootingTime = Time.time;
             LastFrameWantedToShoot = false;
+            OnAutoShootAnimationDiasble?.Invoke();
         }
         else
         {
             StopCharging();
+            OnAutoShootAnimationDiasble?.Invoke();
         }
     }
 
@@ -535,7 +625,7 @@ public class GunSO : ScriptableObject, ICloneable
     {
         TrailRenderer instance = TrailPool.Get();
         instance.gameObject.SetActive(true);
-        instance.transform.localPosition = StartPoint;
+        instance.transform.position = StartPoint;
         yield return null; // avoid position carry-over from last frame if reused
 
         instance.emitting = true;
@@ -544,7 +634,7 @@ public class GunSO : ScriptableObject, ICloneable
         float remainingDistance = distance;
         while (remainingDistance > 0)
         {
-            instance.transform.localPosition = Vector3.Lerp(
+            instance.transform.position = Vector3.Lerp(
                 StartPoint,
                 EndPoint,
                 Mathf.Clamp01(1 - (remainingDistance / distance))
@@ -554,7 +644,7 @@ public class GunSO : ScriptableObject, ICloneable
             yield return null;
         }
 
-        instance.transform.localPosition = EndPoint;
+        instance.transform.position = EndPoint;
 
         if (Hit.collider != null)
         {
@@ -564,8 +654,10 @@ public class GunSO : ScriptableObject, ICloneable
         yield return new WaitForSeconds(TrailConfig.Duration);
         yield return null;
         instance.emitting = false;
-        instance.gameObject.SetActive(false);
-        TrailPool.Release(instance);
+        GameObject gameObject;
+        (gameObject = instance.gameObject).SetActive(false);
+        //TrailPool.Release(instance);
+        Destroy(gameObject);
 
         if (BulletPenetrationConfig != null && BulletPenetrationConfig.MaxObjectsToPenetrate > Iteration)
         {
@@ -632,6 +724,9 @@ public class GunSO : ScriptableObject, ICloneable
         config.ModelPrefab = ModelPrefab;
         config.SpawnPoint = SpawnPoint;
         config.SpawnRotation = SpawnRotation;
+
+        config.animatorOverrideController = animatorOverrideController;
+        config.AutoShootAnimationEnable = AutoShootAnimationEnable;
 
         return config;
     }

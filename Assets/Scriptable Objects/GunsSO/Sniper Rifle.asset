@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: Sniper Rifle
   m_EditorClassIdentifier: 
   ImpactType: {fileID: 11400000, guid: 1691feeaf5aa8824f944385edaaab490, type: 2}
-  Type: 1
+  Type: 0
   Name: Sniper Laser Rifle
-  ModelPrefab: {fileID: 5162746282373765586, guid: 0bcc1c07dcbb0684daaf40cb0b8be0b0, type: 3}
-  SpawnPoint: {x: 0.023, y: -0.139, z: 0.021}
-  SpawnRotation: {x: 0, y: 0, z: 0}
+  ModelPrefab: {fileID: 612330427008487874, guid: e5bb5505830f60d46996d3a4b0b51358, type: 3}
+  SpawnPoint: {x: 0, y: -0.049, z: 0.129}
+  SpawnRotation: {x: 0, y: -90, z: -90}
+  AutoShootAnimationEnable: 0
   DamageConfig: {fileID: 11400000, guid: e3b9d9b4f42cf1141a5479a50c6bfdc8, type: 2}
   ShootConfig: {fileID: 11400000, guid: 42b67660b89cf514fa2251863a862f01, type: 2}
   TrailConfig: {fileID: 11400000, guid: 6504a8f894b15a644a9a6865368168f0, type: 2}
   AmmoConfig: {fileID: 11400000, guid: 82596338e68ce084595881d8ad1f6557, type: 2}
   AudioConfig: {fileID: 11400000, guid: 0cc627ba0ed1ce44290c332f61b8b1f0, type: 2}
   BulletPenetrationConfig: {fileID: 11400000, guid: 6721ae4ea3c47fc4a9d083ac51789e91, type: 2}
+  animatorOverrideController: {fileID: 22100000, guid: b6fb7a252d7bc5f4799c43cfe7955c47, type: 2}

@@ -1,24 +1,43 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class PlayerShootController : MonoBehaviour
+public class PlayerShootController : MonoBehaviour, IPausable
 {
     public PlayerGunSelector GunSelector;
+
     [SerializeField] private bool AutoReload = false;
-    private static bool isReloading = false;
+
+    //private static bool isReloading = false;
     private bool isStopReloading = false;
+    
+    private bool isPaused = false;
 
     public static event Action OnReloadAnimation;
+    
+    private void OnEnable()
+    {
+        PauseGame.OnGamePaused += OnPause;
+        PauseGame.OnGameResumed += OnResume;
+    }
+
+    private void OnDisable()
+    {
+        PauseGame.OnGamePaused -= OnPause;
+        PauseGame.OnGameResumed -= OnResume;
+    }
 
     void Update()
     {
-        if (GunSelector.ActiveGun != null && !isReloading)
-        {
-            GunSelector.ActiveGun.Tick(PlayerController.IsLeftClickDown());
-        }
+        if (isPaused) return;
         
-        if (PlayerController.IsLeftClickDown() && isReloading)
+        if (GunSelector.ActiveGun != null && PlayerController.IsPlayerHasIdleState())
+        {
+            GunSelector.ActiveGun.CallTick(PlayerController.IsLeftClickDown());
+        }
+
+        if (PlayerController.IsLeftClickDown() && PlayerController.GetPlayerState() == PlayerStates.reloading && GunSelector.ActiveGun.AmmoConfig.SingleBulletLoad)
         {
             isStopReloading = true;
         }
@@ -32,42 +51,41 @@ public class PlayerShootController : MonoBehaviour
     private void Reload()
     {
         GunSelector.ActiveGun.StartReloading();
-        isReloading = true;
+        PlayerController.SetPlayerState(PlayerStates.reloading);
         OnReloadAnimation?.Invoke();
     }
 
-    public static bool IsReloading()
-    {
-        return isReloading;
-    }
-
+    
+    /// <summary>
+    ///  EndReload is switch animation method
+    /// </summary>
     private void EndReload()
     {
         if (isStopReloading)
         {
             isStopReloading = false;
-            isReloading = false;
+            PlayerController.SetPlayerState(PlayerStates.idle);
             return;
         }
 
         GunSelector.ActiveGun.EndReload();
-        isReloading = false;
+        PlayerController.SetPlayerState(PlayerStates.idle);
         if (GunSelector.ActiveGun.CanReload())
         {
             Reload();
         }
     }
-    
-    
+
 
     private bool ShouldManualReload()
     {
-        return !isReloading && PlayerController.IsRKeyDown() && GunSelector.ActiveGun.CanReload();
+        return PlayerController.IsPlayerHasIdleState() && PlayerController.IsRKeyDown() &&
+               GunSelector.ActiveGun.CanReload();
     }
 
     private bool ShouldAutoReload()
     {
-        return !isReloading
+        return PlayerController.IsPlayerHasIdleState()
                && AutoReload
                && GunSelector.ActiveGun.AmmoConfig.CurrentClipAmmo == 0
                && GunSelector.ActiveGun.CanReload();
@@ -107,4 +125,13 @@ public class PlayerShootController : MonoBehaviour
            }
        }
    }*/
+    public void OnPause()
+    {
+        isPaused = true;
+    }
+
+    public void OnResume()
+    {
+        isPaused = false;
+    }
 }

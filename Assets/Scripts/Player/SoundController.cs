@@ -1,32 +1,38 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class SoundController : MonoBehaviour
 {
-    [SerializeField] private AudioSource audio;
-    [SerializeField] AudioClip[] stepSounds;
-    
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip[] stepSounds;
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     public void FootStepWhileAiming()
     {
         IsStepSoundsAvailable();
 
-        audio.pitch = 0.6f;
+        audioSource.pitch = 0.6f;
         PlayNextStepSound();
     }
     
     public void FootStepWhileRun()
     {
         IsStepSoundsAvailable();
-        audio.pitch = 0.8f;
+        audioSource.pitch = 0.8f;
         PlayNextStepSound();
     }
     
     public void FootStepWhileSprint()
     {
         IsStepSoundsAvailable();
-        audio.pitch = 1f;
+        audioSource.pitch = 1f;
         PlayNextStepSound();
     }
 
@@ -36,7 +42,7 @@ public class SoundController : MonoBehaviour
         if (!GetComponent<AudioSource>().isPlaying)
         {
             AudioClip clipToPlay = stepSounds[currentIndex];
-            audio.PlayOneShot(clipToPlay);
+            audioSource.PlayOneShot(clipToPlay);
             currentIndex = (currentIndex + 1) % stepSounds.Length;
         }
     }

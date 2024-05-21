@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7528801968239993966}
   - component: {fileID: 3572380549780967311}
   - component: {fileID: 9049751063121535212}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Lighter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,7 +119,7 @@ GameObject:
   - component: {fileID: 8936880323877445807}
   - component: {fileID: 1085744149103458095}
   - component: {fileID: 6477307339168818943}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -12,6 +12,7 @@ public class TilemapGenerator : MonoBehaviour
     public GameObject[] yellowTerrains;
     private List<GameObject[]> terrainsArrays = new();
     private List<GameObject> pickedTerrains = new();
+    public uint terrainsIPick;
 
     private TerrainGenerator terrainGenerator;
     
@@ -58,7 +59,10 @@ public class TilemapGenerator : MonoBehaviour
     private void PickTerrainsAndCreateVersions()
     {
         terrainGenerator = GetComponent<TerrainGenerator>();
-        int randomIndex = UnityEngine.Random.Range(0, terrainsArrays.Count);
+        int randomIndex;
+        if (terrainsIPick == 0 || terrainsIPick > terrainsArrays.Count) 
+            randomIndex = UnityEngine.Random.Range(0, terrainsArrays.Count);
+        else randomIndex = (int)terrainsIPick - 1;
         
         for (int i = 0, j = 0; i < terrainsArrays[randomIndex].Length; i++, j++)
         {
