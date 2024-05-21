@@ -349,15 +349,12 @@ public class PlayerController : MonoBehaviour
     {
         if (_direction != Vector3.zero)
         {
-            targetAngle = Mathf.Atan2(_direction.x, _direction.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+            targetAngle = Mathf.Atan2(_direction.x, _direction.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity,
                 turnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
         }
     }
-
-
-    [SerializeField, Range(0, 10)] private float offset;
 
     private void TurnToMousePosition()
     {
@@ -419,7 +416,7 @@ public class PlayerController : MonoBehaviour
 
         if (isMoving)
         {
-            targetAngle = Mathf.Atan2(_direction.x, _direction.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
+            targetAngle = Mathf.Atan2(_direction.x, _direction.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
 
             // Если игрок не прицеливается, поворачиваем его в направлении движения
             if (!_isLeftClickDown && !_isRightClickDown)
