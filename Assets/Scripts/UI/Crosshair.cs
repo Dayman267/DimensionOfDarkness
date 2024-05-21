@@ -1,7 +1,8 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Crosshair : MonoBehaviour
+public class Crosshair : MonoBehaviour, IPausable
 {
     public float maxExpansion = 5.0f; // Максимальное увеличение при выстреле
     public float expansionSpeed = 100.0f; // Скорость увеличения при выстреле
@@ -10,8 +11,21 @@ public class Crosshair : MonoBehaviour
     private Vector3 originalScale;
     private static bool shotFired = false;
     
-    
-    
+    private bool isPaused = false;
+
+    private void OnEnable()
+    {
+        PauseGame.OnGamePaused += OnPause;
+        PauseGame.OnGameResumed += OnResume;
+    }
+
+    private void OnDisable()
+    {
+        PauseGame.OnGamePaused -= OnPause;
+        PauseGame.OnGameResumed -= OnResume;
+    }
+
+
     private void Awake()
     {
         Cursor.visible = false;
@@ -24,6 +38,8 @@ public class Crosshair : MonoBehaviour
 
     void Update()
     {
+        if (isPaused) return;
+        
         // Получаем позицию курсора мыши в мировых координатах
         Vector3 cursorPosition = Mouse.current.position.value;
 
@@ -49,5 +65,15 @@ public class Crosshair : MonoBehaviour
     public static void OnShotFired()
     {
         shotFired = true;
+    }
+
+    public void OnPause()
+    {
+        isPaused = true;
+    }
+
+    public void OnResume()
+    {
+        isPaused = false;
     }
 }

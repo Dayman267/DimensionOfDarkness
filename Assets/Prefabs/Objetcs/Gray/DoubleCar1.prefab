@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6892922411109510072}
   - component: {fileID: 3484417310906277377}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: DoubleCar1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63,9 +63,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6892922411109510072}
     m_Modifications:
+    - target: {fileID: 1424542165392058716, guid: 41ebaa52b4ece194aa4bf26741520580, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3606375583690559494, guid: 41ebaa52b4ece194aa4bf26741520580, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4724219299422243985, guid: 41ebaa52b4ece194aa4bf26741520580, type: 3}
       propertyPath: m_Name
       value: Vehicle (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4724219299422243985, guid: 41ebaa52b4ece194aa4bf26741520580, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4724219299422243985, guid: 41ebaa52b4ece194aa4bf26741520580, type: 3}
       propertyPath: m_IsActive
@@ -119,6 +131,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7171646297340581448, guid: 41ebaa52b4ece194aa4bf26741520580, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 9093881627710807396, guid: 41ebaa52b4ece194aa4bf26741520580, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -137,9 +157,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6892922411109510072}
     m_Modifications:
+    - target: {fileID: 1424542165392058716, guid: 41ebaa52b4ece194aa4bf26741520580, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3606375583690559494, guid: 41ebaa52b4ece194aa4bf26741520580, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4724219299422243985, guid: 41ebaa52b4ece194aa4bf26741520580, type: 3}
       propertyPath: m_Name
       value: Vehicle
+      objectReference: {fileID: 0}
+    - target: {fileID: 4724219299422243985, guid: 41ebaa52b4ece194aa4bf26741520580, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4724219299422243985, guid: 41ebaa52b4ece194aa4bf26741520580, type: 3}
       propertyPath: m_IsActive
@@ -192,6 +224,14 @@ PrefabInstance:
     - target: {fileID: 5454584765309948325, guid: 41ebaa52b4ece194aa4bf26741520580, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7171646297340581448, guid: 41ebaa52b4ece194aa4bf26741520580, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 9093881627710807396, guid: 41ebaa52b4ece194aa4bf26741520580, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

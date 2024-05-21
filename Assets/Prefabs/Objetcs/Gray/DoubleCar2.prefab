@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1566419192742285931}
   - component: {fileID: 7521688076191511148}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: DoubleCar2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63,9 +63,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1566419192742285931}
     m_Modifications:
+    - target: {fileID: 168474659405524063, guid: fcad6e8d47d6e5844a15c4843c3961be, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390983340263233184, guid: fcad6e8d47d6e5844a15c4843c3961be, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 2257690779398361258, guid: fcad6e8d47d6e5844a15c4843c3961be, type: 3}
       propertyPath: m_Name
       value: Hillbilly
+      objectReference: {fileID: 0}
+    - target: {fileID: 2257690779398361258, guid: fcad6e8d47d6e5844a15c4843c3961be, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6129006082879173633, guid: fcad6e8d47d6e5844a15c4843c3961be, type: 3}
       propertyPath: m_LocalPosition.x
@@ -107,6 +119,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7564640756116236523, guid: fcad6e8d47d6e5844a15c4843c3961be, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7867613971133784524, guid: fcad6e8d47d6e5844a15c4843c3961be, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -125,9 +145,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1566419192742285931}
     m_Modifications:
+    - target: {fileID: 168474659405524063, guid: fcad6e8d47d6e5844a15c4843c3961be, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1390983340263233184, guid: fcad6e8d47d6e5844a15c4843c3961be, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 2257690779398361258, guid: fcad6e8d47d6e5844a15c4843c3961be, type: 3}
       propertyPath: m_Name
       value: Hillbilly (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2257690779398361258, guid: fcad6e8d47d6e5844a15c4843c3961be, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4977211594874529676, guid: fcad6e8d47d6e5844a15c4843c3961be, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -172,6 +204,14 @@ PrefabInstance:
     - target: {fileID: 6129006082879173633, guid: fcad6e8d47d6e5844a15c4843c3961be, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7564640756116236523, guid: fcad6e8d47d6e5844a15c4843c3961be, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7867613971133784524, guid: fcad6e8d47d6e5844a15c4843c3961be, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
