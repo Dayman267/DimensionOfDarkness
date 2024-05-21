@@ -18,7 +18,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.12
+      value: 0.2
       inSlope: 0
       outSlope: 0
       tangentMode: 34
@@ -27,7 +27,7 @@ MonoBehaviour:
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 0.12
+      value: 0.2
       inSlope: 0
       outSlope: 0
       tangentMode: 34
@@ -37,12 +37,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  Duration: 0.02
+  Duration: 0.04
   MinVertexDistance: 1
   Color:
     serializedVersion: 2
     key0: {r: 0.9622642, g: 0.51243067, b: 0.086240634, a: 1}
-    key1: {r: 1, g: 1, b: 1, a: 0}
+    key1: {r: 0.9433962, g: 0.57914585, b: 0.057849795, a: 1}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
@@ -69,5 +69,6 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
+  BulletParticlePrefab: {fileID: 1735024089641582, guid: 3210ff86fb7e38444b32cdbeb152c728, type: 3}
   MissDistance: 50
   SimulationSpeed: 50

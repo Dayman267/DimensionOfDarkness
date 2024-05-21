@@ -11,11 +11,11 @@ public class PlayerShootController : MonoBehaviour, IPausable
 
     //private static bool isReloading = false;
     private bool isStopReloading = false;
-    
     private bool isPaused = false;
 
     public static event Action OnReloadAnimation;
-    
+
+
     private void OnEnable()
     {
         PauseGame.OnGamePaused += OnPause;
@@ -31,13 +31,16 @@ public class PlayerShootController : MonoBehaviour, IPausable
     void Update()
     {
         if (isPaused) return;
-        
-        if (GunSelector.ActiveGun != null && PlayerController.IsPlayerHasIdleState())
+
+        if (GunSelector.ActiveGun != null &&
+            PlayerController.IsPlayerHasIdleState() &&
+            PlayerController.GetPlayerMoveState() != PlayerMoveStates.dashing)
         {
             GunSelector.ActiveGun.CallTick(PlayerController.IsLeftClickDown());
         }
 
-        if (PlayerController.IsLeftClickDown() && PlayerController.GetPlayerState() == PlayerStates.reloading && GunSelector.ActiveGun.AmmoConfig.SingleBulletLoad)
+        if (PlayerController.IsLeftClickDown() && PlayerController.GetPlayerState() == PlayerStates.reloading &&
+            GunSelector.ActiveGun.AmmoConfig.SingleBulletLoad)
         {
             isStopReloading = true;
         }
@@ -55,7 +58,7 @@ public class PlayerShootController : MonoBehaviour, IPausable
         OnReloadAnimation?.Invoke();
     }
 
-    
+
     /// <summary>
     ///  EndReload is switch animation method
     /// </summary>

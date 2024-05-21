@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseGame : MonoBehaviour
 {
@@ -61,9 +62,11 @@ public class PauseGame : MonoBehaviour
         
         playerActions.UI.Disable();
         playerActions.Gameplay.Enable();
+        
         isGameplayMapActive = true;
         
-        Cursor.visible = false;
+        if(SceneManager.GetActiveScene().name != "Hub")
+            Cursor.visible = false;
 
         Time.timeScale = 1;
         

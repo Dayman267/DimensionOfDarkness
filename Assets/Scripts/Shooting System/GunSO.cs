@@ -7,6 +7,7 @@ using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 using UnityEngine.Rendering;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 [CreateAssetMenu(fileName = "Gun", menuName = "Guns/Gun", order = 0)]
@@ -29,8 +30,7 @@ public class GunSO : ScriptableObject, ICloneable
     public AmmoConfigSO AmmoConfig;
     public AudioConfigSO AudioConfig;
     public BulletPenetrationConfigSO BulletPenetrationConfig;
-
-
+    
     public ICollisionHandler[] BulletImpactEffects = Array.Empty<ICollisionHandler>();
 
     private MonoBehaviour ActiveMonoBehaviour;
@@ -118,11 +118,6 @@ public class GunSO : ScriptableObject, ICloneable
         ChargeShoot_VFX = null;
         ShootingStartPoint = null;
         animatorOverrideController = null;
-    }
-
-    public void UpdateCamera(Camera ActiveCamera)
-    {
-        this.ActiveCamera = ActiveCamera;
     }
 
     private void PlayParticleSystems(ParticleSystem[] particleSystem)
@@ -262,45 +257,68 @@ public class GunSO : ScriptableObject, ICloneable
     }
 
     private void DoProjectileShoot(Vector3 shootDirection)
+{
+    Bullet bullet = BulletPool.Get();
+    bullet.gameObject.SetActive(true);
+    bullet.OnCollision += HandleOnBulletCollision;
+
+    if (ShootConfig.ShootType == ShootType.FromCamera &&
+        Physics.Raycast(
+            GetRaycastOrigin(),
+            shootDirection,
+            out RaycastHit hit,
+            float.MaxValue,
+            ShootConfig.HitMask
+        ))
     {
-        Bullet bullet = BulletPool.Get();
-        bullet.gameObject.SetActive(true);
-        bullet.OnCollision += HandleOnBulletColision;
-
-        if (ShootConfig.ShootType == ShootType.FromCamera
-            && Physics.Raycast(
-                GetRaycastOrigin(),
-                shootDirection,
-                out RaycastHit hit,
-                float.MaxValue,
-                ShootConfig.HitMask
-            ))
-        {
-            Vector3 directionToHit = (hit.point - ShootingStartPoint.transform.position).normalized;
-            Model.transform.forward = directionToHit;
-            shootDirection = directionToHit;
-        }
-
-        bullet.transform.position = ShootingStartPoint.transform.position;
-        bullet.Spawn(shootDirection * ShootConfig.BulletSpawnForce);
-
-        TrailRenderer trail = TrailPool.Get();
-        if (trail != null)
-        {
-            Transform transform;
-            (transform = trail.transform).SetParent(bullet.transform, false);
-            transform.localPosition = Vector3.zero;
-            trail.emitting = true;
-            trail.gameObject.SetActive(true);
-        }
+        Vector3 directionToHit = (hit.point - ShootingStartPoint.transform.position).normalized;
+        Model.transform.forward = directionToHit;
+        shootDirection = directionToHit;
     }
 
-    public Vector3 GetGunForward()
+    bullet.transform.position = ShootingStartPoint.transform.position;
+    bullet.Spawn(shootDirection * ShootConfig.BulletSpawnForce);
+
+    TrailRenderer trail = TrailPool.Get();
+    if (trail != null)
     {
-        return Model.transform.forward;
+        Transform transform;
+        (transform = trail.transform).SetParent(bullet.transform, false);
+        transform.localPosition = Vector3.zero;
+        trail.emitting = true;
+        trail.gameObject.SetActive(true);
+    }
+    
+    if(TrailConfig.BulletParticlePrefab != null)
+    {
+        GameObject particleInstance = Instantiate(TrailConfig.BulletParticlePrefab, bullet.transform.position, Quaternion.identity);
+        ParticleSystem particleSystem = particleInstance.GetComponent<ParticleSystem>();
+        particleSystem.Play();
+        
+        ActiveMonoBehaviour.StartCoroutine(UpdateParticleSystem(particleSystem, bullet, trail));
+    }
+}
+
+private IEnumerator UpdateParticleSystem(ParticleSystem particleSystem, Bullet bullet, TrailRenderer trail)
+{
+    while (bullet.gameObject.activeSelf)
+    {
+        particleSystem.transform.position = bullet.transform.position;
+        yield return null;
     }
 
-    private void HandleOnBulletColision(Bullet bullet, Collision collision, int objectsPenetrated)
+    // Останавливаем и уничтожаем Particle System
+    particleSystem.Stop();
+    Destroy(particleSystem.gameObject, particleSystem.main.duration + particleSystem.main.startLifetime.constantMax);
+
+    if (trail != null)
+    {
+        trail.transform.SetParent(null, true);
+        ActiveMonoBehaviour.StartCoroutine(DelayedDisableTrail(trail));
+    }
+}
+
+    private void HandleOnBulletCollision(Bullet bullet, Collision collision, int objectsPenetrated)
     {
         TrailRenderer trail = bullet.GetComponentInChildren<TrailRenderer>();
 
@@ -357,14 +375,14 @@ public class GunSO : ScriptableObject, ICloneable
         if (trail != null)
         {
             trail.transform.SetParent(null, true);
-            ActiveMonoBehaviour.StartCoroutine(DeleyedDisableTrail(trail));
+            ActiveMonoBehaviour.StartCoroutine(DelayedDisableTrail(trail));
         }
 
         bullet.gameObject.SetActive(false);
         BulletPool.Release(bullet);
     }
 
-    private IEnumerator DeleyedDisableTrail(TrailRenderer trail)
+    private IEnumerator DelayedDisableTrail(TrailRenderer trail)
     {
         yield return new WaitForSeconds(TrailConfig.Duration);
         yield return null;
@@ -374,8 +392,7 @@ public class GunSO : ScriptableObject, ICloneable
         //TrailPool.Release(trail);
         Destroy(gameObject);
     }
-
-    // Video 6 - 10:39
+    
     private void HandleBulletImpact(
         float DistanceTraveled,
         Vector3 HitLocation,
@@ -410,38 +427,7 @@ public class GunSO : ScriptableObject, ICloneable
             collisionHandler.HandleImpact(HitCollider, HitLocation, HitNormal, this);
         }
     }
-
-
-    /*private void DoHitScanShoot(Vector3 shootDirection, Vector3 Origin, Vector3 TrailOrigin, int Iteration = 0)
-    {
-        if (Physics.Raycast(
-                GetRaycastOrigin(),
-                shootDirection,
-                out RaycastHit hit,
-                float.MaxValue,
-                ShootConfig.HitMask
-            ))
-        {
-            ActiveMonoBehaviour.StartCoroutine(
-                PlayTrail(
-                    ShootingStartPoint.transform.position,
-                    hit.point,
-                    hit
-                )
-            );
-        }
-        else
-        {
-            ActiveMonoBehaviour.StartCoroutine(
-                PlayTrail(
-                    ShootingStartPoint.transform.position,
-                    ShootingStartPoint.transform.position + (shootDirection * TrailConfig.MissDistance),
-                    new RaycastHit()
-                )
-            );
-        }
-    }*/
-
+    
     public Vector3 GetRaycastOrigin()
     {
         Vector3 origin = ShootingStartPoint.transform.position;
@@ -558,132 +544,95 @@ public class GunSO : ScriptableObject, ICloneable
         }
     }
 
-    /*private IEnumerator PlayTrail(Vector3 StartPoint, Vector3 EndPoint, RaycastHit Hit, int Iteration = 0)
-    {
-        TrailRenderer instance = TrailPool.Get();
-        instance.gameObject.SetActive(true);
-        instance.transform.position = StartPoint;
-        yield return null; // avoid position carry-over from last frame if reused
-
-        instance.emitting = true;
-
-        float distance = Vector3.Distance(StartPoint, EndPoint);
-        float remainingDistance = distance;
-        while (remainingDistance > 0)
-        {
-            instance.transform.position = Vector3.Lerp(
-                StartPoint,
-                EndPoint,
-                Mathf.Clamp01(1 - (remainingDistance / distance))
-            );
-            remainingDistance -= TrailConfig.SimulationSpeed * Time.deltaTime;
-
-            yield return null;
-        }
-
-        instance.transform.position = EndPoint;
-
-        if (Hit.collider != null)
-        {
-            HandleBulletImpact(distance, EndPoint, Hit.normal, Hit.collider, Iteration);
-        }
-
-        yield return new WaitForSeconds(TrailConfig.Duration);
-        yield return null;
-        instance.emitting = false;
-        instance.gameObject.SetActive(false);
-        //TrailPool.Release(instance);
-        Destroy(instance.gameObject);
-
-        if (BulletPenetrationConfig != null && BulletPenetrationConfig.MaxObjectsToPenetrate > Iteration)
-        {
-            yield return null;
-            Vector3 direction = (EndPoint - StartPoint).normalized;
-            Vector3 backCastOrigin = Hit.point + direction * BulletPenetrationConfig.MaxObjectsToPenetrate;
-
-            if (Physics.Raycast(
-                    backCastOrigin,
-                    -direction,
-                    out RaycastHit hit,
-                    BulletPenetrationConfig.MaxPenetrationDepth,
-                    ShootConfig.HitMask
-                ))
-            {
-                Vector3 penetrationOrigin = hit.point;
-                direction += new Vector3(
-                    Random.Range(-BulletPenetrationConfig.AccuracyLoss.x, BulletPenetrationConfig.AccuracyLoss.x),
-                    Random.Range(-BulletPenetrationConfig.AccuracyLoss.y, BulletPenetrationConfig.AccuracyLoss.y),
-                    Random.Range(-BulletPenetrationConfig.AccuracyLoss.z, BulletPenetrationConfig.AccuracyLoss.z)
-                );
-
-                DoHitScanShoot(direction, penetrationOrigin, penetrationOrigin, Iteration + 1);
-            }
-        }
-    }*/
-
     private IEnumerator PlayTrail(Vector3 StartPoint, Vector3 EndPoint, RaycastHit Hit, int Iteration = 0)
+{
+    TrailRenderer instance = CreateTrail();
+    instance.gameObject.SetActive(true);
+    instance.transform.position = StartPoint;
+
+    // Создаем экземпляр Particle System, если ParticlePrefab не равен null
+    GameObject particleInstance = null;
+    ParticleSystem particleSystem = null;
+    if (TrailConfig.BulletParticlePrefab != null)
     {
-        TrailRenderer instance = TrailPool.Get();
-        instance.gameObject.SetActive(true);
-        instance.transform.position = StartPoint;
-        yield return null; // avoid position carry-over from last frame if reused
+        particleInstance = Instantiate(TrailConfig.BulletParticlePrefab, StartPoint, Quaternion.identity);
+        particleSystem = particleInstance.GetComponent<ParticleSystem>();
+        particleSystem.Play();
+    }
 
-        instance.emitting = true;
+    yield return null; // avoid position carry-over from last frame if reused
 
-        float distance = Vector3.Distance(StartPoint, EndPoint);
-        float remainingDistance = distance;
-        while (remainingDistance > 0)
-        {
-            instance.transform.position = Vector3.Lerp(
-                StartPoint,
-                EndPoint,
-                Mathf.Clamp01(1 - (remainingDistance / distance))
-            );
-            remainingDistance -= TrailConfig.SimulationSpeed * Time.deltaTime;
+    instance.emitting = true;
+    float distance = Vector3.Distance(StartPoint, EndPoint);
+    float remainingDistance = distance;
+    while (remainingDistance > 0)
+    {
+        Vector3 currentPosition = Vector3.Lerp(
+            StartPoint,
+            EndPoint,
+            Mathf.Clamp01(1 - (remainingDistance / distance))
+        );
 
-            yield return null;
-        }
+        instance.transform.position = currentPosition;
+        if (particleInstance != null)
+            particleInstance.transform.position = currentPosition;
 
-        instance.transform.position = EndPoint;
-
-        if (Hit.collider != null)
-        {
-            HandleBulletImpact(distance, EndPoint, Hit.normal, Hit.collider, Iteration);
-        }
-
-        yield return new WaitForSeconds(TrailConfig.Duration);
+        remainingDistance -= TrailConfig.SimulationSpeed * Time.deltaTime;
         yield return null;
-        instance.emitting = false;
-        GameObject gameObject;
-        (gameObject = instance.gameObject).SetActive(false);
-        //TrailPool.Release(instance);
-        Destroy(gameObject);
+    }
 
-        if (BulletPenetrationConfig != null && BulletPenetrationConfig.MaxObjectsToPenetrate > Iteration)
+    if (particleInstance != null)
+    {
+        // Обновляем позицию Particle System
+        instance.transform.position = EndPoint;
+        particleInstance.transform.position = EndPoint;
+    }
+
+    if (Hit.collider != null)
+    {
+        HandleBulletImpact(distance, EndPoint, Hit.normal, Hit.collider, Iteration);
+    }
+
+    yield return new WaitForSeconds(TrailConfig.Duration);
+    yield return null;
+
+    instance.emitting = false;
+    instance.gameObject.SetActive(false);
+    Destroy(instance.gameObject);
+
+    // Останавливаем и уничтожаем Particle System, если ParticlePrefab не равен null
+    if (particleInstance != null)
+    {
+        particleSystem.Stop();
+        Destroy(particleInstance, particleSystem.main.duration + particleSystem.main.startLifetime.constantMax);
+    }
+
+    if (BulletPenetrationConfig != null && BulletPenetrationConfig.MaxObjectsToPenetrate > Iteration)
+    {
+        yield return null;
+        Vector3 direction = (EndPoint - StartPoint).normalized;
+        Vector3 backCastOrigin = Hit.point + direction * BulletPenetrationConfig.MaxPenetrationDepth;
+
+        if (Physics.Raycast(
+                backCastOrigin,
+                -direction,
+                out RaycastHit hit,
+                BulletPenetrationConfig.MaxPenetrationDepth,
+                ShootConfig.HitMask
+            ))
         {
-            yield return null;
-            Vector3 direction = (EndPoint - StartPoint).normalized;
-            Vector3 backCastOrigin = Hit.point + direction * BulletPenetrationConfig.MaxPenetrationDepth;
+            Vector3 penetrationOrigin = hit.point;
+            direction += new Vector3(
+                Random.Range(-BulletPenetrationConfig.AccuracyLoss.x, BulletPenetrationConfig.AccuracyLoss.x),
+                Random.Range(-BulletPenetrationConfig.AccuracyLoss.y, BulletPenetrationConfig.AccuracyLoss.y),
+                Random.Range(-BulletPenetrationConfig.AccuracyLoss.z, BulletPenetrationConfig.AccuracyLoss.z)
+            );
 
-            if (Physics.Raycast(
-                    backCastOrigin,
-                    -direction,
-                    out RaycastHit hit,
-                    BulletPenetrationConfig.MaxPenetrationDepth,
-                    ShootConfig.HitMask
-                ))
-            {
-                Vector3 penetrationOrigin = hit.point;
-                direction += new Vector3(
-                    Random.Range(-BulletPenetrationConfig.AccuracyLoss.x, BulletPenetrationConfig.AccuracyLoss.x),
-                    Random.Range(-BulletPenetrationConfig.AccuracyLoss.y, BulletPenetrationConfig.AccuracyLoss.y),
-                    Random.Range(-BulletPenetrationConfig.AccuracyLoss.z, BulletPenetrationConfig.AccuracyLoss.z)
-                );
-
-                DoHitScanShoot(direction, penetrationOrigin, penetrationOrigin, Iteration + 1);
-            }
+            DoHitScanShoot(direction, penetrationOrigin, penetrationOrigin, Iteration + 1);
         }
     }
+}
+
 
     private TrailRenderer CreateTrail()
     {

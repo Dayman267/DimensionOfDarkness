@@ -67,7 +67,8 @@ public class PlayerGunSelector : MonoBehaviour
 
     private void Update()
     {
-        if (PlayerController.IsPlayerHasIdleState() || PlayerController.GetPlayerState() == PlayerStates.switchingWeapon)
+        if ((PlayerController.GetPlayerMoveState() != PlayerMoveStates.dashing && PlayerController.IsPlayerHasIdleState()) 
+            || PlayerController.GetPlayerState() == PlayerStates.switchingWeapon)
         {
             if (PlayerController.IsQKeyDown() && !isQKeyDown)
             {

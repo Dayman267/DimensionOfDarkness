@@ -69,5 +69,6 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 3
+  BulletParticlePrefab: {fileID: 5749892945899594870, guid: 3b1f481cdb7e0de45bdf98a208586981, type: 3}
   MissDistance: 50
   SimulationSpeed: 50

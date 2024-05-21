@@ -7,4 +7,5 @@ public enum PlayerMoveStates
    idle,
    aiming,
    running,
+   dashing,
 }

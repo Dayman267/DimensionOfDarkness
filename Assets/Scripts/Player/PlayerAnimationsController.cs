@@ -15,6 +15,7 @@ public class PlayerAnimationsController : MonoBehaviour
     private int verticalAnimHash;
     private int reloadAnimHash;
     private int switchAnimHash;
+    private int dashAnimHash;
 
     float shootingSpeed = 0.0f;
     
@@ -29,6 +30,7 @@ public class PlayerAnimationsController : MonoBehaviour
         reloadAnimHash = Animator.StringToHash("Reload");
         switchAnimHash = Animator.StringToHash("SwitchingWeapon");
         singleShootingSpeedAnimHash = Animator.StringToHash("SingleShoot");
+        dashAnimHash = Animator.StringToHash("Dash");
     }
 
     private void OnEnable()
@@ -37,6 +39,7 @@ public class PlayerAnimationsController : MonoBehaviour
         PlayerController.OnAimAnimationEnable += EnableAimAnimationHandler;
         PlayerController.OnAimAnimationDiasble += DisableAimAnimationHandler;
         PlayerController.OnSend_X_Z_Pos += Get_X_Z_PosHandler;
+        PlayerController.OnDashAnimation += DashAnimationHandler;
         
         PlayerShootController.OnReloadAnimation += ReloadAnimation;
         
@@ -53,6 +56,7 @@ public class PlayerAnimationsController : MonoBehaviour
         PlayerController.OnAimAnimationEnable -= EnableAimAnimationHandler;
         PlayerController.OnAimAnimationDiasble -= DisableAimAnimationHandler;
         PlayerController.OnSend_X_Z_Pos -= Get_X_Z_PosHandler;
+        PlayerController.OnDashAnimation -= DashAnimationHandler;
         
         PlayerShootController.OnReloadAnimation -= ReloadAnimation;
         
@@ -61,6 +65,12 @@ public class PlayerAnimationsController : MonoBehaviour
         GunSO.OnAutoShootAnimationEnable -= EnableAutoShootAnimationHandler;
         GunSO.OnAutoShootAnimationDiasble -= DisableAutoShootAnimationHandler;
         GunSO.OnSingleShootAnimationEnable -= SingleShootAnimation;
+    }
+
+    private void DashAnimationHandler()
+    {
+        DisableAutoShootAnimationHandler();
+        animator.SetTrigger(dashAnimHash);
     }
 
     private void ReloadAnimation()

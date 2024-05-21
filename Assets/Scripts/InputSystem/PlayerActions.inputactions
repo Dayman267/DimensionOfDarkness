@@ -105,9 +105,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Change Action Map",
+                    "name": "ChangeActionMap",
                     "type": "Button",
-                    "id": "6076584b-864c-49c7-b060-9cd8f90fad34",
+                    "id": "5b833568-366d-46a6-a2e4-beab2c2f2036",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Dash",
+                    "type": "Button",
+                    "id": "ec418d38-b125-4660-b8d5-451c227f50cc",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -304,12 +313,23 @@
                 },
                 {
                     "name": "",
-                    "id": "64941152-fd2e-4d4a-9146-889531cd5d6f",
+                    "id": "4364b853-8fbf-4166-8952-a515575dc5c2",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Change Action Map",
+                    "action": "ChangeActionMap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a8544b10-36a2-40d3-8d99-6305bedd7e2d",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -320,9 +340,9 @@
             "id": "9bc9bd6b-d36a-47f7-9f03-edfaef723e3b",
             "actions": [
                 {
-                    "name": "Change Action Map",
+                    "name": "ChangeActionMap",
                     "type": "Button",
-                    "id": "449f5e19-1428-4a15-9353-a4333160e14b",
+                    "id": "6dcd84aa-a706-4079-8ee1-ffae9c90c38f",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -332,12 +352,12 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "51b5ef92-0e68-40c8-aaf5-951daf2b3433",
+                    "id": "4e13896b-4ef5-4fba-acd8-54fd0c468e94",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Change Action Map",
+                    "action": "ChangeActionMap",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

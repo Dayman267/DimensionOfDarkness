@@ -7,17 +7,16 @@ using UnityEngine.InputSystem;
 [DisallowMultipleComponent]
 public class PlayerController : MonoBehaviour, IPausable
 {
-    //[SerializeField] private Image Crosshair;
     private Camera cam;
-    private static Vector3 direction;
+    private static Vector3 _direction;
 
-    private Vector3 _movementVector;
+    private Vector3 movementVector;
     private PlayerActions playerActions;
-    private static PlayerStates playerState = PlayerStates.idle;
-    private static PlayerMoveStates playerMoveState = PlayerMoveStates.idle;
+    private static PlayerStates _playerState = PlayerStates.idle;
+    private static PlayerMoveStates _playerMoveState = PlayerMoveStates.idle;
 
 
-    private bool isAiming = false;
+    //private bool isAiming = false;
     private bool isRotating;
     private Quaternion targetRotation;
 
@@ -27,29 +26,29 @@ public class PlayerController : MonoBehaviour, IPausable
     [SerializeField] private float spendPointsWhenRunning = 0.3f;
     [SerializeField] private float speedRun = 10f;
     [SerializeField] private float speedAim = 1.5f;
+    [SerializeField] private float speedDash = 15f;
     [SerializeField] private float rotationSpeed = 500f;
     private float currentSpeed = 5f;
     private float targetSpeed = 5f;
-    private float speedTransitionDuration = 0.5f;
+    [SerializeField] private float speedTransitionDuration = 0.5f;
     private float speedTransitionProgress = 0f;
-
-    private float runShootDeley = 0f;
-
 
     private bool isDashing;
     [Header("Dashing")] [SerializeField] private float dashSpeed = 10f;
     [SerializeField] private float dashTime = 0.5f;
-    [SerializeField] private float spendPointsWhenDashing = 10f;
+    [SerializeField] private float spendPointsWhenDashing = 5f;
 
     private bool isVaulting;
     [Header("Vaulting")] [SerializeField] private float vaultSpeed = 6f;
     [SerializeField] private float vaultTime = 0.2f;
     [SerializeField] private float stayVaultRadius = 0.6f;
     [SerializeField] private float spendPointsWhenVaulting = 20f;
+    [SerializeField] private CameraController cameraController;
 
     public static event Action<float> OnMoveAnimation;
     public static event Action OnAimAnimationEnable;
     public static event Action OnAimAnimationDiasble;
+    public static event Action OnDashAnimation;
     public static event Action<float, float> OnSend_X_Z_Pos;
 
     public float turnSmoothTime = 0.3f;
@@ -65,15 +64,14 @@ public class PlayerController : MonoBehaviour, IPausable
     bool isGrounded;
     Vector3 velocity;
     private float targetAngle;
-
-    private PlayerStamina playerStamina;
-
+    
     private bool isPaused = false;
+    private PlayerStamina playerStamina;
 
     private void Awake()
     {
         cam = Camera.main;
-        
+
         controller = GetComponent<CharacterController>();
         playerActions = new PlayerActions();
         playerActions.Gameplay.Enable();
@@ -88,127 +86,81 @@ public class PlayerController : MonoBehaviour, IPausable
         //     EditorApplication.isPlaying = false;
         // #endif
 
-
         playerStamina = GetComponent<PlayerStamina>();
 
         transform.rotation = Quaternion.Euler(Vector3.zero);
     }
 
-    static bool isRightClickDown;
-    static bool isLeftClickDown;
-    static bool isLShiftDown;
-    static bool isRKeyDown;
-    static bool isQKeyDown;
-    static bool isEKeyDown;
-
-    public static void SetPlayerState(PlayerStates state)
-    {
-        playerState = state;
-    }
-
-    public static PlayerStates GetPlayerState()
-    {
-        return playerState;
-    }
-
-    public static PlayerMoveStates GetPlayerMoveState()
-    {
-        return playerMoveState;
-    }
-
-    public static bool IsPlayerHasIdleState()
-    {
-        return playerState == PlayerStates.idle;
-    }
-
-    public static bool IsRightClickDown()
-    {
-        return isRightClickDown;
-    }
-
-    public static bool IsLeftClickDown()
-    {
-        return isLeftClickDown;
-    }
-
-    public static bool IsLShiftDown()
-    {
-        return isLShiftDown;
-    }
-
-    public static bool IsRKeyDown()
-    {
-        return isRKeyDown;
-    }
-
-    public static bool IsQKeyDown()
-    {
-        return isQKeyDown;
-    }
-
-    public static bool IsEKeyDown()
-    {
-        return isEKeyDown;
-    }
-
+    private static bool _isRightClickDown;
+    private static bool _isLeftClickDown;
+    private static bool _isLShiftDown;
+    private static bool _isRKeyDown;
+    private static bool _isQKeyDown;
+    private static bool _isEKeyDown;
+    private static bool _isSpaceKeyDown;
     public static bool inMovement;
+
+    public static void SetPlayerState(PlayerStates state) => _playerState = state;
+    public static PlayerStates GetPlayerState() => _playerState;
+    public static PlayerMoveStates GetPlayerMoveState() => _playerMoveState;
+    public static bool IsPlayerHasIdleState() => _playerState == PlayerStates.idle;
+    public static bool IsRightClickDown() => _isRightClickDown;
+    public static bool IsLeftClickDown() => _isLeftClickDown;
+    public static bool IsLShiftDown() => _isLShiftDown;
+    public static bool IsRKeyDown() => _isRKeyDown;
+    public static bool IsQKeyDown() => _isQKeyDown;
+    public static bool IsEKeyDown() => _isEKeyDown;
+
 
     void Update()
     {
-        if (isPaused) return;
+        if(isPaused) return;
         
-        _movementVector = CalculateMovementVector();
-        direction = playerActions.Gameplay.Movement.ReadValue<Vector3>();
-
-        inMovement = Mathf.Abs(direction.x) > 0 || Mathf.Abs(direction.z) > 0;
-
-
-        if (inMovement)
-        {
-            if (playerMoveState != PlayerMoveStates.aiming)
-            {
-                playerMoveState = PlayerMoveStates.running;
-            }
-        }
-        else
-        {
-            if(playerMoveState != PlayerMoveStates.aiming)
-                playerMoveState = PlayerMoveStates.idle;
-        }
-        
-        // if(!PlayerShootController.IsReloading())
+        movementVector = CalculateMovementVector();
+        _direction = playerActions.Gameplay.Movement.ReadValue<Vector3>();
+        inMovement = Mathf.Abs(_direction.x) > 0 || Mathf.Abs(_direction.z) > 0;
         MoveAnimEnable();
 
-        if (isRightClickDown || isLeftClickDown)
+        if (_isSpaceKeyDown && playerStamina.GetStaminaPoints() >= 30)
         {
-            AimOn();
-        }
-        else
-        {
-            AimOff();
+            playerStamina.SpendStamina(spendPointsWhenDashing);
+            Dash();
         }
 
-        /*f (isRightClickDown)
+        if (_playerMoveState != PlayerMoveStates.dashing)
         {
-            AimOn();
-        }
-        else
-        {
-            if (!isLeftClickDown)
+            if (inMovement)
+            {
+                if (_playerMoveState != PlayerMoveStates.aiming && _playerMoveState != PlayerMoveStates.dashing)
+                {
+                    _playerMoveState = PlayerMoveStates.running;
+                }
+            }
+            else
+            {
+                if (_playerMoveState != PlayerMoveStates.aiming)
+                    _playerMoveState = PlayerMoveStates.idle;
+            }
+
+            if (_isRightClickDown || _isLeftClickDown)
+            {
+                currentSpeed = speedAim;
+                speedTransitionProgress = 0f;
+
+                AimOn();
+
+                if(cameraController != null)
+                    cameraController.LookAround(Mouse.current.position.value);
+            }
+            else
+            {
                 AimOff();
+                if(cameraController != null)
+                    cameraController.StopLookingAround();   
+            }
         }
 
-        if (isLeftClickDown)
-        {
-            ShootAnimOn();
-        }
-        else
-        {
-            ShootAnimOff();
-        }
-        */
-
-        if (!inMovement && !isRightClickDown && !isLeftClickDown)
+        if (!inMovement && !_isRightClickDown && !_isLeftClickDown)
         {
             ListenWASDKeyUp();
             if (isRotating)
@@ -218,9 +170,8 @@ public class PlayerController : MonoBehaviour, IPausable
         }
 
         if (isDashing || isVaulting) return;
-        
-        ChangeSpeed();
 
+        ChangeSpeed();
         Move(inMovement);
         // if (Vaulting())
         // {
@@ -242,35 +193,86 @@ public class PlayerController : MonoBehaviour, IPausable
     }
 
 
+    private void Dash()
+    {
+        if (_playerMoveState == PlayerMoveStates.dashing) return;
+
+        AimOff();
+
+        // Determine the dash direction based on movement or facing direction
+        _playerMoveState = PlayerMoveStates.dashing;
+        Vector3 dashDirection = _direction != Vector3.zero ? _direction : transform.forward;
+        StartCoroutine(PerformDash(dashDirection));
+
+        OnDashAnimation?.Invoke();
+    }
+
+    private IEnumerator PerformDash(Vector3 dashDirection)
+    {
+        float startTime = Time.time;
+        // Calculate the dash direction relative to the camera
+        if (dashDirection != transform.forward)
+        {
+            float targetAngle = Mathf.Atan2(dashDirection.x, dashDirection.z) * Mathf.Rad2Deg +
+                                cam.transform.eulerAngles.y;
+            dashDirection = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+        }
+
+        while (Time.time < startTime + dashTime)
+        {
+            RotateCharacterTowardsDashDirection();
+
+            controller.Move(dashDirection.normalized * dashSpeed * Time.deltaTime);
+            yield return null;
+        }
+    }
+
+    private void RotateCharacterTowardsDashDirection()
+    {
+        // If there's movement input, rotate towards that direction; otherwise, use current facing direction
+        float targetAngle = _direction != Vector3.zero
+            ? Mathf.Atan2(_direction.x, _direction.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y
+            : transform.eulerAngles.y;
+        float angle =
+            Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+
+        transform.rotation = Quaternion.Euler(0f, angle, 0f);
+    }
+
+    public void EndRoll()
+    {
+        currentSpeed = 0f;
+        _playerMoveState = PlayerMoveStates.idle;
+    }
+
     private void ChangeSpeed()
     {
-        if (inMovement && playerMoveState != PlayerMoveStates.aiming)
+        if (inMovement)
         {
-            targetSpeed = speedRun;
-            speedTransitionDuration = 0.1f;
-        }
-        else if (playerMoveState == PlayerMoveStates.aiming)
-        {
-            targetSpeed = speedAim;
-            speedTransitionDuration = 1f;
+            if (_playerMoveState != PlayerMoveStates.aiming)
+            {
+                targetSpeed = speedRun;
+            }
+            else if (_playerMoveState == PlayerMoveStates.aiming)
+            {
+                targetSpeed = speedAim;
+            }
+            else if (_playerMoveState == PlayerMoveStates.dashing)
+            {
+                targetSpeed = speedDash;
+            }
         }
         else
         {
-            targetSpeed = 0f;
-            speedTransitionDuration = 1f;
+            currentSpeed = 0f;
+            return;
         }
 
         if (currentSpeed != targetSpeed)
         {
-            speedTransitionProgress += Time.deltaTime / speedTransitionDuration;
-            currentSpeed = Mathf.Lerp(currentSpeed, targetSpeed, speedTransitionProgress);
+            currentSpeed = Mathf.SmoothDamp(currentSpeed, targetSpeed, ref speedTransitionProgress,
+                speedTransitionDuration);
         }
-    }
-
-    private IEnumerator ChangePlayerMoveStateWithDelay(PlayerMoveStates newState, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        playerMoveState = newState;
     }
 
     private void RotateTowardsTarget()
@@ -286,24 +288,15 @@ public class PlayerController : MonoBehaviour, IPausable
 
     private void ListenWASDKeyUp()
     {
-        switch (playerActions.Gameplay.W.WasReleasedThisFrame(),
-            playerActions.Gameplay.S.WasReleasedThisFrame(),
-            playerActions.Gameplay.A.WasReleasedThisFrame(),
-            playerActions.Gameplay.D.WasReleasedThisFrame())
-        {
-            case (true, false, false, false):
-                RotateToDirection(Vector3.forward);
-                break;
-            case (false, true, false, false):
-                RotateToDirection(Vector3.back);
-                break;
-            case (false, false, true, false):
-                RotateToDirection(Vector3.left);
-                break;
-            case (false, false, false, true):
-                RotateToDirection(Vector3.right);
-                break;
-        }
+        bool wReleased = playerActions.Gameplay.W.WasReleasedThisFrame();
+        bool sReleased = playerActions.Gameplay.S.WasReleasedThisFrame();
+        bool aReleased = playerActions.Gameplay.A.WasReleasedThisFrame();
+        bool dReleased = playerActions.Gameplay.D.WasReleasedThisFrame();
+
+        if (wReleased) RotateToDirection(Vector3.forward);
+        if (sReleased) RotateToDirection(Vector3.back);
+        if (aReleased) RotateToDirection(Vector3.left);
+        if (dReleased) RotateToDirection(Vector3.right);
     }
 
     private void RotateToDirection(Vector3 direction)
@@ -317,15 +310,15 @@ public class PlayerController : MonoBehaviour, IPausable
 
     private void MoveAnimEnable()
     {
-        OnMoveAnimation?.Invoke(_movementVector.magnitude);
+        OnMoveAnimation?.Invoke(movementVector.magnitude);
     }
 
     private float maxMovementMagnitude = 1f;
 
     private Vector3 CalculateMovementVector()
     {
-        float h = direction.x;
-        float v = direction.z;
+        float h = _direction.x;
+        float v = _direction.z;
 
         Vector3 cameraR = cam.transform.right;
         Vector3 cameraF = cam.transform.forward;
@@ -333,7 +326,7 @@ public class PlayerController : MonoBehaviour, IPausable
         cameraR.y = 0;
         cameraF.y = 0;
 
-        if (isLShiftDown)
+        if (_isLShiftDown)
         {
             maxMovementMagnitude = 1.5f;
         }
@@ -345,8 +338,9 @@ public class PlayerController : MonoBehaviour, IPausable
         Vector3 movementVector = cameraF.normalized * v + cameraR.normalized * h;
         movementVector = Vector3.ClampMagnitude(movementVector, maxMovementMagnitude);
 
-        float targetMagnitude = isLShiftDown && playerStamina.GetStaminaPoints() > 0 ? 1.5f : 1f;
-        float lerpedMagnitude = Mathf.MoveTowards(_movementVector.magnitude, targetMagnitude, 1.1f * Time.deltaTime);
+        float targetMagnitude = _isLShiftDown && playerStamina.GetStaminaPoints() > 0 ? 1.5f : 1f;
+        float lerpedMagnitude =
+            Mathf.MoveTowards(this.movementVector.magnitude, targetMagnitude, 1.1f * Time.deltaTime);
         movementVector = movementVector.normalized * lerpedMagnitude;
 
         Vector3 relativeVector = transform.InverseTransformDirection(movementVector);
@@ -357,26 +351,35 @@ public class PlayerController : MonoBehaviour, IPausable
 
     private void TurnCharacterInMovementDirection()
     {
-        float angle =
-            Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-        transform.rotation = Quaternion.Euler(0f, angle, 0f);
+        if (_direction != Vector3.zero)
+        {
+            targetAngle = Mathf.Atan2(_direction.x, _direction.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity,
+                turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+        }
     }
 
     private void TurnToMousePosition()
     {
-        Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = cam.transform.position.y - transform.position.y; // Устанавливаем Z равным расстоянию от камеры до персонажа
+        Vector3 mousePosition = Mouse.current.position.value;
+        mousePosition.z = cam.transform.position.y - transform.position.y;
         mousePosition = cam.ScreenToWorldPoint(mousePosition);
 
-        // Поворот персонажа курсором мыши с использованием интерполяции
-        Quaternion targetRotation = Quaternion.LookRotation(mousePosition - transform.position);
-        float rotationSpeed = 10f; // Скорость поворота (можете настроить под свои нужды)
+        /*Vector3 temp = cam.transform.localPosition;
+        temp.x = transform.position.x + (mousePosition.x - 0.5f) * cameraController.offsetX;
+        temp.y = transform.position.y + (mousePosition.y - 0.5f) * cameraController.offsetY;
+        cam.transform.localPosition = temp;*/
 
-        // Ограничиваем вращение только по оси Y
+
+        Quaternion targetRotation = Quaternion.LookRotation(mousePosition - transform.position);
+        float rotationSpeed = 10f;
+
         targetRotation.eulerAngles = new Vector3(0f, targetRotation.eulerAngles.y, 0f);
 
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
     }
+
 
     /*private void ResetAngularVelocity()
     {
@@ -417,6 +420,39 @@ public class PlayerController : MonoBehaviour, IPausable
 
         if (isMoving)
         {
+            targetAngle = Mathf.Atan2(_direction.x, _direction.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
+
+            // Если игрок не прицеливается, поворачиваем его в направлении движения
+            if (!_isLeftClickDown && !_isRightClickDown)
+                TurnCharacterInMovementDirection();
+
+            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+            float speed = _isLShiftDown && playerStamina.GetStaminaPoints() > 0 &&
+                          _playerMoveState != PlayerMoveStates.aiming
+                ? currentSpeed * speedIncreaseFactor
+                : currentSpeed;
+
+            if (_isLShiftDown)
+                playerStamina.SpendStamina(spendPointsWhenRunning);
+
+            controller.Move(moveDir.normalized * speed * Time.deltaTime);
+        }
+
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
+    }
+
+    /*private void Move(bool isMoving)
+    {
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+
+        if (isGrounded && velocity.y < 0)
+        {
+            velocity.y = -2f;
+        }
+
+        if (isMoving)
+        {
             targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + Camera.main.transform.eulerAngles.y;
             if (!isLeftClickDown && !isRightClickDown) TurnCharacterInMovementDirection();
 
@@ -437,70 +473,78 @@ public class PlayerController : MonoBehaviour, IPausable
         // {
         //     velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         // }
-    }
+    }*/
 
     private void AimOn()
     {
-        playerMoveState = PlayerMoveStates.aiming;
-        TurnToMousePosition();
+        _playerMoveState = PlayerMoveStates.aiming;
+        if (_playerMoveState != PlayerMoveStates.dashing)
+            TurnToMousePosition();
         OnAimAnimationEnable?.Invoke();
     }
 
     private void AimOff()
     {
-        playerMoveState = PlayerMoveStates.idle;
-        TurnCharacterInMovementDirection();
+        _playerMoveState = PlayerMoveStates.idle;
+        if (_playerMoveState != PlayerMoveStates.dashing)
+            TurnCharacterInMovementDirection();
         OnAimAnimationDiasble?.Invoke();
     }
 
     private void OnEnable()
     {
-        playerActions.Gameplay.Enable();
-        playerActions.Gameplay.Aim.performed += ctx => isRightClickDown = true;
-        playerActions.Gameplay.Aim.canceled += ctx => isRightClickDown = false;
-
-        playerActions.Gameplay.Shoot.performed += ctx => isLeftClickDown = true;
-        playerActions.Gameplay.Shoot.canceled += ctx => isLeftClickDown = false;
-
-        playerActions.Gameplay.Sprint.performed += ctx => isLShiftDown = true;
-        playerActions.Gameplay.Sprint.canceled += ctx => isLShiftDown = false;
-
-        playerActions.Gameplay.WeaponReload.performed += ctx => isRKeyDown = true;
-        playerActions.Gameplay.WeaponReload.canceled += ctx => isRKeyDown = false;
-
-        playerActions.Gameplay.ChangeGunBackward.performed += ctx => isQKeyDown = true;
-        playerActions.Gameplay.ChangeGunBackward.canceled += ctx => isQKeyDown = false;
-
-        playerActions.Gameplay.ChangeGunForward.performed += ctx => isEKeyDown = true;
-        playerActions.Gameplay.ChangeGunForward.canceled += ctx => isEKeyDown = false;
-        
         PauseGame.OnGamePaused += OnPause;
         PauseGame.OnGameResumed += OnResume;
+        
+        playerActions.Gameplay.Enable();
+        playerActions.Gameplay.Aim.performed += ctx => _isRightClickDown = true;
+        playerActions.Gameplay.Aim.canceled += ctx => _isRightClickDown = false;
+
+        playerActions.Gameplay.Shoot.performed += ctx => _isLeftClickDown = true;
+        playerActions.Gameplay.Shoot.canceled += ctx => _isLeftClickDown = false;
+
+        playerActions.Gameplay.Sprint.performed += ctx => _isLShiftDown = true;
+        playerActions.Gameplay.Sprint.canceled += ctx => _isLShiftDown = false;
+
+        playerActions.Gameplay.WeaponReload.performed += ctx => _isRKeyDown = true;
+        playerActions.Gameplay.WeaponReload.canceled += ctx => _isRKeyDown = false;
+
+        playerActions.Gameplay.ChangeGunBackward.performed += ctx => _isQKeyDown = true;
+        playerActions.Gameplay.ChangeGunBackward.canceled += ctx => _isQKeyDown = false;
+
+        playerActions.Gameplay.ChangeGunForward.performed += ctx => _isEKeyDown = true;
+        playerActions.Gameplay.ChangeGunForward.canceled += ctx => _isEKeyDown = false;
+
+        playerActions.Gameplay.Dash.performed += ctx => _isSpaceKeyDown = true;
+        playerActions.Gameplay.Dash.canceled += ctx => _isSpaceKeyDown = false;
     }
 
     private void OnDisable()
     {
-        playerActions.Gameplay.Disable();
-        playerActions.Gameplay.Aim.performed -= ctx => isRightClickDown = true;
-        playerActions.Gameplay.Aim.canceled -= ctx => isRightClickDown = false;
-
-        playerActions.Gameplay.Shoot.performed -= ctx => isLeftClickDown = true;
-        playerActions.Gameplay.Shoot.canceled -= ctx => isLeftClickDown = false;
-
-        playerActions.Gameplay.Sprint.performed -= ctx => isLShiftDown = true;
-        playerActions.Gameplay.Sprint.canceled -= ctx => isLShiftDown = false;
-
-        playerActions.Gameplay.WeaponReload.performed -= ctx => isRKeyDown = true;
-        playerActions.Gameplay.WeaponReload.canceled -= ctx => isRKeyDown = false;
-
-        playerActions.Gameplay.ChangeGunBackward.performed -= ctx => isQKeyDown = true;
-        playerActions.Gameplay.ChangeGunBackward.canceled -= ctx => isQKeyDown = false;
-
-        playerActions.Gameplay.ChangeGunForward.performed -= ctx => isEKeyDown = true;
-        playerActions.Gameplay.ChangeGunForward.canceled -= ctx => isEKeyDown = false;
-        
         PauseGame.OnGamePaused -= OnPause;
         PauseGame.OnGameResumed -= OnResume;
+        
+        playerActions.Gameplay.Disable();
+        playerActions.Gameplay.Aim.performed -= ctx => _isRightClickDown = true;
+        playerActions.Gameplay.Aim.canceled -= ctx => _isRightClickDown = false;
+
+        playerActions.Gameplay.Shoot.performed -= ctx => _isLeftClickDown = true;
+        playerActions.Gameplay.Shoot.canceled -= ctx => _isLeftClickDown = false;
+
+        playerActions.Gameplay.Sprint.performed -= ctx => _isLShiftDown = true;
+        playerActions.Gameplay.Sprint.canceled -= ctx => _isLShiftDown = false;
+
+        playerActions.Gameplay.WeaponReload.performed -= ctx => _isRKeyDown = true;
+        playerActions.Gameplay.WeaponReload.canceled -= ctx => _isRKeyDown = false;
+
+        playerActions.Gameplay.ChangeGunBackward.performed -= ctx => _isQKeyDown = true;
+        playerActions.Gameplay.ChangeGunBackward.canceled -= ctx => _isQKeyDown = false;
+
+        playerActions.Gameplay.ChangeGunForward.performed -= ctx => _isEKeyDown = true;
+        playerActions.Gameplay.ChangeGunForward.canceled -= ctx => _isEKeyDown = false;
+
+        playerActions.Gameplay.Dash.performed -= ctx => _isSpaceKeyDown = true;
+        playerActions.Gameplay.Dash.canceled -= ctx => _isSpaceKeyDown = false;
     }
 
     public void OnPause()
