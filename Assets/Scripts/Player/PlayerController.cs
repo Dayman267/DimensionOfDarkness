@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 
 [DisallowMultipleComponent]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IPausable
 {
     private Camera cam;
     private static Vector3 _direction;
@@ -64,7 +64,8 @@ public class PlayerController : MonoBehaviour
     bool isGrounded;
     Vector3 velocity;
     private float targetAngle;
-
+    
+    private bool isPaused = false;
     private PlayerStamina playerStamina;
 
     private void Awake()
@@ -113,6 +114,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if(isPaused) return;
+        
         movementVector = CalculateMovementVector();
         _direction = playerActions.Gameplay.Movement.ReadValue<Vector3>();
         inMovement = Mathf.Abs(_direction.x) > 0 || Mathf.Abs(_direction.z) > 0;
@@ -146,13 +149,14 @@ public class PlayerController : MonoBehaviour
 
                 AimOn();
 
-                cameraController.LookAround(Mouse.current.position.value);
+                if(cameraController != null)
+                    cameraController.LookAround(Mouse.current.position.value);
             }
             else
             {
                 AimOff();
-                
-                cameraController.StopLookingAround();   
+                if(cameraController != null)
+                    cameraController.StopLookingAround();   
             }
         }
 
@@ -489,6 +493,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
+        PauseGame.OnGamePaused += OnPause;
+        PauseGame.OnGameResumed += OnResume;
+        
         playerActions.Gameplay.Enable();
         playerActions.Gameplay.Aim.performed += ctx => _isRightClickDown = true;
         playerActions.Gameplay.Aim.canceled += ctx => _isRightClickDown = false;
@@ -514,6 +521,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnDisable()
     {
+        PauseGame.OnGamePaused -= OnPause;
+        PauseGame.OnGameResumed -= OnResume;
+        
         playerActions.Gameplay.Disable();
         playerActions.Gameplay.Aim.performed -= ctx => _isRightClickDown = true;
         playerActions.Gameplay.Aim.canceled -= ctx => _isRightClickDown = false;
@@ -535,5 +545,15 @@ public class PlayerController : MonoBehaviour
 
         playerActions.Gameplay.Dash.performed -= ctx => _isSpaceKeyDown = true;
         playerActions.Gameplay.Dash.canceled -= ctx => _isSpaceKeyDown = false;
+    }
+
+    public void OnPause()
+    {
+        isPaused = true;
+    }
+
+    public void OnResume()
+    {
+        isPaused = false;
     }
 }

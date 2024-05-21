@@ -624,6 +624,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1947319190050210885, guid: 1e883ca88c3b5844395f633c243f64da, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2252682893084729565, guid: 1e883ca88c3b5844395f633c243f64da, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.036071777
@@ -738,6 +742,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5656193790306952943, guid: 1e883ca88c3b5844395f633c243f64da, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6009271767654756898, guid: 1e883ca88c3b5844395f633c243f64da, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8710095707253688691, guid: 1e883ca88c3b5844395f633c243f64da, type: 3}
@@ -13970,7 +13978,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &823415604
 RectTransform:
   m_ObjectHideFlags: 0
@@ -36549,6 +36557,10 @@ PrefabInstance:
     - target: {fileID: 1692308955213122484, guid: 03c0044aaca76d14380c9e7b183fc3f8, type: 3}
       propertyPath: m_Name
       value: SceneTransition
+      objectReference: {fileID: 0}
+    - target: {fileID: 4257318499722755320, guid: 03c0044aaca76d14380c9e7b183fc3f8, type: 3}
+      propertyPath: startGameScene
+      value: MainScene
       objectReference: {fileID: 0}
     - target: {fileID: 7133173286898003525, guid: 03c0044aaca76d14380c9e7b183fc3f8, type: 3}
       propertyPath: m_IsActive

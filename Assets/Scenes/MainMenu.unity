@@ -837,6 +837,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SceneTransition
       objectReference: {fileID: 0}
+    - target: {fileID: 4257318499722755320, guid: 03c0044aaca76d14380c9e7b183fc3f8, type: 3}
+      propertyPath: startGameScene
+      value: MainScene
+      objectReference: {fileID: 0}
     - target: {fileID: 9107039017048435602, guid: 03c0044aaca76d14380c9e7b183fc3f8, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
