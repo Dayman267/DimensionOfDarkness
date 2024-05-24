@@ -5,10 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/MainMenuScene.unity
-    guid: 00d1d044365514e42bad6f6ebe415450
   - enabled: 1
-    path: Assets/Scenes/VetalyaScene.unity
-    guid: 3f2d2fe2ca592da489d3756456a4fbb0
+    path: Assets/Scenes/MainMenu.unity
+    guid: 41badf2bf7c5f6246825abb740e78fa0
+  - enabled: 1
+    path: Assets/Scenes/Hub.unity
+    guid: ef66d6dfe828ff74a9fea0d5eed41f50
+  - enabled: 1
+    path: Assets/Scenes/MainScene.unity
+    guid: 4688d0ab2dbbbc440ad9358fe9e707e2
+  - enabled: 0
+    path: Assets/Scenes/DimaScene.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects: {}

@@ -49,7 +49,7 @@ MonoBehaviour:
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
-    ctime0: 0
+    ctime0: 386
     ctime1: 65535
     ctime2: 0
     ctime3: 0
@@ -69,5 +69,6 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 3
+  BulletParticlePrefab: {fileID: 5749892945899594870, guid: 3b1f481cdb7e0de45bdf98a208586981, type: 3}
   MissDistance: 50
   SimulationSpeed: 50

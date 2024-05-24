@@ -9727,6 +9727,7 @@ GameObject:
   - component: {fileID: 198656289721292014}
   - component: {fileID: 199514137936353666}
   - component: {fileID: -2195841864238266246}
+  - component: {fileID: 5414438100164719650}
   m_Layer: 0
   m_Name: SmallExplosionEffect
   m_TagString: Untagged
@@ -14706,6 +14707,18 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &5414438100164719650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828176872806910}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b44df75e97b08749883b3ae75319054, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1834016579923706
 GameObject:
   m_ObjectHideFlags: 0

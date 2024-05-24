@@ -1,28 +1,36 @@
+using System;
 using UnityEngine;
 
 public class PlayerAnimationsController : MonoBehaviour
 {
-    [SerializeField] private float shootingSpeedAcceleration = 0.5f;
-    private int aimAnimHash;
     private Animator animator;
-    private int horizontalAnimHash;
 
+    [SerializeField] private float shootingSpeedAcceleration = 1f;
+    
     private int moveSpeedAnimHash;
-    private int reloadAnimHash;
-
-    private float shootingSpeed;
-    private int shootingSpeedAnimHash;
+    private int aimAnimHash;
+    private int autoShootingSpeedAnimHash;
+    private int singleShootingSpeedAnimHash;
+    private int horizontalAnimHash;
     private int verticalAnimHash;
+    private int reloadAnimHash;
+    private int switchAnimHash;
+    private int dashAnimHash;
 
-    private void Awake()
+    float shootingSpeed = 0.0f;
+    
+    void Awake()
     {
         animator = GetComponentInChildren<Animator>();
         moveSpeedAnimHash = Animator.StringToHash("MovementSpeed");
         aimAnimHash = Animator.StringToHash("isAim");
-        shootingSpeedAnimHash = Animator.StringToHash("ShootingSpeed");
+        autoShootingSpeedAnimHash = Animator.StringToHash("ShootingSpeed");
         horizontalAnimHash = Animator.StringToHash("Horizontal");
         verticalAnimHash = Animator.StringToHash("Vertical");
-        reloadAnimHash = Animator.StringToHash("isReload");
+        reloadAnimHash = Animator.StringToHash("Reload");
+        switchAnimHash = Animator.StringToHash("SwitchingWeapon");
+        singleShootingSpeedAnimHash = Animator.StringToHash("SingleShoot");
+        dashAnimHash = Animator.StringToHash("Dash");
     }
 
     private void OnEnable()
@@ -30,11 +38,16 @@ public class PlayerAnimationsController : MonoBehaviour
         PlayerController.OnMoveAnimation += MoveAnimationSwitcherHandler;
         PlayerController.OnAimAnimationEnable += EnableAimAnimationHandler;
         PlayerController.OnAimAnimationDiasble += DisableAimAnimationHandler;
-        PlayerController.OnShootAnimationEnable += EnableShootAnimationHandler;
-        PlayerController.OnShootAnimationDiasble += DisableShootAnimationHandler;
         PlayerController.OnSend_X_Z_Pos += Get_X_Z_PosHandler;
-
+        PlayerController.OnDashAnimation += DashAnimationHandler;
+        
         PlayerShootController.OnReloadAnimation += ReloadAnimation;
+        
+        PlayerGunSelector.OnSwitchWeapon += SwitchWeaponAnimation;    
+        
+        GunSO.OnAutoShootAnimationEnable += EnableAutoShootAnimationHandler;
+        GunSO.OnAutoShootAnimationDiasble += DisableAutoShootAnimationHandler;
+        GunSO.OnSingleShootAnimationEnable += SingleShootAnimation;
     }
 
     private void OnDisable()
@@ -42,20 +55,41 @@ public class PlayerAnimationsController : MonoBehaviour
         PlayerController.OnMoveAnimation -= MoveAnimationSwitcherHandler;
         PlayerController.OnAimAnimationEnable -= EnableAimAnimationHandler;
         PlayerController.OnAimAnimationDiasble -= DisableAimAnimationHandler;
-        PlayerController.OnShootAnimationEnable -= EnableShootAnimationHandler;
-        PlayerController.OnShootAnimationDiasble -= DisableShootAnimationHandler;
         PlayerController.OnSend_X_Z_Pos -= Get_X_Z_PosHandler;
-
+        PlayerController.OnDashAnimation -= DashAnimationHandler;
+        
         PlayerShootController.OnReloadAnimation -= ReloadAnimation;
+        
+        PlayerGunSelector.OnSwitchWeapon -= SwitchWeaponAnimation;     
+        
+        GunSO.OnAutoShootAnimationEnable -= EnableAutoShootAnimationHandler;
+        GunSO.OnAutoShootAnimationDiasble -= DisableAutoShootAnimationHandler;
+        GunSO.OnSingleShootAnimationEnable -= SingleShootAnimation;
+    }
+
+    private void DashAnimationHandler()
+    {
+        DisableAutoShootAnimationHandler();
+        animator.SetTrigger(dashAnimHash);
     }
 
     private void ReloadAnimation()
     {
-        // DisableAimAnimationHandler();
-        DisableShootAnimationHandler();
+        DisableAutoShootAnimationHandler();
         animator.SetTrigger(reloadAnimHash);
     }
-
+    
+    private void SingleShootAnimation()
+    {
+        animator.SetTrigger(singleShootingSpeedAnimHash);
+    }
+    
+    private void SwitchWeaponAnimation()
+    {
+        DisableAutoShootAnimationHandler();
+        animator.SetTrigger(switchAnimHash);
+    }
+    
     private void Get_X_Z_PosHandler(float x, float z)
     {
         animator.SetFloat(horizontalAnimHash, x);
@@ -64,26 +98,32 @@ public class PlayerAnimationsController : MonoBehaviour
 
     private void EnableAimAnimationHandler()
     {
-        if (!IsAnimActive(aimAnimHash)) animator.SetBool(aimAnimHash, true);
+        if (!IsAnimActive(aimAnimHash))
+        {
+            animator.SetBool(aimAnimHash, true);
+        }
     }
 
     private void DisableAimAnimationHandler()
     {
-        if (IsAnimActive(aimAnimHash)) animator.SetBool(aimAnimHash, false);
+        if (IsAnimActive(aimAnimHash))
+        {
+            animator.SetBool(aimAnimHash, false);
+        }
     }
-
-    private void EnableShootAnimationHandler()
+    
+    private void EnableAutoShootAnimationHandler()
     {
         if (shootingSpeed <= 1f)
             shootingSpeed += Time.deltaTime * shootingSpeedAcceleration;
-        animator.SetFloat(shootingSpeedAnimHash, shootingSpeed);
+        animator.SetFloat(autoShootingSpeedAnimHash, shootingSpeed);
     }
 
-    private void DisableShootAnimationHandler()
+    private void DisableAutoShootAnimationHandler()
     {
         if (shootingSpeed > 0f)
             shootingSpeed = 0;
-        animator.SetFloat(shootingSpeedAnimHash, shootingSpeed);
+        animator.SetFloat(autoShootingSpeedAnimHash, shootingSpeed);
     }
 
 

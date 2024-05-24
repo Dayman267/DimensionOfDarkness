@@ -143,6 +143,7 @@ MonoBehaviour:
   - {fileID: 1000011696945378, guid: f94554303b4f7094ea5e12fe79985529, type: 3}
   - {fileID: 1000013569322780, guid: 5d10ae558efe6a64d96e5b4d02ec6792, type: 3}
   - {fileID: 1000011143488790, guid: a649302f8407dd9469e2c5b67b4a0674, type: 3}
-  - {fileID: 2042345143871824945, guid: cf178a8101172334ba7cc41c69a38f5a, type: 3}
+  - {fileID: 114418, guid: be878d9ea17907f4a8068678a5ce7908, type: 3}
+  - {fileID: 114418, guid: 956bd2acf7aae244dac8fc20cf57858d, type: 3}
   minObjectsPerTile: 15
   maxObjectsPerTile: 25

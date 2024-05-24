@@ -12,11 +12,11 @@ public class TerrainGenerator : MonoBehaviour
     {
         return GenerateTerrain(exampleTerrain.GetComponent<Terrain>(), 2, exampleTerrain);
     }
-
+    
     private GameObject GenerateTerrain(Terrain exampleTerrain, int variant, GameObject exampleObject)
     {
-        var terrainPrefab = new GameObject();
-        var terrain = terrainPrefab.AddComponent<Terrain>();
+        GameObject terrainPrefab = new GameObject();
+        Terrain terrain = terrainPrefab.AddComponent<Terrain>();
         terrain.terrainData = GenerateTerrainData(exampleTerrain, variant);
         terrain.gameObject.AddComponent<TerrainCollider>().terrainData = terrain.terrainData;
         terrain.materialTemplate = exampleTerrain.materialTemplate;
@@ -24,8 +24,31 @@ public class TerrainGenerator : MonoBehaviour
         terrain.terrainData.terrainLayers = exampleTerrain.terrainData.terrainLayers;
         terrain.terrainData.RefreshPrototypes();
 
-        var boxCollider = terrainPrefab.AddComponent<BoxCollider>();
-        var exampleBoxCollider = exampleObject.GetComponent<BoxCollider>();
+        terrain.terrainData.detailPrototypes = exampleTerrain.terrainData.detailPrototypes;
+        terrain.terrainData.RefreshPrototypes();
+
+        for (int i = 0; i < exampleTerrain.terrainData.detailPrototypes.Length; i++)
+        {
+            int[,] detailLayer = null;
+            if (variant == 1)
+            {
+                detailLayer = RotateMatrix(exampleTerrain.terrainData.GetDetailLayer(
+                    0, 0, 
+                    exampleTerrain.terrainData.detailWidth, exampleTerrain.terrainData.detailHeight, 
+                    i));
+            }
+            else if (variant == 2)
+            {
+                detailLayer = MirrorMatrix(exampleTerrain.terrainData.GetDetailLayer(
+                    0, 0, 
+                    exampleTerrain.terrainData.detailWidth, exampleTerrain.terrainData.detailHeight, 
+                    i));
+            }
+            terrain.terrainData.SetDetailLayer(0, 0, i, detailLayer);
+        }
+
+        BoxCollider boxCollider = terrainPrefab.AddComponent<BoxCollider>();
+        BoxCollider exampleBoxCollider = exampleObject.GetComponent<BoxCollider>();
 
         boxCollider.isTrigger = exampleBoxCollider.isTrigger;
         boxCollider.size = exampleBoxCollider.size;
@@ -33,53 +56,67 @@ public class TerrainGenerator : MonoBehaviour
 
         terrainPrefab.tag = "Terrain";
         terrainPrefab.layer = 6;
-
-        var objectsGenerator = terrainPrefab.AddComponent<ObjectsGenerator>();
+        
+        ObjectsGenerator objectsGenerator = terrainPrefab.AddComponent<ObjectsGenerator>();
         objectsGenerator.gameObjectPrefabs = new List<GameObject>();
-        var exampleObjectsGenerator = exampleObject.GetComponent<ObjectsGenerator>();
-        for (var i = 0; i < exampleObjectsGenerator.gameObjectPrefabs.Count; i++)
+        ObjectsGenerator exampleObjectsGenerator = exampleObject.GetComponent<ObjectsGenerator>();
+        for (int i = 0; i < exampleObjectsGenerator.gameObjectPrefabs.Count; i++)
+        {
             objectsGenerator.gameObjectPrefabs.Add(exampleObjectsGenerator.gameObjectPrefabs[i]);
+        }
         objectsGenerator.maxObjectsPerTile = exampleObjectsGenerator.maxObjectsPerTile;
         objectsGenerator.minObjectsPerTile = exampleObjectsGenerator.minObjectsPerTile;
-
+        
         return terrainPrefab;
     }
 
     private TerrainData GenerateTerrainData(Terrain exampleTerrain, int variant)
     {
-        var terrainData = new TerrainData();
-        var exampleTerrainData = exampleTerrain.terrainData;
-        var exampleTerrainHeights = exampleTerrainData.GetHeights(
+        TerrainData terrainData = new TerrainData();
+        TerrainData exampleTerrainData = exampleTerrain.terrainData;
+        float[,] exampleTerrainHeights = exampleTerrainData.GetHeights(
             0,
             0,
             exampleTerrain.terrainData.heightmapResolution,
             exampleTerrain.terrainData.heightmapResolution);
         terrainData.heightmapResolution = exampleTerrainData.heightmapResolution;
 
-        if (variant == 1) terrainData.SetHeights(0, 0, RotateHeights(exampleTerrainHeights, exampleTerrain));
-        else if (variant == 2) terrainData.SetHeights(0, 0, MirrorHeights(exampleTerrainHeights, exampleTerrain));
+        terrainData.SetDetailResolution(exampleTerrainData.detailResolution, exampleTerrainData.detailResolutionPerPatch);
+
+        if (variant == 1) terrainData.SetHeights(0, 0, RotateMatrix(exampleTerrainHeights));
+        else if (variant == 2) terrainData.SetHeights(0, 0, MirrorMatrix(exampleTerrainHeights));
         terrainData.size = exampleTerrainData.size;
         return terrainData;
     }
 
-    private float[,] MirrorHeights(float[,] original, Terrain exampleTerrain)
+    private T[,] RotateMatrix<T>(T[,] original)
     {
-        var heightmapResolution = exampleTerrain.terrainData.heightmapResolution;
-        var heights = new float[heightmapResolution, heightmapResolution];
-        for (var x = 0; x < heightmapResolution; x++)
-        for (var y = 0; y < heightmapResolution; y++)
-            heights[x, y] = original[y, x];
-        return heights;
+        int width = original.GetLength(0);
+        int height = original.GetLength(1);
+        T[,] rotated = new T[width, height];
+        
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                rotated[y, width - 1 - x] = original[x, y];
+            }
+        }
+        return rotated;
     }
 
-    private float[,] RotateHeights(float[,] original, Terrain exampleTerrain)
+    private T[,] MirrorMatrix<T>(T[,] original)
     {
-        var heightmapResolution = exampleTerrain.terrainData.heightmapResolution;
-        var heights = new float[heightmapResolution, heightmapResolution];
-
-        for (var x = 0; x < heightmapResolution; x++)
-        for (var y = 0; y < heightmapResolution; y++)
-            heights[y, heightmapResolution - 1 - x] = original[x, y];
-        return heights;
+        int width = original.GetLength(0);
+        int height = original.GetLength(1);
+        T[,] mirrored = new T[width, height];
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                mirrored[x, y] = original[y, x];
+            }
+        }
+        return mirrored;
     }
 }

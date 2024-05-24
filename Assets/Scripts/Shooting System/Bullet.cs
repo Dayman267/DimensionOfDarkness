@@ -7,6 +7,8 @@ public class Bullet : MonoBehaviour
     public delegate void CollisionEvent(Bullet Bullet, Collision Collision, int ObjectsPenetrated);
 
     [field: SerializeField] public Vector3 SpawnLocation { get; private set; }
+    
+    [field: SerializeField] public Vector3 SpawnVelocity { get; private set; }
 
     [SerializeField] private float DeleyedDisableTime = 2f;
 
@@ -57,12 +59,13 @@ public class Bullet : MonoBehaviour
         SpawnLocation = transform.position;
         transform.forward = SpawnForce.normalized;
         Rigidbody.AddForce(SpawnForce);
-        //SpawnVelocity = SpawnForce * Time.fixedDeltaTime / Rigidbody.mass;
+        SpawnVelocity = SpawnForce * Time.fixedDeltaTime / Rigidbody.mass;
         StartCoroutine(DeleyedDisable(DeleyedDisableTime));
     }
 
     private IEnumerator DeleyedDisable(float Time)
     {
+        yield return null;
         yield return new WaitForSeconds(Time);
         OnCollisionEnter(null);
     }

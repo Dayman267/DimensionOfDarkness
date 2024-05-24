@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GunModifiersApplier : MonoBehaviour
@@ -11,15 +14,15 @@ public class GunModifiersApplier : MonoBehaviour
         {
             Amount = ImpactTypeOverride
         }.Apply(GunSelector.ActiveGun);*/
-
-        new ImpactTypeModifier
+        
+        new ImpactTypeModifier()
         {
             Amount = GunSelector.ActiveGun.ImpactType
         }.Apply(GunSelector.ActiveGun);
 
-
+        
         ApplyModifiers();
-
+        
 
         /*GunSelector.ActiveGun.BulletImpactEffects = new ICollisionHandler[]
         {
@@ -27,7 +30,7 @@ public class GunModifiersApplier : MonoBehaviour
                 1.5f,
                 new AnimationCurve(new Keyframe[]
                 {
-                    new Keyframe(0, 1),
+                    new Keyframe(0, 1), 
                     new Keyframe(1, 0.25f)
                 }),
                 10,
@@ -42,6 +45,36 @@ public class GunModifiersApplier : MonoBehaviour
         };*/
     }
 
+    private void ApplyModifiers()
+    {
+
+        switch (GunSelector.ActiveGun.Type)
+        {
+            case GunType.GrandeLauncher:
+                GunSelector.ActiveGun.BulletImpactEffects = new ICollisionHandler[]
+                {
+                    new Explode(
+                        2f,
+                        new AnimationCurve(new Keyframe[] { new Keyframe(0, 1), new Keyframe(1, 0.25f) }),
+                        15,
+                        20
+                    )
+                };
+                break;
+            case GunType.EnergyLauncher:
+                GunSelector.ActiveGun.BulletImpactEffects = new ICollisionHandler[]
+                {
+                    new Explode(
+                        1.2f,
+                        new AnimationCurve(new Keyframe[] { new Keyframe(0, 1), new Keyframe(1, 0.25f) }),
+                        5,
+                        8
+                    )
+                };
+                break;
+        }
+    }
+
     private void OnEnable()
     {
         PlayerGunSelector.OnGunChanged += ApplyModifiers;
@@ -50,19 +83,5 @@ public class GunModifiersApplier : MonoBehaviour
     private void OnDisable()
     {
         PlayerGunSelector.OnGunChanged -= ApplyModifiers;
-    }
-
-    private void ApplyModifiers()
-    {
-        if (GunSelector.ActiveGun.Type == GunType.GrandeLauncher)
-            GunSelector.ActiveGun.BulletImpactEffects = new ICollisionHandler[]
-            {
-                new Explode(
-                    10f,
-                    new AnimationCurve(new Keyframe(0, 1), new Keyframe(1, 0.25f)),
-                    15,
-                    20
-                )
-            };
     }
 }

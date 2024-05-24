@@ -125,6 +125,24 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeActionMap"",
+                    ""type"": ""Button"",
+                    ""id"": ""5b833568-366d-46a6-a2e4-beab2c2f2036"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dash"",
+                    ""type"": ""Button"",
+                    ""id"": ""ec418d38-b125-4660-b8d5-451c227f50cc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -314,14 +332,58 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
                     ""action"": ""Change Gun Forward"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4364b853-8fbf-4166-8952-a515575dc5c2"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeActionMap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a8544b10-36a2-40d3-8d99-6305bedd7e2d"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
         {
             ""name"": ""UI"",
             ""id"": ""9bc9bd6b-d36a-47f7-9f03-edfaef723e3b"",
-            ""actions"": [],
-            ""bindings"": []
+            ""actions"": [
+                {
+                    ""name"": ""ChangeActionMap"",
+                    ""type"": ""Button"",
+                    ""id"": ""6dcd84aa-a706-4079-8ee1-ffae9c90c38f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""4e13896b-4ef5-4fba-acd8-54fd0c468e94"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeActionMap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -339,8 +401,11 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         m_Gameplay_WeaponReload = m_Gameplay.FindAction("Weapon Reload", throwIfNotFound: true);
         m_Gameplay_ChangeGunBackward = m_Gameplay.FindAction("Change Gun Backward", throwIfNotFound: true);
         m_Gameplay_ChangeGunForward = m_Gameplay.FindAction("Change Gun Forward", throwIfNotFound: true);
+        m_Gameplay_ChangeActionMap = m_Gameplay.FindAction("ChangeActionMap", throwIfNotFound: true);
+        m_Gameplay_Dash = m_Gameplay.FindAction("Dash", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_ChangeActionMap = m_UI.FindAction("ChangeActionMap", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -413,6 +478,8 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_WeaponReload;
     private readonly InputAction m_Gameplay_ChangeGunBackward;
     private readonly InputAction m_Gameplay_ChangeGunForward;
+    private readonly InputAction m_Gameplay_ChangeActionMap;
+    private readonly InputAction m_Gameplay_Dash;
     public struct GameplayActions
     {
         private @PlayerActions m_Wrapper;
@@ -428,6 +495,8 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         public InputAction @WeaponReload => m_Wrapper.m_Gameplay_WeaponReload;
         public InputAction @ChangeGunBackward => m_Wrapper.m_Gameplay_ChangeGunBackward;
         public InputAction @ChangeGunForward => m_Wrapper.m_Gameplay_ChangeGunForward;
+        public InputAction @ChangeActionMap => m_Wrapper.m_Gameplay_ChangeActionMap;
+        public InputAction @Dash => m_Wrapper.m_Gameplay_Dash;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -470,6 +539,12 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @ChangeGunForward.started += instance.OnChangeGunForward;
             @ChangeGunForward.performed += instance.OnChangeGunForward;
             @ChangeGunForward.canceled += instance.OnChangeGunForward;
+            @ChangeActionMap.started += instance.OnChangeActionMap;
+            @ChangeActionMap.performed += instance.OnChangeActionMap;
+            @ChangeActionMap.canceled += instance.OnChangeActionMap;
+            @Dash.started += instance.OnDash;
+            @Dash.performed += instance.OnDash;
+            @Dash.canceled += instance.OnDash;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -507,6 +582,12 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
             @ChangeGunForward.started -= instance.OnChangeGunForward;
             @ChangeGunForward.performed -= instance.OnChangeGunForward;
             @ChangeGunForward.canceled -= instance.OnChangeGunForward;
+            @ChangeActionMap.started -= instance.OnChangeActionMap;
+            @ChangeActionMap.performed -= instance.OnChangeActionMap;
+            @ChangeActionMap.canceled -= instance.OnChangeActionMap;
+            @Dash.started -= instance.OnDash;
+            @Dash.performed -= instance.OnDash;
+            @Dash.canceled -= instance.OnDash;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -528,10 +609,12 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
     // UI
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
+    private readonly InputAction m_UI_ChangeActionMap;
     public struct UIActions
     {
         private @PlayerActions m_Wrapper;
         public UIActions(@PlayerActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @ChangeActionMap => m_Wrapper.m_UI_ChangeActionMap;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -541,10 +624,16 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_UIActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_UIActionsCallbackInterfaces.Add(instance);
+            @ChangeActionMap.started += instance.OnChangeActionMap;
+            @ChangeActionMap.performed += instance.OnChangeActionMap;
+            @ChangeActionMap.canceled += instance.OnChangeActionMap;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
         {
+            @ChangeActionMap.started -= instance.OnChangeActionMap;
+            @ChangeActionMap.performed -= instance.OnChangeActionMap;
+            @ChangeActionMap.canceled -= instance.OnChangeActionMap;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -575,8 +664,11 @@ public partial class @PlayerActions: IInputActionCollection2, IDisposable
         void OnWeaponReload(InputAction.CallbackContext context);
         void OnChangeGunBackward(InputAction.CallbackContext context);
         void OnChangeGunForward(InputAction.CallbackContext context);
+        void OnChangeActionMap(InputAction.CallbackContext context);
+        void OnDash(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
+        void OnChangeActionMap(InputAction.CallbackContext context);
     }
 }

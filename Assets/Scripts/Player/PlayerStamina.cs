@@ -40,7 +40,7 @@ public class PlayerStamina : MonoBehaviour
     public void SpendStamina(float points)
     {
         isSpentRecently = true;
-        staminaPoints -= points;
+        staminaPoints = points > staminaPoints ? 0 : staminaPoints - points;
         ChangeStaminaBar(staminaPoints);
     }
 

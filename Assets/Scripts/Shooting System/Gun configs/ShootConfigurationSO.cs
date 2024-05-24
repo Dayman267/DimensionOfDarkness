@@ -12,19 +12,19 @@ public class ShootConfigurationSO : ScriptableObject, ICloneable
     public LayerMask HitMask;
     public float FireRate = 0.25f;
     public int BulletPerShot = 1;
-
+        
     public ShootType ShootType = ShootType.FromGun;
-
-    public bool IsPreparedShot;
+    
+    [Header("Prepeared shot")] 
+    public bool IsPreparedShot = false;
     public float chargeTime = 1.0f;
 
-
+    [Header("Increasing the spread of firing time")] 
     public float RecoilRecoverySpeed = 1f;
     public float MaxSpreadTime = 1f;
     public BulletSpreadType SpreadType = BulletSpreadType.Simple;
-
-    [Header("Simple Spread")] public Vector3 Spread = new(0.1f, 0.1f, 0.1f);
-
+    [Header("Simple Spread")] 
+    public Vector3 Spread = new Vector3(0.1f, 0.1f, 0.1f);
     public Vector3 MinSpread = Vector3.zero;
 
     [Header("Texture-Based Spread")] [Range(0.001f, 5f)]
@@ -32,17 +32,9 @@ public class ShootConfigurationSO : ScriptableObject, ICloneable
 
     public Texture2D SpreadTexture;
 
-    public object Clone()
-    {
-        var config = CreateInstance<ShootConfigurationSO>();
-
-        Utilities.CopyValues(this, config);
-        return config;
-    }
-
     public Vector3 GetSpread(float ShootTime = 0)
     {
-        var spread = Vector3.zero;
+        Vector3 spread = Vector3.zero;
 
         if (SpreadType == BulletSpreadType.Simple)
         {
@@ -71,8 +63,8 @@ public class ShootConfigurationSO : ScriptableObject, ICloneable
 
     private Vector3 GetTextureDirection(float ShootTime)
     {
-        var halfSize = new Vector2(SpreadTexture.width / 2f, SpreadTexture.height / 2f);
-        var halfSquareExtends = Mathf.CeilToInt(
+        Vector2 halfSize = new Vector2(SpreadTexture.width / 2f, SpreadTexture.height / 2f);
+        int halfSquareExtends = Mathf.CeilToInt(
             Mathf.Lerp(
                 0.01f,
                 halfSize.x,
@@ -80,32 +72,43 @@ public class ShootConfigurationSO : ScriptableObject, ICloneable
             )
         );
 
-        var minX = Mathf.FloorToInt(halfSize.x) - halfSquareExtends;
-        var minY = Mathf.FloorToInt(halfSize.y) - halfSquareExtends;
+        int minX = Mathf.FloorToInt(halfSize.x) - halfSquareExtends;
+        int minY = Mathf.FloorToInt(halfSize.y) - halfSquareExtends;
 
-        var sampleColors = SpreadTexture.GetPixels(
+        Color[] sampleColors = SpreadTexture.GetPixels(
             minX,
             minY,
             halfSquareExtends * 2,
             halfSquareExtends * 2
         );
 
-        var colorsAsGrey = Array.ConvertAll(sampleColors, color => color.grayscale);
-        var totalGreyValue = colorsAsGrey.Sum();
+        float[] colorsAsGrey = System.Array.ConvertAll(sampleColors, (color) => color.grayscale);
+        float totalGreyValue = colorsAsGrey.Sum();
 
-        var gray = Random.Range(0, totalGreyValue);
-        var i = 0;
+        float gray = Random.Range(0, totalGreyValue);
+        int i = 0;
         for (; i < colorsAsGrey.Length; i++)
         {
             gray -= colorsAsGrey[i];
-            if (gray <= 0) break;
+            if (gray <= 0)
+            {
+                break;
+            }
         }
 
-        var x = minX + i % (halfSquareExtends * 2);
-        var y = minY + i / (halfSquareExtends * 2);
-        var targetPosition = new Vector2(x, y);
-        var direction = (targetPosition - halfSize) / halfSize.x;
+        int x = minX + i % (halfSquareExtends * 2);
+        int y = minY + i / (halfSquareExtends * 2);
+        Vector2 targetPosition = new Vector2(x, y);
+        Vector2 direction = (targetPosition - halfSize) / halfSize.x;
 
         return direction;
+    }
+
+    public object Clone()
+    {
+        ShootConfigurationSO config = CreateInstance<ShootConfigurationSO>();
+
+        Utilities.CopyValues(this, config);
+        return config;
     }
 }

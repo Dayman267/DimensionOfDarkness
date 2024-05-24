@@ -2,7 +2,7 @@ public enum GunType
 {
     Pistol,
     Rifle,
-    Light,
+    EnergyLauncher,
     GrandeLauncher,
     Shotgun
 }
