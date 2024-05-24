@@ -1,30 +1,102 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour
+public class Enemy : ObjectPool.PoolableObject
 {
+    private const string ATTACK_TRIGGER = "Attack";
+    public AttackRadius AttackRadius;
+    public Animator Animator;
+    public EnemyMovement Movement;
+    public NavMeshAgent Agent;
+    public EnemyScriptableObject EnemyScriptableObject;
     public EnemyHealth Health;
+    public EnemyPainResponse PainResponse;
+    public Rigidbody Rigidbody;
 
-    private void OnDisable()
+    private Coroutine LookCoroutine;
+
+    private void Die(Vector3 Position)
     {
+        Movement.StopMoving();
+        PainResponse.HandleDeath();
+        Health.OnTakeDamage -= PainResponse.HandlePain;
         Health.OnDeath -= Die;
+        AttackRadius.OnAttack -= OnAttack;
+        Health.Collider.isTrigger = true;
+        Rigidbody.constraints = RigidbodyConstraints.FreezePosition;
+        Invoke(nameof(Trash), 5f);
+        
+        Agent.enabled = false;
     }
 
-    private void OnEnable()
+    private void Trash()
     {
+        Rigidbody.constraints = RigidbodyConstraints.None;
+        Destroy(gameObject, 10);
+    }
+    private void Awake()
+    {
+        Health.OnTakeDamage += PainResponse.HandlePain;
         Health.OnDeath += Die;
+        AttackRadius.OnAttack += OnAttack;
     }
 
-    private void Start()
+    public void OnEnable()
     {
-        //Health.OnTakeDamage += PainResponse.Handler;
+        SetupAgentFromConfiguration();
         
     }
 
-    private void Die(Vector3 position)
+    public override void OnDisable()
     {
-        Destroy(gameObject);
+        base.OnDisable();
+
+    }
+
+    private void OnAttack(IDamageable Target)
+    {
+        Animator.SetTrigger(ATTACK_TRIGGER);
+
+        if (LookCoroutine != null) StopCoroutine(LookCoroutine);
+
+        LookCoroutine = StartCoroutine(LookAt(Target.GetTransform()));
+    }
+
+    private IEnumerator LookAt(Transform Target)
+    {
+        var lookRotation = Quaternion.LookRotation(Target.position - transform.position);
+        float time = 0;
+
+        while (time < 1)
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, time);
+
+            time += Time.deltaTime * 2;
+            yield return null;
+        }
+
+        transform.rotation = lookRotation;
+    }
+
+    public virtual void SetupAgentFromConfiguration()
+    {
+        Agent.acceleration = EnemyScriptableObject.Acceleration;
+        Agent.angularSpeed = EnemyScriptableObject.AngularSpeed;
+        Agent.areaMask = EnemyScriptableObject.AreaMask;
+        Agent.avoidancePriority = EnemyScriptableObject.AvoidancePriority;
+        Agent.baseOffset = EnemyScriptableObject.BaseOffset;
+        Agent.height = EnemyScriptableObject.Height;
+        Agent.obstacleAvoidanceType = EnemyScriptableObject.ObstacleAvoidanceType;
+        Agent.radius = EnemyScriptableObject.Radius;
+        Agent.speed = EnemyScriptableObject.Speed;
+        Agent.stoppingDistance = EnemyScriptableObject.StoppingDistance;
+
+        Movement.UpdateRate = EnemyScriptableObject.AIUpdateInterval;
+
+        Health._MaxHealth = EnemyScriptableObject.Health;
+        AttackRadius.Collider.radius = EnemyScriptableObject.AttackRadius;
+        AttackRadius.AttackDelay = EnemyScriptableObject.AttackDelay;
+        AttackRadius.Damage = EnemyScriptableObject.Damage;
     }
 }

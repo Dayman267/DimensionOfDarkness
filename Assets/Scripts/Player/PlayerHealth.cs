@@ -1,38 +1,55 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour, IDamageable
 {
     [SerializeField] private float healthPoints;
     [SerializeField] private float maxHealthPoints = 100f;
-    
     private Image bar;
-    
+
     private void Start()
     {
         bar = FindObjectOfType<HealthBar>().GetComponent<Image>();
         healthPoints = maxHealthPoints;
-        bar.fillAmount = healthPoints/100;
+        UpdateHealthBar();
     }
-    
-    private void ChangeHealthBar(float points)
+
+    public int CurrentHealth { get; }
+    public int MaxHealth { get; }
+    public event IDamageable.TakeDamageEvent OnTakeDamage;
+    public event IDamageable.DeathEvent OnDeath;
+
+    public void TakeDamage(int damage)
     {
-        bar.fillAmount = points/100;
+        DamageToHealth(damage);
     }
-    
+
+    public Transform GetTransform()
+    {
+        return transform;
+    }
+
+    private void UpdateHealthBar()
+    {
+        bar.fillAmount = healthPoints / maxHealthPoints;
+    }
+
     public void RestoreHealth(float points)
     {
         healthPoints += points;
-        ChangeHealthBar(healthPoints);
+        if (healthPoints > maxHealthPoints) healthPoints = maxHealthPoints;
+        UpdateHealthBar();
     }
-    
+
     public void DamageToHealth(float damage)
     {
         healthPoints -= damage;
-        ChangeHealthBar(healthPoints);
         if (healthPoints <= 0)
         {
+            healthPoints = 0;
             Destroy(gameObject);
         }
+
+        UpdateHealthBar();
     }
 }

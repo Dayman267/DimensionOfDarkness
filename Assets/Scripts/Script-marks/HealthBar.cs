@@ -1,5 +1,5 @@
 using UnityEngine;
 
-public class HealthBar : MonoBehaviour{
-    
+public class HealthBar : MonoBehaviour
+{
 }

@@ -1,12 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SoundController : MonoBehaviour
 {
     [SerializeField] private AudioSource audio;
-    [SerializeField] AudioClip[] stepSounds;
-    
+    [SerializeField] private AudioClip[] stepSounds;
+
+    private int currentIndex;
+
 
     public void FootStepWhileAiming()
     {
@@ -15,14 +15,14 @@ public class SoundController : MonoBehaviour
         audio.pitch = 0.6f;
         PlayNextStepSound();
     }
-    
+
     public void FootStepWhileRun()
     {
         IsStepSoundsAvailable();
         audio.pitch = 0.8f;
         PlayNextStepSound();
     }
-    
+
     public void FootStepWhileSprint()
     {
         IsStepSoundsAvailable();
@@ -30,12 +30,11 @@ public class SoundController : MonoBehaviour
         PlayNextStepSound();
     }
 
-    private int currentIndex = 0;
     public void PlayNextStepSound()
     {
         if (!GetComponent<AudioSource>().isPlaying)
         {
-            AudioClip clipToPlay = stepSounds[currentIndex];
+            var clipToPlay = stepSounds[currentIndex];
             audio.PlayOneShot(clipToPlay);
             currentIndex = (currentIndex + 1) % stepSounds.Length;
         }
@@ -43,12 +42,9 @@ public class SoundController : MonoBehaviour
 
     public bool IsStepSoundsAvailable()
     {
-        bool isSoundsAvailable = stepSounds.Length > 0;
-        
-        if (!isSoundsAvailable)
-        {
-            Debug.LogWarning("No step sounds available!");
-        }
+        var isSoundsAvailable = stepSounds.Length > 0;
+
+        if (!isSoundsAvailable) Debug.LogWarning("No step sounds available!");
 
         return isSoundsAvailable;
     }

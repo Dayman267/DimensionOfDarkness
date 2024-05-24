@@ -2,26 +2,27 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 [DisallowMultipleComponent]
 public class PlayerGunSelector : MonoBehaviour
 {
-    private Camera Camera;
     [SerializeField] private GunType GunType;
     [SerializeField] private Transform GunParent;
 
     [SerializeField] private List<GunSO> Guns;
-
-    public static event Action OnGunChanged;
     // video 1
     //  [SerializeField] private PlayerIK InversKinematics;
 
     [Space] [Header("Runtime Filled")] public GunSO ActiveGun;
     [SerializeField] private GunSO ActiveBaseGun;
+    private Camera Camera;
+    private bool isEKeyDown;
+
+
+    private bool isQKeyDown;
 
     private void Awake()
     {
-        GunSO gun = Guns[0];
+        var gun = Guns[0];
         Camera = Camera.main;
 
         if (gun == null)
@@ -40,10 +41,6 @@ public class PlayerGunSelector : MonoBehaviour
         InversKinematics.LeftHandIKTarget = allChildren.FirstOrDefault(child => child.name == "LeftHand");
         InversKinematics.RightHandIKTarget = allChildren.FirstOrDefault(child => child.name == "RightHand");*/
     }
-
-
-    private bool isQKeyDown = false;
-    private bool isEKeyDown = false;
 
     private void Update()
     {
@@ -68,6 +65,8 @@ public class PlayerGunSelector : MonoBehaviour
         }
     }
 
+    public static event Action OnGunChanged;
+
     public void DespawnActiveGun()
     {
         ActiveGun.Despawn();
@@ -77,7 +76,7 @@ public class PlayerGunSelector : MonoBehaviour
     private void SwitchWeapon(int switchDirection)
     {
         GunSO NewActiveGun;
-        int ActiveGunPosition = Guns.FindIndex(gun => gun.Name == ActiveGun.Name);
+        var ActiveGunPosition = Guns.FindIndex(gun => gun.Name == ActiveGun.Name);
 
         if (ActiveGunPosition + switchDirection < 0)
             NewActiveGun = Guns[Guns.Count - 1];
@@ -85,10 +84,10 @@ public class PlayerGunSelector : MonoBehaviour
             NewActiveGun = Guns[0];
         else
             NewActiveGun = Guns[ActiveGunPosition + switchDirection];
-        
+
         DespawnActiveGun();
         SetupGun(NewActiveGun);
-        
+
         OnGunChanged?.Invoke();
     }
 
@@ -103,10 +102,7 @@ public class PlayerGunSelector : MonoBehaviour
         DespawnActiveGun();
         SetupGun(ActiveBaseGun);
 
-        foreach (IModifier modifier in Modifiers)
-        {
-            modifier.Apply(ActiveGun);
-        }
+        foreach (var modifier in Modifiers) modifier.Apply(ActiveGun);
     }
 
     private void SetupGun(GunSO gun)
@@ -116,5 +112,4 @@ public class PlayerGunSelector : MonoBehaviour
         if (ActiveGun != null)
             ActiveGun.Spawn(GunParent, this, Camera);
     }
-
 }

@@ -1,5 +1,3 @@
-using System;
-using System.Reflection;
 using UnityEngine;
 using static UnityEngine.ParticleSystem;
 
@@ -9,10 +7,10 @@ public class DamageModifier : AbstractValueModifier<float>
     {
         try
         {
-            MinMaxCurve damageCurve = GetAttribute<MinMaxCurve>(
+            var damageCurve = GetAttribute<MinMaxCurve>(
                 Gun,
-                out object targetObject,
-                out FieldInfo field);
+                out var targetObject,
+                out var field);
 
             switch (damageCurve.mode)
             {
@@ -30,10 +28,12 @@ public class DamageModifier : AbstractValueModifier<float>
                     damageCurve.constant *= Amount;
                     break;
             }
-            
+
             field.SetValue(targetObject, damageCurve);
         }
-        catch (InvalidPathSpecifiedException) { } // dont kill thw flow, just log those errors
+        catch (InvalidPathSpecifiedException)
+        {
+        } // dont kill thw flow, just log those errors
         // so we can fix them!
     }
 }

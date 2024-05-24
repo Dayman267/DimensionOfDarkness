@@ -7,12 +7,19 @@ using Random = UnityEngine.Random;
 public class DamageConfigSO : ScriptableObject, ICloneable
 {
     public MinMaxCurve DamageCurve;
-    public float CriticalChance = 0f;
-    public float CriticalMultiplier = 0f;
+    public float CriticalChance;
+    public float CriticalMultiplier;
 
     private void Reset()
     {
         DamageCurve.mode = ParticleSystemCurveMode.Curve;
+    }
+
+    public object Clone()
+    {
+        var config = CreateInstance<DamageConfigSO>();
+        Utilities.CopyValues(this, config);
+        return config;
     }
 
     /*public int GetDamage(float Distance = 0, float DamageMultiplier = 1 )
@@ -23,21 +30,14 @@ public class DamageConfigSO : ScriptableObject, ICloneable
         {
             normalDamage *= (CriticalMultiplier);
         }
-        
+
         return Mathf.CeilToInt(normalDamage);
     }*/
-    
+
     public int GetDamage(float Distance = 0, float DamageMultiplier = 1)
     {
         return Mathf.CeilToInt(
             DamageCurve.Evaluate(Distance, Random.value) * DamageMultiplier
         );
-    }
-
-    public object Clone()
-    {
-        DamageConfigSO config = CreateInstance<DamageConfigSO>();
-        Utilities.CopyValues(this,config);
-        return config;
     }
 }

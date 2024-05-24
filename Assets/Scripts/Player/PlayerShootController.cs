@@ -4,30 +4,22 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class PlayerShootController : MonoBehaviour
 {
+    private static bool isReloading;
     public PlayerGunSelector GunSelector;
-    [SerializeField] private bool AutoReload = false;
-    private static bool isReloading = false;
-    private bool isStopReloading = false;
+    [SerializeField] private bool AutoReload;
+    private bool isStopReloading;
 
-    public static event Action OnReloadAnimation;
-
-    void Update()
+    private void Update()
     {
         if (GunSelector.ActiveGun != null && !isReloading)
-        {
             GunSelector.ActiveGun.Tick(PlayerController.IsLeftClickDown());
-        }
-        
-        if (PlayerController.IsLeftClickDown() && isReloading)
-        {
-            isStopReloading = true;
-        }
 
-        if (ShouldManualReload() || ShouldAutoReload())
-        {
-            Reload();
-        }
+        if (PlayerController.IsLeftClickDown() && isReloading) isStopReloading = true;
+
+        if (ShouldManualReload() || ShouldAutoReload()) Reload();
     }
+
+    public static event Action OnReloadAnimation;
 
     private void Reload()
     {
@@ -52,13 +44,9 @@ public class PlayerShootController : MonoBehaviour
 
         GunSelector.ActiveGun.EndReload();
         isReloading = false;
-        if (GunSelector.ActiveGun.CanReload())
-        {
-            Reload();
-        }
+        if (GunSelector.ActiveGun.CanReload()) Reload();
     }
-    
-    
+
 
     private bool ShouldManualReload()
     {

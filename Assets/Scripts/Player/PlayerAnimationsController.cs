@@ -1,22 +1,20 @@
-using System;
 using UnityEngine;
 
 public class PlayerAnimationsController : MonoBehaviour
 {
-    private Animator animator;
-
     [SerializeField] private float shootingSpeedAcceleration = 0.5f;
-    
-    private int moveSpeedAnimHash;
     private int aimAnimHash;
-    private int shootingSpeedAnimHash;
+    private Animator animator;
     private int horizontalAnimHash;
-    private int verticalAnimHash;
+
+    private int moveSpeedAnimHash;
     private int reloadAnimHash;
 
-    float shootingSpeed = 0.0f;
-    
-    void Awake()
+    private float shootingSpeed;
+    private int shootingSpeedAnimHash;
+    private int verticalAnimHash;
+
+    private void Awake()
     {
         animator = GetComponentInChildren<Animator>();
         moveSpeedAnimHash = Animator.StringToHash("MovementSpeed");
@@ -35,9 +33,8 @@ public class PlayerAnimationsController : MonoBehaviour
         PlayerController.OnShootAnimationEnable += EnableShootAnimationHandler;
         PlayerController.OnShootAnimationDiasble += DisableShootAnimationHandler;
         PlayerController.OnSend_X_Z_Pos += Get_X_Z_PosHandler;
-        
+
         PlayerShootController.OnReloadAnimation += ReloadAnimation;
-        
     }
 
     private void OnDisable()
@@ -48,7 +45,7 @@ public class PlayerAnimationsController : MonoBehaviour
         PlayerController.OnShootAnimationEnable -= EnableShootAnimationHandler;
         PlayerController.OnShootAnimationDiasble -= DisableShootAnimationHandler;
         PlayerController.OnSend_X_Z_Pos -= Get_X_Z_PosHandler;
-        
+
         PlayerShootController.OnReloadAnimation -= ReloadAnimation;
     }
 
@@ -58,7 +55,7 @@ public class PlayerAnimationsController : MonoBehaviour
         DisableShootAnimationHandler();
         animator.SetTrigger(reloadAnimHash);
     }
-    
+
     private void Get_X_Z_PosHandler(float x, float z)
     {
         animator.SetFloat(horizontalAnimHash, x);
@@ -67,20 +64,14 @@ public class PlayerAnimationsController : MonoBehaviour
 
     private void EnableAimAnimationHandler()
     {
-        if (!IsAnimActive(aimAnimHash))
-        {
-            animator.SetBool(aimAnimHash, true);
-        }
+        if (!IsAnimActive(aimAnimHash)) animator.SetBool(aimAnimHash, true);
     }
 
     private void DisableAimAnimationHandler()
     {
-        if (IsAnimActive(aimAnimHash))
-        {
-            animator.SetBool(aimAnimHash, false);
-        }
+        if (IsAnimActive(aimAnimHash)) animator.SetBool(aimAnimHash, false);
     }
-    
+
     private void EnableShootAnimationHandler()
     {
         if (shootingSpeed <= 1f)

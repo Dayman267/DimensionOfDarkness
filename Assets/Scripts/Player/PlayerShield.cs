@@ -6,42 +6,36 @@ public class PlayerShield : MonoBehaviour
 {
     [SerializeField] private float shieldPoints;
     [SerializeField] private float maxShieldPoints = 100f;
-    
-    private Image bar;
-
-    private PlayerHealth playerHealth;
-    
-    private bool isDamagedRecently = false;
     [SerializeField] private float waitSecAfterDamage = 2f;
     [SerializeField] private float waitSecBetweenRestoring = 0.1f;
-    
+
+    private Image bar;
+
+    private bool isDamagedRecently;
+
+    private PlayerHealth playerHealth;
+
     private void Start()
     {
         playerHealth = GetComponent<PlayerHealth>();
         bar = FindObjectOfType<ShieldBar>().GetComponent<Image>();
         shieldPoints = maxShieldPoints;
-        bar.fillAmount = shieldPoints/100;
+        bar.fillAmount = shieldPoints / 100;
         StartCoroutine(RecoveryByTime());
     }
-    
-    void Update()
+
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            DamageToShield(20f);
-        }
-    
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            RestoreShield(20f);
-        }
+        if (Input.GetKeyDown(KeyCode.V)) DamageToShield(20f);
+
+        if (Input.GetKeyDown(KeyCode.F)) RestoreShield(20f);
     }
 
     private void ChangeShieldBar(float shieldPoints)
     {
-        bar.fillAmount = shieldPoints/100;
+        bar.fillAmount = shieldPoints / 100;
     }
-    
+
     private void RestoreShield(float points)
     {
         if (shieldPoints < 100)
@@ -50,7 +44,7 @@ public class PlayerShield : MonoBehaviour
             ChangeShieldBar(shieldPoints);
         }
     }
-    
+
     public void DamageToShield(float damage)
     {
         isDamagedRecently = true;
@@ -61,7 +55,7 @@ public class PlayerShield : MonoBehaviour
         }
         else if (shieldPoints > 0 && shieldPoints - damage < 0)
         {
-            float remainder = damage - shieldPoints;
+            var remainder = damage - shieldPoints;
             shieldPoints = 0;
             ChangeShieldBar(shieldPoints);
             playerHealth.DamageToHealth(remainder);
@@ -85,9 +79,11 @@ public class PlayerShield : MonoBehaviour
                     yield return new WaitForSeconds(waitSecAfterDamage);
                     isDamagedRecently = false;
                 }
+
                 RestoreShield(1);
                 yield return new WaitForSeconds(waitSecBetweenRestoring);
             }
+
             yield return null;
         }
     }

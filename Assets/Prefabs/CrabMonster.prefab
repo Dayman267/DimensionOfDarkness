@@ -780,6 +780,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6443645094827519704}
   - component: {fileID: 4822024889066232518}
+  - component: {fileID: 3553882771498058723}
   m_Layer: 0
   m_Name: Rikayon
   m_TagString: Untagged
@@ -795,13 +796,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1672615750478904752}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0.7071068, w: 0}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 334198466973629282}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 180}
 --- !u!137 &4822024889066232518
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -948,6 +949,28 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.00031795911, y: 0.016304154, z: 0.0038340185}
     m_Extent: {x: 0.019063767, y: 0.018203422, z: 0.021267155}
   m_DirtyAABB: 0
+--- !u!64 &3553882771498058723
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672615750478904752}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 5779b1a41ccf45b45bfc238034373133, type: 3}
 --- !u!1 &1698234410370088595
 GameObject:
   m_ObjectHideFlags: 0
@@ -4189,7 +4212,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 3.73, y: 2.85, z: 3.55}
   m_Center: {x: 0, y: 1.38, z: 0.41}
