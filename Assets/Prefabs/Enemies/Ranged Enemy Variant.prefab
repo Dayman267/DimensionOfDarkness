@@ -80,6 +80,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: fea5914b5f205b54b8e4e4db3f46f893, type: 2}
+    - target: {fileID: 5172934495741322369, guid: ee0bb74242b8c764b8673751f75c24a6, type: 3}
+      propertyPath: m_Layer
+      value: 23
+      objectReference: {fileID: 0}
     - target: {fileID: 9145494213740153801, guid: ee0bb74242b8c764b8673751f75c24a6, type: 3}
       propertyPath: m_AgentTypeID
       value: 1479372276

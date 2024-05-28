@@ -8,7 +8,10 @@ namespace ObjectPool
 
         public virtual void OnDisable()
         {
-            Parent.ReturnObjectToPool(this);
+            if(Parent != null)
+            {
+                Parent.ReturnObjectToPool(this);
+            }
         }
     }
 }

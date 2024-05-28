@@ -17,7 +17,7 @@ MonoBehaviour:
   BulletSpawnForce: 700
   HitMask:
     serializedVersion: 2
-    m_Bits: 337
+    m_Bits: 8388945
   FireRate: 0.1
   BulletPerShot: 10
   ShootType: 1

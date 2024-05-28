@@ -79,10 +79,8 @@ GameObject:
   - component: {fileID: -7028186267372897314}
   - component: {fileID: 4429585403933295889}
   - component: {fileID: 9145494213740153801}
-  - component: {fileID: 6380109871455135691}
-  - component: {fileID: -3184225290934156981}
   - component: {fileID: -9060143955811499000}
-  m_Layer: 22
+  m_Layer: 23
   m_Name: TestEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -215,42 +213,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!65 &6380109871455135691
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 686996371805013717}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 128
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 0.54, y: 0.59, z: 0.66}
-  m_Center: {x: 0, y: 0.3, z: 0.05}
---- !u!114 &-3184225290934156981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 686996371805013717}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 667a6d57dfc4b7a4f9a600fe3c088091, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Health: 0
-  Collider: {fileID: 0}
-  _MaxHealth: 150
 --- !u!114 &-9060143955811499000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -700,7 +662,7 @@ GameObject:
   - component: {fileID: 3634850783944108749}
   - component: {fileID: 7631406299874881495}
   - component: {fileID: 3038509284871500363}
-  m_Layer: 22
+  m_Layer: 23
   m_Name: Body_mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1053,7 +1015,7 @@ GameObject:
   - component: {fileID: 1637091320656639059}
   - component: {fileID: 3304699552279179824}
   - component: {fileID: 3674405274157291619}
-  m_Layer: 23
+  m_Layer: 24
   m_Name: Attack Radius
   m_TagString: Untagged
   m_Icon: {fileID: 0}

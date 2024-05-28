@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
@@ -60,24 +61,21 @@ public class AreaFloorBaker : MonoBehaviour
             var navMeshData = NavMeshDataList[i];
 
             var navMeshBounds = new Bounds(Player.transform.position, NavMeshSize);
-            var markups = new List<NavMeshBuildMarkup>();
 
-            List<NavMeshModifier> modifiers;
-            if (surface.collectObjects == CollectObjects.Children)
-                modifiers = new List<NavMeshModifier>(GetComponentsInChildren<NavMeshModifier>());
-            else
-                modifiers = NavMeshModifier.activeModifiers;
+            IEnumerable<NavMeshModifier> modifiers = surface.collectObjects == CollectObjects.Children
+                ? GetComponentsInChildren<NavMeshModifier>()
+                : NavMeshModifier.activeModifiers;
 
-            for (var j = 0; j < modifiers.Count; j++)
-                if ((surface.layerMask & (1 << modifiers[j].gameObject.layer)) != 0
-                    && modifiers[j].AffectsAgentType(surface.agentTypeID))
-                    markups.Add(new NavMeshBuildMarkup
-                    {
-                        root = modifiers[j].transform,
-                        overrideArea = modifiers[j].overrideArea,
-                        area = modifiers[j].area,
-                        ignoreFromBuild = modifiers[j].ignoreFromBuild
-                    });
+            var markups = modifiers
+                .Where(t => (surface.layerMask & (1 << t.gameObject.layer)) != 0 &&
+                            t.AffectsAgentType(surface.agentTypeID))
+                .Select(t => new NavMeshBuildMarkup
+                {
+                    root = t.transform,
+                    overrideArea = t.overrideArea,
+                    area = t.area,
+                    ignoreFromBuild = t.ignoreFromBuild
+                }).ToList();
 
             if (surface.collectObjects == CollectObjects.Children)
                 NavMeshBuilder.CollectSources(transform, surface.layerMask, surface.useGeometry, surface.defaultArea,

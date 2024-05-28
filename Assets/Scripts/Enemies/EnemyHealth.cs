@@ -16,7 +16,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     public int CurrentHealth
     {
         get => _Health;
-        private set => _Health = value;
+        private set => _Health = value < 0 ? 0 : value;
     }
 
     public int MaxHealth
@@ -32,6 +32,7 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     {
         var damageTaken = Mathf.Clamp(Damage, 0, CurrentHealth);
 
+        var currentHealth = CurrentHealth;
         CurrentHealth -= damageTaken;
 
         if (damageTaken != 0) OnTakeDamage?.Invoke(damageTaken);

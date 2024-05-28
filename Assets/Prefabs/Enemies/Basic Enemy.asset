@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7643158e4c5b2b44a960367854e3b93a, type: 3}
-  m_Name: Ranged Enemy
+  m_Name: Basic Enemy
   m_EditorClassIdentifier: 
-  Health: 50
-  AttackDelay: 0.75
-  Damage: 0
-  AttackRadius: 7
-  IsRanged: 1
+  Health: 100
+  AttackDelay: 1
+  Damage: 10
+  AttackRadius: 1.5
+  IsRanged: 0
   AIUpdateInterval: 0.1
   Acceleration: 8
   AngularSpeed: 200
@@ -26,5 +26,5 @@ MonoBehaviour:
   Height: 2
   ObstacleAvoidanceType: 1
   Radius: 0.5
-  Speed: 2
-  StoppingDistance: 0.5
+  Speed: 3
+  StoppingDistance: 2.5

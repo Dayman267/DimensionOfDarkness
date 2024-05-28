@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerShield : MonoBehaviour
+public class PlayerShield : MonoBehaviour, IDamageable
 {
     [SerializeField] private float shieldPoints;
     [SerializeField] private float maxShieldPoints = 100f;
@@ -15,6 +15,10 @@ public class PlayerShield : MonoBehaviour
     [SerializeField] private float waitSecAfterDamage = 2f;
     [SerializeField] private float waitSecBetweenRestoring = 0.1f;
     
+    public int CurrentHealth { get; }
+    public int MaxHealth { get; }
+    public event IDamageable.TakeDamageEvent OnTakeDamage;
+    public event IDamageable.DeathEvent OnDeath;
     private void Start()
     {
         playerHealth = GetComponent<PlayerHealth>();
@@ -35,6 +39,16 @@ public class PlayerShield : MonoBehaviour
         {
             RestoreShield(20f);
         }
+    }
+    
+    public void TakeDamage(int Damage)
+    {
+        DamageToShield(Damage);
+    }
+
+    public Transform GetTransform()
+    {
+        return transform;
     }
 
     private void ChangeShieldBar(float shieldPoints)

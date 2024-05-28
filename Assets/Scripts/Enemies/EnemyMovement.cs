@@ -49,6 +49,7 @@ public class EnemyMovement : MonoBehaviour
     public void StopMoving()
     {
         StopAllCoroutines();
+        if (!Agent.enabled) return;
         Agent.isStopped = true;
         Agent.enabled = false;
     }
@@ -59,7 +60,7 @@ public class EnemyMovement : MonoBehaviour
 
         while (enabled)
         {
-            if (Player != null)
+            if (Player != null && Agent.isOnNavMesh)
             {
                 Agent.SetDestination(Player.position);
             }

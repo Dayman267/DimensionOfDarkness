@@ -21,27 +21,30 @@ public class AttackRadius : MonoBehaviour
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        var damageable = other.GetComponent<IDamageable>();
-        if (damageable != null)
-        {
-            Damageables.Add(damageable);
+        if (!other.TryGetComponent<IDamageable>(out var damageable)) return;
+        Damageables.Add(damageable);
 
-            if (AttackCoroutine == null) AttackCoroutine = StartCoroutine(Attack());
-        }
+        StartAttack();
+    }
+
+    public void StartAttack()
+    {
+        AttackCoroutine ??= StartCoroutine(Attack());
     }
 
     protected virtual void OnTriggerExit(Collider other)
     {
-        var damageable = other.GetComponent<IDamageable>();
-        if (damageable != null)
-        {
-            Damageables.Remove(damageable);
-            if (Damageables.Count == 0)
-            {
-                StopCoroutine(AttackCoroutine);
-                AttackCoroutine = null;
-            }
-        }
+        if (!other.TryGetComponent<IDamageable>(out var damageable)) return;
+        Damageables.Remove(damageable);
+        if (Damageables.Count != 0) return;
+        StopAttack();
+    }
+
+    public void StopAttack()
+    {
+        if (AttackCoroutine != null)
+            StopCoroutine(AttackCoroutine);
+        AttackCoroutine = null;
     }
 
     protected virtual IEnumerator Attack()
@@ -52,7 +55,7 @@ public class AttackRadius : MonoBehaviour
 
         IDamageable closestDamageable = null;
         var closestDistance = float.MaxValue;
-
+    
         while (Damageables.Count > 0)
         {
             for (var i = 0; i < Damageables.Count; i++)

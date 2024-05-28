@@ -23,6 +23,8 @@ public class Enemy : ObjectPool.PoolableObject
         Health.OnTakeDamage -= PainResponse.HandlePain;
         Health.OnDeath -= Die;
         AttackRadius.OnAttack -= OnAttack;
+        AttackRadius.StopAttack();
+        AttackRadius.Collider.enabled = false;
         Health.Collider.isTrigger = true;
         Rigidbody.constraints = RigidbodyConstraints.FreezePosition;
         Invoke(nameof(Trash), 5f);

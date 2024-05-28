@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -24,22 +25,21 @@ public class EnemySpawner : MonoBehaviour
 
             var spawnPosition = playerTransform.position + randomOffset;
 
-            UnityEngine.AI.NavMeshHit hit;
-            if (UnityEngine.AI.NavMesh.SamplePosition(spawnPosition, out hit, spawnRadius, UnityEngine.AI.NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(spawnPosition, out var hit, spawnRadius, NavMesh.AllAreas))
             {
                 var randomEnemyPrefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Length)];
                 var enemyInstance = Instantiate(randomEnemyPrefab, hit.position, Quaternion.identity);
 
                 // Передача игрока в EnemyMovement
-                var enemyMovement = enemyInstance.GetComponent<EnemyMovement>();
-                if (enemyMovement != null)
+                
+                if (enemyInstance.TryGetComponent<EnemyMovement>(out var enemyMovement))
                 {
                     enemyMovement.Player = playerTransform;
                 }
 
                 // Убедитесь, что NavMeshAgent активен
-                var navMeshAgent = enemyInstance.GetComponent<UnityEngine.AI.NavMeshAgent>();
-                if (navMeshAgent != null)
+                
+                if (enemyInstance.TryGetComponent<NavMeshAgent>(out var navMeshAgent))
                 {
                     navMeshAgent.enabled = true;
                 }
