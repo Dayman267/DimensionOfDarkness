@@ -2,13 +2,13 @@ using UnityEngine;
 
 public abstract class AbstractAreaOfEffect : ICollisionHandler
 {
-    public float Radius = 1;
-    public AnimationCurve DamageFalloff;
     public int BaseDamage = 10;
-    public int MaxEnemiesAffected = 100;
+    public AnimationCurve DamageFalloff;
 
     protected Collider[] HitObjects;
     protected int Hits;
+    public int MaxEnemiesAffected = 100;
+    public float Radius = 1;
 
     public AbstractAreaOfEffect(float Radius, AnimationCurve DamageFalloff, int BaseDamage, int MaxEnemiesAffected)
     {
@@ -21,23 +21,21 @@ public abstract class AbstractAreaOfEffect : ICollisionHandler
 
     public virtual void HandleImpact(Collider ImpactedObject, Vector3 HitPosition, Vector3 HitNormal, GunSO Gun)
     {
-            Hits = Physics.OverlapSphereNonAlloc(
+        Hits = Physics.OverlapSphereNonAlloc(
             HitPosition,
             Radius,
             HitObjects,
             Gun.ShootConfig.HitMask
         );
 
-        for (int i = 0; i < Hits; i++)
-        {
+        for (var i = 0; i < Hits; i++)
             if (HitObjects[i].TryGetComponent(out IDamageable damageable))
             {
-                float distance = Vector3.Distance(HitPosition, HitObjects[i].ClosestPoint(HitPosition));
-                
+                var distance = Vector3.Distance(HitPosition, HitObjects[i].ClosestPoint(HitPosition));
+
                 damageable.TakeDamage(
-                    Mathf.CeilToInt(BaseDamage * DamageFalloff.Evaluate(distance/ Radius))
+                    Mathf.CeilToInt(BaseDamage * DamageFalloff.Evaluate(distance / Radius))
                 );
             }
-        }
     }
 }

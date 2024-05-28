@@ -1,9 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 public class PointsManager : MonoBehaviour
 {
@@ -14,7 +11,7 @@ public class PointsManager : MonoBehaviour
 
     public int firstFibonacci;
     public int secondFibonacci;
-    
+
     public TextMeshProUGUI darkEnergyText;
 
     public int counterICanEnter;
@@ -24,7 +21,7 @@ public class PointsManager : MonoBehaviour
         firstFibonacci = secondFibonacci = darkEnergyPointsToAccess;
         StartCoroutine(DarkEnergyTimeIncreaser());
     }
-    
+
     public void RpcAddDarkEnergyPoints(int points)
     {
         darkEnergyPoints += points;
@@ -36,7 +33,7 @@ public class PointsManager : MonoBehaviour
             counterICanEnter += 1;
         }
     }
-    
+
     public void RpcSubtractOneCounterICanEnter()
     {
         counterICanEnter -= 1;

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Frost : AbstractAreaOfEffect
@@ -9,7 +7,7 @@ public class Frost : AbstractAreaOfEffect
     public Frost(float Radius, AnimationCurve DamageFalloff, int BaseDamage, int MaxEnemiesAffected)
         : base(Radius, DamageFalloff, BaseDamage, MaxEnemiesAffected)
     {
-        this.SlowDecay = new AnimationCurve();
+        SlowDecay = new AnimationCurve();
     }
 
     public Frost(float Radius, AnimationCurve DamageFalloff, int BaseDamage, int MaxEnemiesAffected,
@@ -23,12 +21,8 @@ public class Frost : AbstractAreaOfEffect
     {
         base.HandleImpact(ImpactedObject, HitPosition, HitNormal, Gun);
 
-        for (int i = 0; i < Hits; i++)
-        {
+        for (var i = 0; i < Hits; i++)
             if (HitObjects[i].TryGetComponent(out ISlowable slowable))
-            {
                 slowable.Slow(SlowDecay);
-            }
-        }
     }
 }

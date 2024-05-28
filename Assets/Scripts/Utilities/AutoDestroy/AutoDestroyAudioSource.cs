@@ -1,17 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AutoDestroyAudioSource : MonoBehaviour
 {
     private AudioSource audioSource;
 
-    void Start()
+    private void Start()
     {
         audioSource = GetComponent<AudioSource>();
     }
 
-    void Update()
+    private void Update()
     {
         if (!audioSource.isPlaying || !gameObject.activeSelf)
         {
