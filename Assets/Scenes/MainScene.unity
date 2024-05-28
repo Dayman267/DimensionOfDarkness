@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 1, g: 1, b: 1, a: 1}
+  m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -13010,10 +13010,10 @@ GameObject:
   - component: {fileID: 1034488287}
   - component: {fileID: 1034488288}
   - component: {fileID: 1034488289}
+  - component: {fileID: 1034488290}
   - component: {fileID: 1034488293}
   - component: {fileID: 1034488292}
   - component: {fileID: 1034488291}
-  - component: {fileID: 1034488290}
   m_Layer: 0
   m_Name: MapGenerator
   m_TagString: Untagged
