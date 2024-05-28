@@ -19,6 +19,8 @@ public class VALERAController : MonoBehaviour, IPausable
 
     private bool isPaused = false;
 
+    [SerializeField] private LayerMask layerMask;
+
     private void OnEnable()
     {
         PauseGame.OnGamePaused += OnPause;
@@ -45,8 +47,9 @@ public class VALERAController : MonoBehaviour, IPausable
         Vector3 mousePosition = Input.mousePosition;
         Ray ray = cam.ScreenPointToRay(mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
         {
+            Debug.Log(hit.collider.gameObject.name);
             Vector3 targetPoint = hit.point;
             Vector3 direction = (targetPoint - transform.position).normalized;
             transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
