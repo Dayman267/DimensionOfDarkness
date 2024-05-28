@@ -12,6 +12,7 @@ public class PauseGame : MonoBehaviour
     public GameObject pausePanel;
     public GameObject settingsMenu;
     public GameObject buttons;
+    public Material menuButtonsMaterial;
     
     bool isGameplayMapActive = true;
     
@@ -35,7 +36,7 @@ public class PauseGame : MonoBehaviour
                 pausePanel.SetActive(true);
 
                 Time.timeScale = 0;
-                
+
                 Cursor.visible = true;
                 
                 OnGamePaused?.Invoke();
@@ -54,6 +55,9 @@ public class PauseGame : MonoBehaviour
                 Resume();
             }
         }
+        
+        if(!isGameplayMapActive)
+            menuButtonsMaterial.SetFloat("_UnscaledTime", Time.unscaledTime);
     }
 
     public void Resume()

@@ -192,7 +192,7 @@ public class GunSO : ScriptableObject, ICloneable
                 Ray ray = ActiveCamera.ScreenPointToRay(Mouse.current.position.value);
                 RaycastHit hit;
 
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, ShootConfig.HitMask))
                 {
                     Vector3 shootDirection = (hit.point - ShootingStartPoint.transform.position) +
                                              Model.transform.TransformDirection(spreadAmount);
@@ -200,6 +200,7 @@ public class GunSO : ScriptableObject, ICloneable
                     {
                         DoHitScanShoot(shootDirection, GetRaycastOrigin(), ShootingStartPoint.transform.position);
                     }
+                    
                     else
                     {
                         DoProjectileShoot(shootDirection.normalized);

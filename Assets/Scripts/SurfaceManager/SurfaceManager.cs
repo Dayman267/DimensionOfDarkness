@@ -239,7 +239,7 @@ namespace LlamAcademy.ImpactSystem
                 }
             }
         }
-    
+
         private IEnumerator DisableAudioSource(ObjectPool<GameObject> Pool, AudioSource AudioSource, float Time)
         {
             yield return new WaitForSeconds(Time);
