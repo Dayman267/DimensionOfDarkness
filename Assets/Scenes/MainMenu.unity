@@ -123,6 +123,74 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &139121632
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3353441396814991729, guid: 258b1a730bec1a946ab53185ced14888, type: 3}
+      propertyPath: m_Name
+      value: ScoreManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6483516606783676629, guid: 258b1a730bec1a946ab53185ced14888, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6483516606783676629, guid: 258b1a730bec1a946ab53185ced14888, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6483516606783676629, guid: 258b1a730bec1a946ab53185ced14888, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6483516606783676629, guid: 258b1a730bec1a946ab53185ced14888, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6483516606783676629, guid: 258b1a730bec1a946ab53185ced14888, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6483516606783676629, guid: 258b1a730bec1a946ab53185ced14888, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6483516606783676629, guid: 258b1a730bec1a946ab53185ced14888, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6483516606783676629, guid: 258b1a730bec1a946ab53185ced14888, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6483516606783676629, guid: 258b1a730bec1a946ab53185ced14888, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6483516606783676629, guid: 258b1a730bec1a946ab53185ced14888, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 258b1a730bec1a946ab53185ced14888, type: 3}
+--- !u!114 &139121633 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5967083756587131134, guid: 258b1a730bec1a946ab53185ced14888, type: 3}
+  m_PrefabInstance: {fileID: 139121632}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc2bb50094f200d41b4d43aa5494d7b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &287027169
 GameObject:
   m_ObjectHideFlags: 0
@@ -1024,6 +1092,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 139121633}
+        m_TargetAssemblyTypeName: ScoreManager, Assembly-CSharp
+        m_MethodName: DeleteRecords
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 1654226858}
         m_TargetAssemblyTypeName: SceneTransition, Assembly-CSharp
         m_MethodName: EnterTheHub
@@ -1407,3 +1487,4 @@ SceneRoots:
   - {fileID: 827205446}
   - {fileID: 1721922485}
   - {fileID: 694709847}
+  - {fileID: 139121632}
