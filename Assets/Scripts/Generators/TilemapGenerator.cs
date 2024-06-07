@@ -61,7 +61,7 @@ public class TilemapGenerator : MonoBehaviour
         terrainGenerator = GetComponent<TerrainGenerator>();
         int randomIndex;
         if (terrainsIPick == 0 || terrainsIPick > terrainsArrays.Count) 
-            randomIndex = UnityEngine.Random.Range(0, terrainsArrays.Count);
+            randomIndex = Random.Range(0, terrainsArrays.Count);
         else randomIndex = (int)terrainsIPick - 1;
         
         for (int i = 0, j = 0; i < terrainsArrays[randomIndex].Length; i++, j++)

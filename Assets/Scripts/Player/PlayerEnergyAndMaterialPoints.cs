@@ -15,7 +15,7 @@ public class PlayerEnergyAndMaterialPoints : MonoBehaviour
 
     private void Update()
     {
-        manager.darkEnergyText.text = $"{manager.darkEnergyPoints}/{manager.darkEnergyPointsToAccess}";
+        manager.darkEnergyText.text = $"Score: {manager.darkEnergyPoints}";
         solidMaterialText.text = $"{solidMaterial}";
     }
 
