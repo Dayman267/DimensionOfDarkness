@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 165592c2cd47b454e9a03a185a2ec1f4, type: 3}
   m_Name: Rifle Bullet Penetration Config
   m_EditorClassIdentifier: 
-  MaxObjectsToPenetrate: 1
-  MaxPenetrationDepth: 1.5
+  MaxObjectsToPenetrate: 0
+  MaxPenetrationDepth: 0
   AccuracyLoss: {x: 0.1, y: 0.1, z: 0.1}
   DamageRetentionPercentage: 0.5

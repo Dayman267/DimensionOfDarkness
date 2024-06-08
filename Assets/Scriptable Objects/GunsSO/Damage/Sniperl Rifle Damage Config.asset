@@ -20,7 +20,7 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 20
+        value: 5
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -28,8 +28,8 @@ MonoBehaviour:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 1
-        value: 5
+        time: 1.0012207
+        value: 35
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -44,7 +44,7 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 30
+        value: 10
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -53,7 +53,7 @@ MonoBehaviour:
         outWeight: 0
       - serializedVersion: 3
         time: 1
-        value: 10
+        value: 50
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -65,7 +65,7 @@ MonoBehaviour:
       m_RotationOrder: 4
     m_ConstantMin: 0
     m_ConstantMax: 0
-  CriticalChance: 0
-  CriticalMultiplier: 0
+  CriticalChance: 10
+  CriticalMultiplier: 2
   IsChargedShot: 0
   maxChargedDamageMultiplier: 2
