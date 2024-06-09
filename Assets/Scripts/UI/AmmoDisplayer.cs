@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -11,7 +10,7 @@ public class AmmoDisplayer : MonoBehaviour
     [SerializeField] private float shakeDuration = 0.1f; // Длительность тряски
     [SerializeField] private float shakeMagnitude = 0.1f; // Магнитуда тряски
     private TextMeshProUGUI AmmoText;
-    private bool isShaking = false;
+    private bool isShaking;
     private Color originalColor;
 
     private Vector3 originalPosition;
@@ -25,8 +24,8 @@ public class AmmoDisplayer : MonoBehaviour
 
     private void Update()
     {
-        int currentAmmo = GunSelector.ActiveGun.AmmoConfig.CurrentClipAmmo;
-        int maxAmmo = GunSelector.ActiveGun.AmmoConfig.ClipSize;
+        var currentAmmo = GunSelector.ActiveGun.AmmoConfig.CurrentClipAmmo;
+        var maxAmmo = GunSelector.ActiveGun.AmmoConfig.ClipSize;
 
         AmmoText.SetText($"{currentAmmo} | {maxAmmo}");
 
@@ -41,12 +40,12 @@ public class AmmoDisplayer : MonoBehaviour
     private IEnumerator ShakeText()
     {
         isShaking = true;
-        float elapsedTime = 0f;
+        var elapsedTime = 0f;
 
         while (elapsedTime < shakeDuration)
         {
             // Генерируем случайное смещение в пределах заданной магнитуды
-            Vector3 newPos = originalPosition + UnityEngine.Random.insideUnitSphere * shakeMagnitude;
+            var newPos = originalPosition + Random.insideUnitSphere * shakeMagnitude;
             newPos.z = originalPosition.z; // Мы не хотим трясти текст вдоль оси Z
             transform.position = newPos;
 
@@ -63,7 +62,7 @@ public class AmmoDisplayer : MonoBehaviour
 
     private IEnumerator ChangeTextColor(Color targetColor, float duration)
     {
-        float elapsedTime = 0f;
+        var elapsedTime = 0f;
 
         while (elapsedTime < duration)
         {

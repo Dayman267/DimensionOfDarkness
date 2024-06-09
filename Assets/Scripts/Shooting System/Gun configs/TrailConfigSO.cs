@@ -1,7 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+
 [CreateAssetMenu(fileName = "Trail Config", menuName = "Guns/Gun Trail Config", order = 4)]
 public class TrailConfigSO : ScriptableObject, ICloneable
 {
@@ -14,10 +13,11 @@ public class TrailConfigSO : ScriptableObject, ICloneable
 
     public float MissDistance = 100f;
     public float SimulationSpeed = 100f;
+
     public object Clone()
     {
-        TrailConfigSO config = CreateInstance<TrailConfigSO>();
-        
+        var config = CreateInstance<TrailConfigSO>();
+
         Utilities.CopyValues(this, config);
 
         return config;

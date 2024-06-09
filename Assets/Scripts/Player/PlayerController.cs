@@ -79,13 +79,6 @@ public class PlayerController : MonoBehaviour, IPausable
 
     private void Start()
     {
-        // #if !UNITY_EDITOR
-        //     Application.Quit();
-        // #endif
-        // #if UNITY_EDITOR
-        //     EditorApplication.isPlaying = false;
-        // #endif
-
         playerStamina = GetComponent<PlayerStamina>();
 
         transform.rotation = Quaternion.Euler(Vector3.zero);
@@ -121,11 +114,11 @@ public class PlayerController : MonoBehaviour, IPausable
         inMovement = Mathf.Abs(_direction.x) > 0 || Mathf.Abs(_direction.z) > 0;
         MoveAnimEnable();
 
-        if (_isSpaceKeyDown && playerStamina.GetStaminaPoints() >= 30)
-        {
-            playerStamina.SpendStamina(spendPointsWhenDashing);
-            Dash();
-        }
+        // if (_isSpaceKeyDown && playerStamina.GetStaminaPoints() >= spendPointsWhenDashing)
+        // {
+        //     playerStamina.SpendStamina(spendPointsWhenDashing);
+        //     Dash();
+        // }
 
         if (_playerMoveState != PlayerMoveStates.dashing)
         {
@@ -195,8 +188,12 @@ public class PlayerController : MonoBehaviour, IPausable
 
     private void Dash()
     {
+        if (playerStamina.GetStaminaPoints() < spendPointsWhenDashing) return;
+        
         if (_playerMoveState == PlayerMoveStates.dashing) return;
-
+        
+        playerStamina.SpendStamina(spendPointsWhenDashing);
+        
         AimOff();
 
         // Determine the dash direction based on movement or facing direction
@@ -517,6 +514,8 @@ public class PlayerController : MonoBehaviour, IPausable
 
         playerActions.Gameplay.Dash.performed += ctx => _isSpaceKeyDown = true;
         playerActions.Gameplay.Dash.canceled += ctx => _isSpaceKeyDown = false;
+        
+        playerActions.Gameplay.Dash.performed += ctx => Dash();
     }
 
     private void OnDisable()

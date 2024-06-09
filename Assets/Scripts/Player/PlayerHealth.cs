@@ -5,39 +5,36 @@ public class PlayerHealth : MonoBehaviour
 {
     [SerializeField] private float healthPoints;
     [SerializeField] private float maxHealthPoints = 100f;
-    
     private Image bar;
 
-    public float GetHealth()
-    {
-        return healthPoints;
-    }
-    
     private void Start()
     {
         bar = FindObjectOfType<HealthBar>().GetComponent<Image>();
         healthPoints = maxHealthPoints;
-        bar.fillAmount = healthPoints/100;
+        UpdateHealthBar();
     }
-    
-    private void ChangeHealthBar(float points)
+
+    private void UpdateHealthBar()
     {
-        bar.fillAmount = points/100;
+        bar.fillAmount = healthPoints / maxHealthPoints;
     }
-    
+
     public void RestoreHealth(float points)
     {
         healthPoints += points;
-        ChangeHealthBar(healthPoints);
+        if (healthPoints > maxHealthPoints) healthPoints = maxHealthPoints;
+        UpdateHealthBar();
     }
-    
+
     public void DamageToHealth(float damage)
     {
         healthPoints -= damage;
-        ChangeHealthBar(healthPoints);
         if (healthPoints <= 0)
         {
+            healthPoints = 0;
             Destroy(gameObject);
         }
+
+        UpdateHealthBar();
     }
 }

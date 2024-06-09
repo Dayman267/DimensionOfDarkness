@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletEffect : MonoBehaviour
 {
-   [SerializeField] private float destroyDelay = 3f;
+    [SerializeField] private float destroyDelay = 3f;
 
     private void Start()
     {

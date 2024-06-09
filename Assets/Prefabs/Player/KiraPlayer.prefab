@@ -107,7 +107,7 @@ MonoBehaviour:
   speedTransitionDuration: 0.3
   dashSpeed: 10
   dashTime: 0.5
-  spendPointsWhenDashing: 5
+  spendPointsWhenDashing: 20
   vaultSpeed: 6
   vaultTime: 0.2
   stayVaultRadius: 0.6
@@ -483,8 +483,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   staminaPoints: 0
   maxStaminaPoints: 100
-  waitSecAfterSpending: 1
-  waitSecBetweenRestoring: 0.03
+  waitSecAfterSpending: 2
+  waitSecBetweenRestoring: 0.1
 --- !u!114 &4591973583880858255
 MonoBehaviour:
   m_ObjectHideFlags: 0
