@@ -54,10 +54,10 @@ public class GunModifiersApplier : MonoBehaviour
                 GunSelector.ActiveGun.BulletImpactEffects = new ICollisionHandler[]
                 {
                     new Explode(
-                        2f,
+                        3f,
                         new AnimationCurve(new Keyframe[] { new Keyframe(0, 1), new Keyframe(1, 0.25f) }),
-                        15,
-                        20
+                        20,
+                        6
                     )
                 };
                 break;
@@ -65,10 +65,10 @@ public class GunModifiersApplier : MonoBehaviour
                 GunSelector.ActiveGun.BulletImpactEffects = new ICollisionHandler[]
                 {
                     new Explode(
-                        1.2f,
+                        2f,
                         new AnimationCurve(new Keyframe[] { new Keyframe(0, 1), new Keyframe(1, 0.25f) }),
-                        5,
-                        8
+                        15,
+                        3
                     )
                 };
                 break;

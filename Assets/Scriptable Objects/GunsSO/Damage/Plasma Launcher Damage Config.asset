@@ -63,8 +63,8 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    m_ConstantMin: 10
-    m_ConstantMax: 15
+    m_ConstantMin: 25
+    m_ConstantMax: 60
   CriticalChance: 0
   CriticalMultiplier: 0
   IsChargedShot: 1

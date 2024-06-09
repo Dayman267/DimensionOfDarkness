@@ -18,7 +18,7 @@ MonoBehaviour:
   HitMask:
     serializedVersion: 2
     m_Bits: 8388945
-  FireRate: 0.1
+  FireRate: 0.2
   BulletPerShot: 10
   ShootType: 1
   IsPreparedShot: 0
