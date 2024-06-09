@@ -32,8 +32,8 @@ public class Enemy : ObjectPool.PoolableObject
         
         Agent.enabled = false;
         
-        var points = GameObject.FindWithTag("Points").GetComponent<PlayerEnergyAndMaterialPoints>();
-        points.AddSolidMaterial(PointsForKill);
+        //var points = GameObject.FindWithTag("Points").GetComponent<PlayerEnergyAndMaterialPoints>();
+        //points.AddSolidMaterial(PointsForKill);
         var pointsManager = GameObject.FindWithTag("PointsManager").GetComponent<PointsManager>();
         pointsManager.RpcAddDarkEnergyPoints(PointsForKill);
     }

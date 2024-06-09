@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BigDadyCrabMonster Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 2144357153052033485, guid: 85eb6394c9698754f879ebe2a8cf2235, type: 3}
+      propertyPath: PointsForKill
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9083811006421698949, guid: 85eb6394c9698754f879ebe2a8cf2235, type: 3}
       propertyPath: m_LocalScale.x
       value: 1

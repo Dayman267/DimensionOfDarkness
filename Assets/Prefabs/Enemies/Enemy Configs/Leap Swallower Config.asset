@@ -17,7 +17,7 @@ MonoBehaviour:
   Health: 30
   PointsForKill: 2
   DefaultState: 1
-  IdleLocationRadius: 30
+  IdleLocationRadius: 5
   IdleMovespeedMultiplier: 1
   LineOfSightRange: 15
   FieldOfView: 120

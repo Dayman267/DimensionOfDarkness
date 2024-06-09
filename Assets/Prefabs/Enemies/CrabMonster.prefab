@@ -601,7 +601,7 @@ MonoBehaviour:
   Health: {fileID: 2538493170059586557}
   PainResponse: {fileID: 3437296944581979212}
   Rigidbody: {fileID: 8799403055546163998}
-  PointsForKill: 15
+  PointsForKill: 0
 --- !u!114 &82186070245021625
 MonoBehaviour:
   m_ObjectHideFlags: 0

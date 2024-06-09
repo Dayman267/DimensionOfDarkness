@@ -6,12 +6,12 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     [SerializeField] private int _Health;
 
     public Collider Collider;
-    [SerializeField] public int _MaxHealth = 100;
+    [SerializeField] public int _MaxHealth;
     private Enemy enemy;
 
-    private void OnEnable()
+    private void Start()
     {
-        _Health = MaxHealth;
+        CurrentHealth = MaxHealth;
     }
 
     public int CurrentHealth
