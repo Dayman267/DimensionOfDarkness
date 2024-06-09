@@ -86,12 +86,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _Scan2:
         m_Texture: {fileID: 2800000, guid: d6717a765e8c7c44ab4227d5d07ecfac, type: 3}
-        m_Scale: {x: 1, y: 0.2}
-        m_Offset: {x: 0, y: 10}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Scanlines:
         m_Texture: {fileID: 2800000, guid: d6717a765e8c7c44ab4227d5d07ecfac, type: 3}
-        m_Scale: {x: 0.1, y: 0.1}
-        m_Offset: {x: 0, y: -10}
+        m_Scale: {x: 0.1, y: 0}
+        m_Offset: {x: 1, y: 0}
     - _SecondaryFlicker:
         m_Texture: {fileID: 2800000, guid: ac782bf64bc0d4447bfd606db3ca6968, type: 3}
         m_Scale: {x: 0.1, y: 0.1}

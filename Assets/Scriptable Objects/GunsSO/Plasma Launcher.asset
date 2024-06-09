@@ -16,8 +16,10 @@ MonoBehaviour:
   Type: 2
   Name: Plasma Launcher
   ModelPrefab: {fileID: 4409388436065691012, guid: 0e3e8b787f8ea254b83f37fc248b5917, type: 3}
+  GunIcon: {fileID: 21300000, guid: ac15edf5fb0aec34d9ac2d1fe2ffbca5, type: 3}
   SpawnPoint: {x: 0.003, y: -0.245, z: 0.002}
   SpawnRotation: {x: 90, y: 0, z: 0}
+  AutoShootAnimationEnable: 0
   DamageConfig: {fileID: 11400000, guid: 9ac121ebed0effd418a2b25faa58cb24, type: 2}
   ShootConfig: {fileID: 11400000, guid: 7cba6323c34ac16478ad48a8dd3b796a, type: 2}
   TrailConfig: {fileID: 11400000, guid: 2109fec5a842def40aef4eda13fc3bf0, type: 2}

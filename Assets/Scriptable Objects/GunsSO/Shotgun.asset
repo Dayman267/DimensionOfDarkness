@@ -16,8 +16,10 @@ MonoBehaviour:
   Type: 4
   Name: Shotgun
   ModelPrefab: {fileID: 6149488503386817413, guid: 53a9b181070c94644b01dfefef461f7d, type: 3}
+  GunIcon: {fileID: 21300000, guid: ff730fdf1fb9e96448a8d3aed349104b, type: 3}
   SpawnPoint: {x: 0.014, y: 0.007, z: 0.011}
   SpawnRotation: {x: 180, y: -90, z: -90}
+  AutoShootAnimationEnable: 0
   DamageConfig: {fileID: 11400000, guid: 6b82f07d80a39714f8097ec65ada1704, type: 2}
   ShootConfig: {fileID: 11400000, guid: 778555aecba36a8488ee7be9fe7a9953, type: 2}
   TrailConfig: {fileID: 11400000, guid: 48dd37bb101f485419c5cf0d85911943, type: 2}

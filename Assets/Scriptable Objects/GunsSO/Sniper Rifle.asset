@@ -16,7 +16,7 @@ MonoBehaviour:
   Type: 0
   Name: Sniper Laser Rifle
   ModelPrefab: {fileID: 612330427008487874, guid: e5bb5505830f60d46996d3a4b0b51358, type: 3}
-  BulletParticlePrefab: {fileID: 6409383349883824935, guid: 800f726670171b1439c242fe8af84135, type: 3}
+  GunIcon: {fileID: 21300000, guid: b36c6645adbd28c40bb9785bc68688b7, type: 3}
   SpawnPoint: {x: 0, y: -0.049, z: 0.129}
   SpawnRotation: {x: 0, y: -90, z: -90}
   AutoShootAnimationEnable: 0

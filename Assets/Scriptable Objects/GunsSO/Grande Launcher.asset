@@ -16,7 +16,7 @@ MonoBehaviour:
   Type: 3
   Name: Grande Launcher
   ModelPrefab: {fileID: 5783954524288184859, guid: c58ca35b15664a347892d09acb0e3b2d, type: 3}
-  BulletParticlePrefab: {fileID: 0}
+  GunIcon: {fileID: 21300000, guid: f40739f544d5bee48a899c5496d247f3, type: 3}
   SpawnPoint: {x: 0, y: -0.09, z: 0.011}
   SpawnRotation: {x: 0, y: -90, z: -90}
   AutoShootAnimationEnable: 0
