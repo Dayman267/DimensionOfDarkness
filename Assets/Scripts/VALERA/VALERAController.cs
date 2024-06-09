@@ -49,7 +49,6 @@ public class VALERAController : MonoBehaviour, IPausable
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
         {
-            Debug.Log(hit.collider.gameObject.name);
             Vector3 targetPoint = hit.point;
             Vector3 direction = (targetPoint - transform.position).normalized;
             transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
