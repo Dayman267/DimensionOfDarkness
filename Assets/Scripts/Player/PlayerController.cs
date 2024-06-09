@@ -238,7 +238,7 @@ public class PlayerController : MonoBehaviour, IPausable
 
     public void EndRoll()
     {
-        currentSpeed = 0f;
+        currentSpeed = 1f;
         _playerMoveState = PlayerMoveStates.idle;
     }
 

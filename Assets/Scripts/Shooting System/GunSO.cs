@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Pool;
 using UnityEngine.Rendering;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 [CreateAssetMenu(fileName = "Gun", menuName = "Guns/Gun", order = 0)]
@@ -18,6 +19,7 @@ public class GunSO : ScriptableObject, ICloneable
     public string Name;
 
     public GameObject ModelPrefab;
+    public Sprite GunIcon;
 
     public Vector3 SpawnPoint;
     public Vector3 SpawnRotation;
@@ -200,6 +202,7 @@ public class GunSO : ScriptableObject, ICloneable
                     {
                         DoHitScanShoot(shootDirection, GetRaycastOrigin(), ShootingStartPoint.transform.position);
                     }
+                    
                     else
                     {
                         DoProjectileShoot(shootDirection.normalized);
@@ -662,6 +665,7 @@ private IEnumerator UpdateParticleSystem(ParticleSystem particleSystem, Bullet b
         config.Type = Type;
         config.Name = Name;
         config.name = name;
+        config.GunIcon = GunIcon;
 
         config.DamageConfig = DamageConfig.Clone() as DamageConfigSO;
         config.ShootConfig = ShootConfig.Clone() as ShootConfigurationSO;

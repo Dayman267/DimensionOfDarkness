@@ -8,19 +8,19 @@ public class PlayerGunSelector : MonoBehaviour
 {
     private Camera Camera;
     [SerializeField] private GunType GunType;
-    
+
     [SerializeField] private Transform GunParent;
     [SerializeField] private Transform BulletPoolParent;
     [SerializeField] private Transform BulletCasesPoolParent;
     [SerializeField] private Transform ShootingStartPoint;
-  
+
 
     [SerializeField] private List<GunSO> Guns;
 
     private List<int> runtimeCurrentAmmoClips;
     private int ActiveGunPosition;
     private int NewActiveGunPosition;
-    
+
     [Space] [Header("Runtime Filled")] public GunSO ActiveGun;
     [SerializeField] private GunSO ActiveBaseGun;
 
@@ -28,14 +28,15 @@ public class PlayerGunSelector : MonoBehaviour
     // video 1
     //  [SerializeField] private PlayerIK InversKinematics;
 
-    
 
-    public static event Action OnSwitchWeapon;
+    public static event Action OnSwitchWeaponCallAnimation;
 
     private void Awake()
     {
         GunSO gun = Guns[0];
         Camera = Camera.main;
+
+        NewActiveGunPosition = ActiveGunPosition;
 
         runtimeCurrentAmmoClips = new List<int>(Guns.Count);
 
@@ -67,7 +68,8 @@ public class PlayerGunSelector : MonoBehaviour
 
     private void Update()
     {
-        if ((PlayerController.GetPlayerMoveState() != PlayerMoveStates.dashing && PlayerController.IsPlayerHasIdleState()) 
+        if ((PlayerController.GetPlayerMoveState() != PlayerMoveStates.dashing &&
+             PlayerController.IsPlayerHasIdleState())
             || PlayerController.GetPlayerState() == PlayerStates.switchingWeapon)
         {
             if (PlayerController.IsQKeyDown() && !isQKeyDown)
@@ -98,7 +100,27 @@ public class PlayerGunSelector : MonoBehaviour
     private void InvokeSwitchWeaponAnimation()
     {
         if (PlayerController.IsPlayerHasIdleState())
-            OnSwitchWeapon?.Invoke();
+            OnSwitchWeaponCallAnimation?.Invoke();
+    }
+
+    public GunSO GetNextGun()
+    {
+        if (NewActiveGunPosition + 1 > Guns.Count - 1)
+        {
+            return Guns[0];
+        }
+        
+        return Guns[NewActiveGunPosition + 1];
+    }
+
+    public GunSO GetPreviousGun()
+    {
+        if (NewActiveGunPosition - 1 < 0)
+        {
+            return Guns[Guns.Count - 1];
+        }
+
+        return Guns[NewActiveGunPosition - 1];
     }
 
     public void DespawnActiveGun()
@@ -132,8 +154,6 @@ public class PlayerGunSelector : MonoBehaviour
 
         DespawnActiveGun();
         SetupGun(NewActiveGun);
-
-        OnGunChanged?.Invoke();
     }
 
     /// <summary>
@@ -167,8 +187,10 @@ public class PlayerGunSelector : MonoBehaviour
         ActiveGun = gun.Clone() as GunSO;
         if (ActiveGun != null)
         {
-            ActiveGun.Spawn(GunParent, this,BulletPoolParent,BulletCasesPoolParent,ShootingStartPoint, Camera);
+            ActiveGun.Spawn(GunParent, this, BulletPoolParent, BulletCasesPoolParent, ShootingStartPoint, Camera);
             ActiveGun.AmmoConfig.CurrentClipAmmo = runtimeCurrentAmmoClips[NewActiveGunPosition];
         }
+
+        OnGunChanged?.Invoke();
     }
 }
