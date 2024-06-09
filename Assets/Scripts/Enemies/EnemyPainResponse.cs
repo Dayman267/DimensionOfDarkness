@@ -19,12 +19,6 @@ public class EnemyPainResponse : MonoBehaviour
     {
         if (Health.CurrentHealth > 0)
         {
-            // you can do some cool stuff based on the
-            // amount of damage taken relative to max health
-            // here we're simply setting the additive layer
-            // weight based on damage vs max pain threshhold
-            //Animator.ResetTrigger("Hit");
-            /*Animator.SetLayerWeight(1, (float)Damage / MaxDamagePainThreshold);*/
             Animator.SetTrigger("Hit");
         }
     }

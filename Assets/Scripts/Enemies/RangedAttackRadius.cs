@@ -4,7 +4,6 @@ using UnityEngine.AI;
 
 public class RangedAttackRadius : AttackRadius
 {
-    public NavMeshAgent Agent;
     public EnemyBullet BulletPrefab;
     public Vector3 BulletSpawnOffset = new(0, 1, 0);
     public LayerMask Mask;
@@ -16,12 +15,14 @@ public class RangedAttackRadius : AttackRadius
     private RaycastHit Hit;
     private IDamageable targetDamageable;
 
-    protected override void Awake()
-    {
-        base.Awake();
 
-        BulletPool = ObjectPool.ObjectPool.CreateInstance(BulletPrefab,
-            Mathf.CeilToInt(1 / AttackDelay * BulletPrefab.AutoDestroyTime));
+    public void CreateBulletPool()
+    {
+        if (BulletPool == null)
+        {
+            BulletPool = ObjectPool.ObjectPool.CreateInstance(BulletPrefab,
+                Mathf.CeilToInt(1 / AttackDelay * BulletPrefab.AutoDestroyTime));
+        }
     }
 
     protected override void OnTriggerExit(Collider other)
@@ -49,7 +50,7 @@ public class RangedAttackRadius : AttackRadius
 
             if (targetDamageable != null)
             {
-                var poolableObject = BulletPool.GetObject();
+                var poolableObject = BulletPool?.GetObject();
                 if (poolableObject != null)
                 {
                     bullet = poolableObject.GetComponent<EnemyBullet>();
@@ -87,7 +88,6 @@ public class RangedAttackRadius : AttackRadius
             IDamageable damageable;
             if (Hit.collider.TryGetComponent(out damageable)) return damageable.GetTransform() == Target;
         }
-
         return false;
     }
 }

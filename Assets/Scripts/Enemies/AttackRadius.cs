@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(SphereCollider))]
 public class AttackRadius : MonoBehaviour
@@ -13,6 +14,7 @@ public class AttackRadius : MonoBehaviour
     protected Coroutine AttackCoroutine;
     protected List<IDamageable> Damageables = new();
     public AttackEvent OnAttack;
+    public NavMeshAgent Agent;
 
     protected virtual void Awake()
     {
@@ -45,14 +47,12 @@ public class AttackRadius : MonoBehaviour
         if (AttackCoroutine != null)
             StopCoroutine(AttackCoroutine);
         AttackCoroutine = null;
+        
     }
 
     protected virtual IEnumerator Attack()
     {
         var Wait = new WaitForSeconds(AttackDelay);
-
-        
-
         IDamageable closestDamageable = null;
         var closestDistance = float.MaxValue;
     
@@ -74,6 +74,7 @@ public class AttackRadius : MonoBehaviour
             {
                 OnAttack?.Invoke(closestDamageable);
                 closestDamageable.TakeDamage(Damage);
+                
             }
 
             closestDamageable = null;
@@ -83,8 +84,8 @@ public class AttackRadius : MonoBehaviour
 
             Damageables.RemoveAll(DisabledDamageables);
         }
-
         AttackCoroutine = null;
+        
     }
 
     protected bool DisabledDamageables(IDamageable Damageable)
