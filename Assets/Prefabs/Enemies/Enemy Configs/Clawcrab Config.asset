@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7643158e4c5b2b44a960367854e3b93a, type: 3}
+  m_Name: Clawcrab Config
+  m_EditorClassIdentifier: 
+  Prefab: {fileID: 2144357153052033485, guid: 85eb6394c9698754f879ebe2a8cf2235, type: 3}
+  AttackConfiguration: {fileID: 11400000, guid: afdf1056eb699d9448302ddf11565182, type: 2}
+  Health: 200
+  PointsForKill: 9
+  DefaultState: 2
+  IdleLocationRadius: 4
+  IdleMovespeedMultiplier: 0.6
+  LineOfSightRange: 6
+  FieldOfView: 90
+  AIUpdateInterval: 0.1
+  Acceleration: 8
+  AngularSpeed: 200
+  AreaMask: -1
+  AvoidancePriority: 50
+  BaseOffset: 0
+  Height: 3
+  ObstacleAvoidanceType: 4
+  Radius: 2.5
+  Speed: 1.7
+  StoppingDistance: 2.2

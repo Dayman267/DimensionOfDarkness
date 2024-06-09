@@ -1,98 +1,141 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class AreaFloorBaker : MonoBehaviour
 {
-    [SerializeField] private List<NavMeshSurface> Surfaces;
-
+    [SerializeField] private NavMeshSurface[] Surfaces;
     [SerializeField] private PlayerController Player;
-
     [SerializeField] private float UpdateRate = 0.1f;
-
     [SerializeField] private float MovementThreshold = 3f;
+    [SerializeField] private Vector3 NavMeshSize = new(20, 20, 20);
+    [SerializeField] private bool CacheSources;
 
-    [SerializeField] private Vector3 NavMeshSize = new(50, 50, 50);
-    private readonly List<NavMeshBuildSource> Sources = new();
+    public delegate void NavMeshUpdatedEvent(Bounds Bounds);
 
-    private List<NavMeshData> NavMeshDataList;
+    public NavMeshUpdatedEvent OnNavMeshUpdate;
+    
+    private NavMeshData[] NavMeshDatas;
 
+    private Dictionary<int, List<NavMeshBuildSource>> SourcesPerSurface = new();
+    private Dictionary<int, List<NavMeshBuildMarkup>> MarkupsPerSurface = new();
+    private Dictionary<int, List<NavMeshModifier>> ModifiersPerSurface = new();
+    
     private Vector3 WorldAnchor;
 
-    private void Start()
+    private void Awake()
     {
-        NavMeshDataList = new List<NavMeshData>();
-
-        foreach (var surface in Surfaces)
+        NavMeshDatas = new NavMeshData[Surfaces.Length];
+        for (var i = 0; i < Surfaces.Length; i++)
         {
-            var navMeshData = new NavMeshData();
-            NavMesh.AddNavMeshData(navMeshData);
-            NavMeshDataList.Add(navMeshData);
+            NavMeshDatas[i] = new NavMeshData();
+            NavMesh.AddNavMeshData(NavMeshDatas[i]);
+            SourcesPerSurface[i] = new List<NavMeshBuildSource>();
+            MarkupsPerSurface[i] = new List<NavMeshBuildMarkup>();
+            ModifiersPerSurface[i] = new List<NavMeshModifier>();
         }
 
-        BuildNavMeshes(false);
+        WorldAnchor = Player.transform.position;  // Установить начальную позицию игрока
+        BuildNavMesh(false);
         StartCoroutine(CheckPlayerMovement());
     }
 
     private IEnumerator CheckPlayerMovement()
     {
-        var Wait = new WaitForSeconds(UpdateRate);
+        var wait = new WaitForSeconds(UpdateRate);
+        float movementThresholdSquared = MovementThreshold * MovementThreshold;
 
         while (true)
         {
-            if (Vector3.Distance(WorldAnchor, Player.transform.position) > MovementThreshold)
+            if ((WorldAnchor - Player.transform.position).sqrMagnitude > movementThresholdSquared)
             {
-                BuildNavMeshes(true);
+                BuildNavMesh(true);
                 WorldAnchor = Player.transform.position;
             }
 
-            yield return Wait;
+            yield return wait;
         }
     }
 
-    private void BuildNavMeshes(bool Async)
+    private void BuildNavMesh(bool async)
     {
-        for (var i = 0; i < Surfaces.Count; i++)
+        var navMeshBounds = new Bounds(Player.transform.position, NavMeshSize);
+
+        for (var index = 0; index < Surfaces.Length; index++)
         {
-            var surface = Surfaces[i];
-            var navMeshData = NavMeshDataList[i];
+            CollectModifiers(index);
+            if (!CacheSources || SourcesPerSurface[index].Count == 0)
+            {
+                CollectSources(index, navMeshBounds);
+            }
 
-            var navMeshBounds = new Bounds(Player.transform.position, NavMeshSize);
-
-            IEnumerable<NavMeshModifier> modifiers = surface.collectObjects == CollectObjects.Children
-                ? GetComponentsInChildren<NavMeshModifier>()
-                : NavMeshModifier.activeModifiers;
-
-            var markups = modifiers
-                .Where(t => (surface.layerMask & (1 << t.gameObject.layer)) != 0 &&
-                            t.AffectsAgentType(surface.agentTypeID))
-                .Select(t => new NavMeshBuildMarkup
-                {
-                    root = t.transform,
-                    overrideArea = t.overrideArea,
-                    area = t.area,
-                    ignoreFromBuild = t.ignoreFromBuild
-                }).ToList();
-
-            if (surface.collectObjects == CollectObjects.Children)
-                NavMeshBuilder.CollectSources(transform, surface.layerMask, surface.useGeometry, surface.defaultArea,
-                    markups, Sources);
+            if (async)
+            {
+                AsyncOperation navMeshUpdateOperation = NavMeshBuilder.UpdateNavMeshDataAsync(NavMeshDatas[index],
+                    Surfaces[index].GetBuildSettings(), SourcesPerSurface[index], navMeshBounds);
+                navMeshUpdateOperation.completed += HandleNavMeshUpdate;
+            }
             else
-                NavMeshBuilder.CollectSources(navMeshBounds, surface.layerMask, surface.useGeometry,
-                    surface.defaultArea, markups, Sources);
-
-            Sources.RemoveAll(source =>
-                source.component != null && source.component.gameObject.GetComponent<NavMeshAgent>() != null);
-
-            if (Async)
-                NavMeshBuilder.UpdateNavMeshDataAsync(navMeshData, surface.GetBuildSettings(), Sources,
-                    new Bounds(Player.transform.position, NavMeshSize));
-            else
-                NavMeshBuilder.UpdateNavMeshData(navMeshData, surface.GetBuildSettings(), Sources,
-                    new Bounds(Player.transform.position, NavMeshSize));
+            {
+                NavMeshBuilder.UpdateNavMeshData(NavMeshDatas[index], Surfaces[index].GetBuildSettings(), SourcesPerSurface[index],
+                    navMeshBounds);
+                OnNavMeshUpdate?.Invoke(navMeshBounds);
+            }
         }
+    }
+
+
+    private void CollectModifiers(int index)
+    {
+        if (ModifiersPerSurface[index].Count == 0)
+        {
+            if (Surfaces[index].collectObjects == CollectObjects.Children)
+            {
+                ModifiersPerSurface[index].AddRange(GetComponentsInChildren<NavMeshModifier>());
+            }
+            else
+            {
+                ModifiersPerSurface[index].AddRange(NavMeshModifier.activeModifiers);
+            }
+        }
+
+        if (MarkupsPerSurface[index].Count == 0)
+        {
+            foreach (var modifier in ModifiersPerSurface[index])
+            {
+                if ((Surfaces[index].layerMask & (1 << modifier.gameObject.layer)) != 0 && 
+                    modifier.AffectsAgentType(Surfaces[index].agentTypeID))
+                {
+                    MarkupsPerSurface[index].Add(new NavMeshBuildMarkup
+                    {
+                        root = modifier.transform,
+                        overrideArea = modifier.overrideArea,
+                        area = modifier.area,
+                        ignoreFromBuild = modifier.ignoreFromBuild
+                    });
+                }
+            }
+        }
+    }
+
+    private void CollectSources(int index, Bounds navMeshBounds)
+    {
+        if (Surfaces[index].collectObjects == CollectObjects.Children)
+        {
+            NavMeshBuilder.CollectSources(transform, Surfaces[index].layerMask, Surfaces[index].useGeometry, Surfaces[index].defaultArea,
+                MarkupsPerSurface[index], SourcesPerSurface[index]);
+        }
+        else
+        {
+            NavMeshBuilder.CollectSources(navMeshBounds, Surfaces[index].layerMask, Surfaces[index].useGeometry,
+                Surfaces[index].defaultArea, MarkupsPerSurface[index], SourcesPerSurface[index]);
+        }
+    }
+
+    private void HandleNavMeshUpdate(AsyncOperation operation)
+    {
+        OnNavMeshUpdate?.Invoke(new Bounds(WorldAnchor, NavMeshSize));
     }
 }

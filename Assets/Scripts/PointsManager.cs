@@ -8,13 +8,12 @@ public class PointsManager : MonoBehaviour
     public int darkEnergyPointsToAccess;
     public int pointsPerTime;
     public int secondsBetweenAward;
-
     public int firstFibonacci;
     public int secondFibonacci;
-
     public TextMeshProUGUI darkEnergyText;
-
     public int counterICanEnter;
+    public EnemySpawner enemySpawner;
+    public EnemyScriptableObject specificEnemy;
 
     private void Start()
     {
@@ -23,16 +22,18 @@ public class PointsManager : MonoBehaviour
     }
 
     public void RpcAddDarkEnergyPoints(int points)
-    {
-        darkEnergyPoints += points;
-        if (darkEnergyPoints >= darkEnergyPointsToAccess)
-        {
-            darkEnergyPointsToAccess = firstFibonacci + secondFibonacci;
-            secondFibonacci = firstFibonacci;
-            firstFibonacci = darkEnergyPointsToAccess;
-            counterICanEnter += 1;
-        }
-    }
+         {
+             darkEnergyPoints += points;
+             if (darkEnergyPoints >= darkEnergyPointsToAccess)
+             {
+                 darkEnergyPointsToAccess = firstFibonacci + secondFibonacci;
+                 secondFibonacci = firstFibonacci;
+                 firstFibonacci = darkEnergyPointsToAccess;
+                 counterICanEnter += 1;
+                 
+                 StartCoroutine(enemySpawner.SpawnSpecificEnemy(specificEnemy));
+             }
+         }
 
     public void RpcSubtractOneCounterICanEnter()
     {

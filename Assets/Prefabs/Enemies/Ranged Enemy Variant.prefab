@@ -86,7 +86,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9145494213740153801, guid: ee0bb74242b8c764b8673751f75c24a6, type: 3}
       propertyPath: m_AgentTypeID
-      value: 1479372276
+      value: -1372625422
+      objectReference: {fileID: 0}
+    - target: {fileID: 9145494213740153801, guid: ee0bb74242b8c764b8673751f75c24a6, type: 3}
+      propertyPath: m_ObstacleAvoidanceType
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3674405274157291619, guid: ee0bb74242b8c764b8673751f75c24a6, type: 3}

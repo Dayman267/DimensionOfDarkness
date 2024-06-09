@@ -16,6 +16,7 @@ TagManager:
   - VFX_System
   - StatsCanvas
   - TrailPool
+  - Points
   layers:
   - Default
   - TransparentFX

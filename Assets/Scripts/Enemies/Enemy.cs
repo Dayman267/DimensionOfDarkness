@@ -9,10 +9,11 @@ public class Enemy : ObjectPool.PoolableObject
     public Animator Animator;
     public EnemyMovement Movement;
     public NavMeshAgent Agent;
-    public EnemyScriptableObject EnemyScriptableObject;
     public EnemyHealth Health;
     public EnemyPainResponse PainResponse;
     public Rigidbody Rigidbody;
+    public int PointsForKill;
+
 
     private Coroutine LookCoroutine;
 
@@ -30,6 +31,11 @@ public class Enemy : ObjectPool.PoolableObject
         Invoke(nameof(Trash), 5f);
         
         Agent.enabled = false;
+        
+        var points = GameObject.FindWithTag("Points").GetComponent<PlayerEnergyAndMaterialPoints>();
+        points.AddSolidMaterial(PointsForKill);
+        var pointsManager = GameObject.FindWithTag("PointsManager").GetComponent<PointsManager>();
+        pointsManager.RpcAddDarkEnergyPoints(PointsForKill);
     }
 
     private void Trash()
@@ -42,12 +48,6 @@ public class Enemy : ObjectPool.PoolableObject
         Health.OnTakeDamage += PainResponse.HandlePain;
         Health.OnDeath += Die;
         AttackRadius.OnAttack += OnAttack;
-    }
-
-    public void OnEnable()
-    {
-        SetupAgentFromConfiguration();
-        
     }
 
     public override void OnDisable()
@@ -79,26 +79,5 @@ public class Enemy : ObjectPool.PoolableObject
         }
 
         transform.rotation = lookRotation;
-    }
-
-    public virtual void SetupAgentFromConfiguration()
-    {
-        Agent.acceleration = EnemyScriptableObject.Acceleration;
-        Agent.angularSpeed = EnemyScriptableObject.AngularSpeed;
-        Agent.areaMask = EnemyScriptableObject.AreaMask;
-        Agent.avoidancePriority = EnemyScriptableObject.AvoidancePriority;
-        Agent.baseOffset = EnemyScriptableObject.BaseOffset;
-        Agent.height = EnemyScriptableObject.Height;
-        Agent.obstacleAvoidanceType = EnemyScriptableObject.ObstacleAvoidanceType;
-        Agent.radius = EnemyScriptableObject.Radius;
-        Agent.speed = EnemyScriptableObject.Speed;
-        Agent.stoppingDistance = EnemyScriptableObject.StoppingDistance;
-
-        Movement.UpdateRate = EnemyScriptableObject.AIUpdateInterval;
-
-        Health._MaxHealth = EnemyScriptableObject.Health;
-        AttackRadius.Collider.radius = EnemyScriptableObject.AttackRadius;
-        AttackRadius.AttackDelay = EnemyScriptableObject.AttackDelay;
-        AttackRadius.Damage = EnemyScriptableObject.Damage;
     }
 }
