@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,8 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private float healthPoints;
     [SerializeField] private float maxHealthPoints = 100f;
     private Image bar;
+
+    public static Action onPlayerDead;
 
     private void Start()
     {
@@ -32,6 +35,7 @@ public class PlayerHealth : MonoBehaviour
         if (healthPoints <= 0)
         {
             healthPoints = 0;
+            onPlayerDead?.Invoke();
             Destroy(gameObject);
         }
 
