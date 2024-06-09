@@ -13,11 +13,9 @@ public class VALERAController : MonoBehaviour, IPausable
 
     private Vector3 targetPosition;
 
-    private float originalRotationX;
-
-    private bool isRotating = false;
-
     private bool isPaused = false;
+
+    [SerializeField] private LayerMask layerMask;
 
     private void OnEnable()
     {
@@ -35,7 +33,6 @@ public class VALERAController : MonoBehaviour, IPausable
     {
         cam = Camera.main;
         canvas = GetComponentInChildren<Canvas>().transform;
-        originalRotationX = transform.rotation.x;
     }
 
     void Update()
@@ -45,7 +42,7 @@ public class VALERAController : MonoBehaviour, IPausable
         Vector3 mousePosition = Input.mousePosition;
         Ray ray = cam.ScreenPointToRay(mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
         {
             Vector3 targetPoint = hit.point;
             Vector3 direction = (targetPoint - transform.position).normalized;
@@ -58,15 +55,14 @@ public class VALERAController : MonoBehaviour, IPausable
 
         transform.position = targetPosition;
 
-
-        
-        Vector2 upperCenter = new Vector2(Screen.width / 2, Screen.height / 2);
+        // Определяем границы экранных рядов
+        float screenThirdHeight = Screen.height / 3;
 
         float targetRotationX = 0;
         float targetRotationY = 0;
 
-        // Если курсор находится в верхней части экрана
-        if (mousePosition.y > upperCenter.y)
+        // Если курсор находится в верхней трети экрана
+        if (mousePosition.y > 2 * screenThirdHeight)
         {
             if (mousePosition.x < Screen.width / 3)
             {
@@ -87,7 +83,30 @@ public class VALERAController : MonoBehaviour, IPausable
                 targetRotationY = 0;
             }
         }
-        else if (mousePosition.y < upperCenter.y)
+        // Если курсор находится в средней трети экрана
+        else if (mousePosition.y > screenThirdHeight)
+        {
+            if (mousePosition.x < Screen.width / 3)
+            {
+                // Средний левый угол
+                targetRotationX = 30;
+                targetRotationY = 40;
+            }
+            else if (mousePosition.x > 2 * Screen.width / 3)
+            {
+                // Средний правый угол
+                targetRotationX = 30;
+                targetRotationY = 320;
+            }
+            else
+            {
+                // Центральная средняя часть экрана
+                targetRotationX = 20;
+                targetRotationY = 0;
+            }
+        }
+        // Если курсор находится в нижней трети экрана
+        else
         {
             if (mousePosition.x < Screen.width / 3)
             {
@@ -103,7 +122,7 @@ public class VALERAController : MonoBehaviour, IPausable
             }
             else
             {
-                // Центральная Нижний часть экрана
+                // Центральная нижняя часть экрана
                 targetRotationX = 90;
                 targetRotationY = 0;
             }

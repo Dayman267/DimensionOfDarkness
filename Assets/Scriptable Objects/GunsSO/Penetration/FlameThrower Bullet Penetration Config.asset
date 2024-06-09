@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 165592c2cd47b454e9a03a185a2ec1f4, type: 3}
   m_Name: FlameThrower Bullet Penetration Config
   m_EditorClassIdentifier: 
-  MaxObjectsToPenetrate: 3
+  MaxObjectsToPenetrate: 1
   MaxPenetrationDepth: 2
   AccuracyLoss: {x: 0, y: 0, z: 0}
   DamageRetentionPercentage: 0.8

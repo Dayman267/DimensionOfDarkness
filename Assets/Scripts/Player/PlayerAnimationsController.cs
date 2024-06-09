@@ -43,7 +43,7 @@ public class PlayerAnimationsController : MonoBehaviour
         
         PlayerShootController.OnReloadAnimation += ReloadAnimation;
         
-        PlayerGunSelector.OnSwitchWeapon += SwitchWeaponAnimation;    
+        PlayerGunSelector.OnSwitchWeaponCallAnimation += SwitchWeaponCallAnimationAnimation;    
         
         GunSO.OnAutoShootAnimationEnable += EnableAutoShootAnimationHandler;
         GunSO.OnAutoShootAnimationDiasble += DisableAutoShootAnimationHandler;
@@ -60,7 +60,7 @@ public class PlayerAnimationsController : MonoBehaviour
         
         PlayerShootController.OnReloadAnimation -= ReloadAnimation;
         
-        PlayerGunSelector.OnSwitchWeapon -= SwitchWeaponAnimation;     
+        PlayerGunSelector.OnSwitchWeaponCallAnimation -= SwitchWeaponCallAnimationAnimation;     
         
         GunSO.OnAutoShootAnimationEnable -= EnableAutoShootAnimationHandler;
         GunSO.OnAutoShootAnimationDiasble -= DisableAutoShootAnimationHandler;
@@ -84,7 +84,7 @@ public class PlayerAnimationsController : MonoBehaviour
         animator.SetTrigger(singleShootingSpeedAnimHash);
     }
     
-    private void SwitchWeaponAnimation()
+    private void SwitchWeaponCallAnimationAnimation()
     {
         DisableAutoShootAnimationHandler();
         animator.SetTrigger(switchAnimHash);

@@ -46,7 +46,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     m_ConstantMin: 1
-    m_ConstantMax: 10
+    m_ConstantMax: 7
   CriticalChance: 0
   CriticalMultiplier: 0
   IsChargedShot: 0

@@ -80,12 +80,12 @@ Material:
     - _DistortionBlend: 0.5
     - _DistortionEnabled: 0
     - _DistortionStrength: 1
-    - _DistortionStrengthScaled: 0
+    - _DistortionStrengthScaled: 0.1
     - _DstBlend: 10
     - _EmissionEnabled: 0
     - _FlipbookMode: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0.504
+    - _Glossiness: 0.288
     - _GlossyReflections: 1
     - _LightingEnabled: 1
     - _Metallic: 1

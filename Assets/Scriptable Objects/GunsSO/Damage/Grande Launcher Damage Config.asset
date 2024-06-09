@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Grande Launcher Damage Config
   m_EditorClassIdentifier: 
   DamageCurve:
-    m_Mode: 1
+    m_Mode: 3
     m_CurveMultiplier: 1
     m_CurveMin:
       serializedVersion: 2
@@ -26,7 +26,7 @@ MonoBehaviour:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 20
+        value: 40
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -54,7 +54,9 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    m_ConstantMin: 0
-    m_ConstantMax: 0
+    m_ConstantMin: 30
+    m_ConstantMax: 50
   CriticalChance: 0
   CriticalMultiplier: 0
+  IsChargedShot: 0
+  maxChargedDamageMultiplier: 2

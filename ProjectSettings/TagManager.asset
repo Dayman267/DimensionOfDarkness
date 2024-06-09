@@ -16,7 +16,8 @@ TagManager:
   - VFX_System
   - StatsCanvas
   - TrailPool
-  - Points
+  - HighScore
+  - LastScore
   layers:
   - Default
   - TransparentFX
