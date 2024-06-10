@@ -2278,7 +2278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Health: 0
   Collider: {fileID: 423822067143353262}
-  _MaxHealth: 100
+  _MaxHealth: 0
 --- !u!1 &3738560426337324501
 GameObject:
   m_ObjectHideFlags: 0

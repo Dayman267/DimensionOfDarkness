@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Clawcrab Attack Config
   m_EditorClassIdentifier: 
   isRanged: 0
-  Damage: 5
+  Damage: 25
   AttackRadius: 1.7
   AttackDelay: 1.5
   BulletPrefab: {fileID: 0}

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Big Dady Clawcrab Attack Configuration
   m_EditorClassIdentifier: 
   isRanged: 0
-  Damage: 15
+  Damage: 60
   AttackRadius: 2
   AttackDelay: 1.5
   BulletPrefab: {fileID: 0}

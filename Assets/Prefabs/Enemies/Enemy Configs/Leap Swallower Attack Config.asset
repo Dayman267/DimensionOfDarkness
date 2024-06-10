@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Leap Swallower Attack Config
   m_EditorClassIdentifier: 
   isRanged: 0
-  Damage: 4
+  Damage: 20
   AttackRadius: 1.5
   AttackDelay: 1.5
   BulletPrefab: {fileID: 0}

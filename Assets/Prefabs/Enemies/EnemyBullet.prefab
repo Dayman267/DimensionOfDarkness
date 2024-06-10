@@ -159,7 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AutoDestroyTime: 5
   MoveSpeed: 5
-  Damage: 0
+  Damage: 5
   Rigidbody: {fileID: 5645865591707416529}
 --- !u!136 &7825654351603253060
 CapsuleCollider:

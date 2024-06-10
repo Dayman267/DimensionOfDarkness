@@ -11,13 +11,13 @@ public class PlayerEnergyAndMaterialPoints : MonoBehaviour
     private void Start()
     {
         manager = GameObject.FindWithTag("PointsManager").GetComponent<PointsManager>();
-        solidMaterialText = GameObject.FindGameObjectWithTag("SolidMaterial").GetComponent<TextMeshProUGUI>();
+        //solidMaterialText = GameObject.FindGameObjectWithTag("SolidMaterial").GetComponent<TextMeshProUGUI>();
     }
 
     private void Update()
     {
         manager.darkEnergyText.text = $"Score: {manager.darkEnergyPoints}";
-        solidMaterialText.text = $"{solidMaterial}";
+        //solidMaterialText.text = $"{solidMaterial}";
     }
 
     public void AddSolidMaterial(int points)

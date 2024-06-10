@@ -4515,7 +4515,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Health: 0
   Collider: {fileID: 7721570757508591213}
-  _MaxHealth: 30
+  _MaxHealth: 0
 --- !u!64 &7721570757508591213
 MeshCollider:
   m_ObjectHideFlags: 0

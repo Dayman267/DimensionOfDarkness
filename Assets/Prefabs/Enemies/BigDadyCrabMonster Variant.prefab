@@ -16,6 +16,10 @@ PrefabInstance:
       propertyPath: PointsForKill
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2538493170059586557, guid: 85eb6394c9698754f879ebe2a8cf2235, type: 3}
+      propertyPath: _MaxHealth
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9083811006421698949, guid: 85eb6394c9698754f879ebe2a8cf2235, type: 3}
       propertyPath: m_LocalScale.x
       value: 1

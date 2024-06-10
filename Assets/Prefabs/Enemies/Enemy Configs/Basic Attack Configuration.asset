@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Basic Attack Configuration
   m_EditorClassIdentifier: 
   isRanged: 0
-  Damage: 3
+  Damage: 18
   AttackRadius: 1.7
   AttackDelay: 1.5
   BulletPrefab: {fileID: 0}

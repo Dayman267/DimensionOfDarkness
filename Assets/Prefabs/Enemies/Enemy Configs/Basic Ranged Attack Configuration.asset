@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Basic Ranged Attack Configuration
   m_EditorClassIdentifier: 
   isRanged: 1
-  Damage: 2
+  Damage: 12
   AttackRadius: 7
   AttackDelay: 0.75
   BulletPrefab: {fileID: 2022361328593657948, guid: 7ab8fcf731d3e464cbea806e602c6d8b, type: 3}
