@@ -3203,7 +3203,7 @@ MonoBehaviour:
   - {fileID: 5622272936809201590, guid: 222a46b0dbfd1df4691549f986c5ef51, type: 3}
   - {fileID: 8209248628518913437, guid: a5692b5be72a2c045b35520d7ba55e53, type: 3}
   - {fileID: 4936647896783880495, guid: 6a0763a3430a11b49a733dc894b47da9, type: 3}
-  terrainsIPick: 0
+  terrainsIPick: 1
 --- !u!114 &1034488289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6203,6 +6203,10 @@ PrefabInstance:
       propertyPath: m_InnerSpotAngle
       value: 31.479368
       objectReference: {fileID: 0}
+    - target: {fileID: 6619187154632813680, guid: d9a3f92c3df097d42ba3ff7b81ea9cbf, type: 3}
+      propertyPath: m_InnerSpotAngle
+      value: 54.82599
+      objectReference: {fileID: 0}
     - target: {fileID: 7105668054346312853, guid: d9a3f92c3df097d42ba3ff7b81ea9cbf, type: 3}
       propertyPath: m_Intensity
       value: 1
@@ -6223,6 +6227,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 650325573989336052}
+    - target: {fileID: 8967516494796769480, guid: d9a3f92c3df097d42ba3ff7b81ea9cbf, type: 3}
+      propertyPath: layerMask.m_Bits
+      value: 3221225975
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
