@@ -55,8 +55,8 @@ public class GunSO : ScriptableObject, ICloneable
     private ParticleSystem[] Shoot_VFX;
     private ParticleSystem[] ChargeShoot_VFX;
     private Transform ShootingStartPoint;
-    private ObjectPool<TrailRenderer> TrailPool;
-    private ObjectPool<Bullet> BulletPool;
+    private UnityEngine.Pool.ObjectPool<TrailRenderer> TrailPool;
+    private UnityEngine.Pool.ObjectPool<Bullet> BulletPool;
     private BulletCaseSpawner bulletCaseSpawner;
 
     public static event Action OnAutoShootAnimationEnable;
@@ -72,10 +72,10 @@ public class GunSO : ScriptableObject, ICloneable
         this.BulletCasesParent = BulletCasesParent;
         this.ShootingStartPoint = ShootingStartPoint;
 
-        TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
+        TrailPool = new UnityEngine.Pool.ObjectPool<TrailRenderer>(CreateTrail);
         if (!ShootConfig.IsHitScan)
         {
-            BulletPool = new ObjectPool<Bullet>(CreateBullet);
+            BulletPool = new UnityEngine.Pool.ObjectPool<Bullet>(CreateBullet);
         }
 
         Model = Instantiate(ModelPrefab, Parent, false);
