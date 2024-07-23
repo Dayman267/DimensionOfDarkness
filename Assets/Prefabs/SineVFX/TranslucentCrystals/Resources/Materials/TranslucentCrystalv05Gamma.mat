@@ -149,6 +149,7 @@ Material:
     - _TransShadow: 0.9
     - _Translucency: 7.5
     - _TranslucencyMaskPower: 1
+    - _TranslucencyStrenght: 0
     - _UVSec: 0
     - _ZWrite: 1
     - __dirty: 0
@@ -158,4 +159,5 @@ Material:
     - _ColorTint1: {r: 0.5054769, g: 0, b: 0.8235294, a: 1}
     - _ColorTint2: {r: 0.61237305, g: 0.42647058, b: 1, a: 1}
     - _EmissionColor: {r: 1, g: 0.6667343, b: 0.5441177, a: 1}
+    - _LightDirection: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
