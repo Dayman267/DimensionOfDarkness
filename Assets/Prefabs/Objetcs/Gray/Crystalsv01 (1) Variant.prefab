@@ -12,6 +12,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crystalsv01 (1) Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4008390048050004, guid: cc0fd657b60ef8c499b057056b948f16, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4008390048050004, guid: cc0fd657b60ef8c499b057056b948f16, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5999969
+      objectReference: {fileID: 0}
+    - target: {fileID: 4008390048050004, guid: cc0fd657b60ef8c499b057056b948f16, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4008390048050004, guid: cc0fd657b60ef8c499b057056b948f16, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4888588471481040, guid: cc0fd657b60ef8c499b057056b948f16, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.77000004

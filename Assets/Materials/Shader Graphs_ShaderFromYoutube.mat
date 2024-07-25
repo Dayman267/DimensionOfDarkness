@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Shader Graphs_ShaderFromYoutube
-  m_Shader: {fileID: -6465566751694194690, guid: 14c2653a3c6735d4ca74d330e1c520c4, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: e8ffc64189532dd4093c1085e89dcdc8, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -38,6 +38,10 @@ Material:
     m_TexEnvs:
     - _BaseTexture:
         m_Texture: {fileID: 2800000, guid: db56133bdb0993a40b90a1241d093e13, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMask:
+        m_Texture: {fileID: 2800000, guid: c4cb56ed45fb93d428f0b362c9985f7c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal:
@@ -59,13 +63,23 @@ Material:
     m_Ints: []
     m_Floats:
     - _BottomLine: 0.63
+    - _Divide: 1
+    - _EmissionPower: 1
+    - _EmissivePower: 1
+    - _LightPower: 2.37
+    - _LightRadius: -0.27
+    - _LightShift: 1
     - _Metallic: 1
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Smoothness: 1
     - _TopLine: 0.738
     m_Colors:
-    - _BaseColor: {r: 0, g: 0.292341, b: 1, a: 1}
+    - _BaseColor: {r: 0.02352953, g: 0, b: 1, a: 1}
     - _BottomColor: {r: 0.13933039, g: 0, b: 1, a: 1}
+    - _EmissionColor: {r: 1, g: 0, b: 0, a: 1}
+    - _EmissionShift: {r: -1, g: -1, b: 0, a: 0}
+    - _EmissiveColor: {r: 1, g: 0, b: 0, a: 1}
+    - _LightPosition: {r: 1, g: 1, b: 1, a: 0}
     - _TopColor: {r: 1, g: 0, b: 0.5753565, a: 1}
   m_BuildTextureStacks: []
