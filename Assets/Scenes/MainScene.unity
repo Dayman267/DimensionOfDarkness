@@ -3203,7 +3203,7 @@ MonoBehaviour:
   - {fileID: 5622272936809201590, guid: 222a46b0dbfd1df4691549f986c5ef51, type: 3}
   - {fileID: 8209248628518913437, guid: a5692b5be72a2c045b35520d7ba55e53, type: 3}
   - {fileID: 4936647896783880495, guid: 6a0763a3430a11b49a733dc894b47da9, type: 3}
-  terrainsIPick: 1
+  terrainsIPick: 3
 --- !u!114 &1034488289
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -131,6 +131,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _BottomLine: 0.549
+    - _BottomLinePower: 1
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -140,8 +141,8 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _LightPower: 2
-    - _LightRadius: -0.35
+    - _LightPower: 14.09
+    - _LightRadius: -0.29
     - _Metallic: 1
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -150,11 +151,12 @@ Material:
     - _QueueOffset: 0
     - _RampEnabled: 0
     - _RampInverted: 0
-    - _Smoothness: 1
+    - _Smoothness: 0.608
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _TopLine: 0.73
+    - _TopLinePower: 0.504
     - _TransAmbient: 1
     - _TransDirect: 1
     - _TransNormalDistortion: 0.1
