@@ -118,6 +118,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _BottomLine: 0.667
+    - _BottomLinePower: 1
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -142,6 +143,7 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _TopLine: 0.73
+    - _TopLinePower: 1
     - _TransAmbient: 1
     - _TransDirect: 1
     - _TransNormalDistortion: 0.2
@@ -163,3 +165,16 @@ Material:
     - _LightEmitationColor: {r: 1, g: 0.042452812, b: 0.3353497, a: 1}
     - _TopColor: {r: 1, g: 0, b: 0.21279478, a: 1}
   m_BuildTextureStacks: []
+--- !u!114 &662353250797126287
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7
